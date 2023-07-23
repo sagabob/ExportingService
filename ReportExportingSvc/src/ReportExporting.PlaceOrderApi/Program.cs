@@ -10,9 +10,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+
+var tableStorageEndpoint = builder.Configuration.GetValue<string>("TableStorageServiceUrl");
+
 builder.Services.AddSingleton(x =>
     new TableServiceClient(
-        new Uri("https://<account-name>.blob.core.windows.net"),
+        new Uri(tableStorageEndpoint!),
         new DefaultAzureCredential()));
 
 var app = builder.Build();

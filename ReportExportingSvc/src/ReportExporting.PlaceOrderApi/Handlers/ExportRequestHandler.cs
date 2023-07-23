@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using ReportExporting.Core;
+using ReportExporting.PlaceOrderApi.Requests;
 
 namespace ReportExporting.PlaceOrderApi.Handlers
 {

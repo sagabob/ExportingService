@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ReportExporting.Core;
 using ReportExporting.PlaceOrderApi.Handlers;
+using ReportExporting.PlaceOrderApi.Requests;
 
 namespace ReportExporting.PlaceOrderApi.Controllers;
 

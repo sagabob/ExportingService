@@ -3,7 +3,7 @@ using Lamar;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ReportExporting.PlaceOrderApi.Controllers;
-using ReportExporting.PlaceOrderApi.Handlers;
+using ReportExporting.PlaceOrderApi.Requests;
 using Xunit;
 
 namespace ReportExporting.PlaceOrderApiTests;

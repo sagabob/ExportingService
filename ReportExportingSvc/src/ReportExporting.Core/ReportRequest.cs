@@ -9,7 +9,5 @@ public class ReportRequest
     public ReportFormat Format { get; set; }
     public string Title { get; set; }
     public ReportProduct Product { get; set; }
-    public ExportingAttempt Attempt { get; set; }
-
-
+   
 }

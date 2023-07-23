@@ -2,7 +2,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ReportExporting.Core;
-using ReportExporting.PlaceOrderApi.Handlers;
 using ReportExporting.PlaceOrderApi.Requests;
 
 namespace ReportExporting.PlaceOrderApi.Controllers;
@@ -25,6 +24,33 @@ public class PlaceOrderController : ControllerBase
     public async Task<ActionResult<ReportRequest>> PlaceExportOrder(ReportRequest request)
     {
         var result = await _mediator.Send(new PlaceOrderRequest { PayLoad = request });
+        return Ok(result);
+    }
+
+    [HttpGet("test", Name = "Test")]
+    public async Task<IActionResult> Test()
+    {
+        var request = new ReportRequest
+        {
+            Title = "Sample Report",
+            Product = ReportProduct.Profile,
+            Urls = new[]
+            {
+                new()
+                {
+                    Url = "https://profile.id.com.au/adelaide/ancestry",
+                    Title = "Ancestry"
+                },
+                new ReportUrl
+                {
+                    Url = "https://profile.id.com.au/adelaide/industries",
+                    Title = "Industries"
+                }
+            }
+        };
+
+        var result = await _mediator.Send(new PlaceOrderRequest { PayLoad = request });
+
         return Ok(result);
     }
 }

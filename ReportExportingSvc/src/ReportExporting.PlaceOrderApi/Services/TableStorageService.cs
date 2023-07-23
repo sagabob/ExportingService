@@ -3,7 +3,7 @@ using ReportExporting.Core;
 
 namespace ReportExporting.PlaceOrderApi.Services
 {
-    public class TableStorageService
+    public class TableStorageService: ITableStorageService
     {
 
         private readonly TableServiceClient _tableServiceClient;
@@ -30,7 +30,7 @@ namespace ReportExporting.PlaceOrderApi.Services
         public async Task<ReportRequestEntity> AddEntityAsync(ReportRequestEntity entity)
         {
             var tableClient = await GetTableClient();
-            await tableClient.AddEntityAsync<ReportRequestEntity>(entity);
+            var response = await tableClient.UpsertEntityAsync<ReportRequestEntity>(entity);
             return entity;
         }
 

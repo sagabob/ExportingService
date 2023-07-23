@@ -1,5 +1,6 @@
 using Azure.Data.Tables;
 using Azure.Identity;
+using ReportExporting.PlaceOrderApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,8 @@ builder.Services.AddSingleton(x =>
     new TableServiceClient(
         new Uri(tableStorageEndpoint!),
         new DefaultAzureCredential()));
+
+builder.Services.AddScoped<ITableStorageService, TableStorageService>();
 
 var app = builder.Build();
 

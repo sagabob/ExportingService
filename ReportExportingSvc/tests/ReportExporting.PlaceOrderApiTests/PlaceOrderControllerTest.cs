@@ -17,9 +17,8 @@ public class PlaceOrderControllerTest
         {
             cfg.Scan(scanner =>
             {
-                scanner.IncludeNamespaceContainingType<PlaceOrderRequest>();
-                scanner.WithDefaultConventions();
-                scanner.AddAllTypesOf(typeof(ExportRequestHandler));
+                scanner.AssemblyContainingType<PlaceOrderRequest>();
+                scanner.ConnectImplementationsToTypesClosing(typeof(IRequestHandler<,>));
             });
             cfg.For<IMediator>().Use<Mediator>();
         });

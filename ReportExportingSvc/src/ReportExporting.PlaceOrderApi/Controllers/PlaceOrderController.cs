@@ -1,7 +1,8 @@
 ﻿using System.Net.Mime;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using ReportExporting.Core;
+using ReportExporting.PlaceOrderApi.Handlers;
 
 namespace ReportExporting.PlaceOrderApi.Controllers;
 
@@ -9,12 +10,20 @@ namespace ReportExporting.PlaceOrderApi.Controllers;
 [ApiController]
 public class PlaceOrderController : ControllerBase
 {
+    private readonly IMediator _mediator;
+
+    public PlaceOrderController(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
+
     [HttpPost]
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<ReportRequest>> PlaceExportOrder(ReportRequest request)
     {
-        return Ok(request);
+        var result = await _mediator.Send(new PlaceOrderRequest { PayLoad = request });
+        return Ok(result);
     }
 }

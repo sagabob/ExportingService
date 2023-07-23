@@ -1,3 +1,6 @@
+using Azure.Data.Tables;
+using Azure.Identity;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,6 +10,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+builder.Services.AddSingleton(x =>
+    new TableServiceClient(
+        new Uri("https://<account-name>.blob.core.windows.net"),
+        new DefaultAzureCredential()));
 
 var app = builder.Build();
 

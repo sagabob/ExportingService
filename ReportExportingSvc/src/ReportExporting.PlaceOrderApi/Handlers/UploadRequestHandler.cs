@@ -1,14 +1,15 @@
 ﻿using MediatR;
 using ReportExporting.Core;
 using ReportExporting.PlaceOrderApi.Requests;
+using ReportExporting.PlaceOrderApi.Services;
 
 namespace ReportExporting.PlaceOrderApi.Handlers
 {
-    public class UploadRequestHandler : IRequestHandler<AddItemToTableRequest, ReportRequest>
+    public class UploadRequestHandler : IRequestHandler<AddItemToTableRequest, ReportRequestEntity>
     {
-        public Task<ReportRequest> Handle(AddItemToTableRequest request, CancellationToken cancellationToken)
+        public async Task<ReportRequestEntity> Handle(AddItemToTableRequest request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return request.PayLoad;
         }
     }
 }

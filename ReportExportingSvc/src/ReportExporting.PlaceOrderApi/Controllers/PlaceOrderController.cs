@@ -34,6 +34,8 @@ public class PlaceOrderController : ControllerBase
         {
             Title = "Sample Report",
             Product = ReportProduct.Profile,
+            Status = ExportingProgress.Submitting,
+            EmailAddress = "bobpham.tdp@gmail.com",
             Urls = new[]
             {
                 new()

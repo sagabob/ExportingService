@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using ReportExporting.Core;
+using ReportExporting.PlaceOrderApi.Helpers;
 using ReportExporting.PlaceOrderApi.Requests;
-using ReportExporting.PlaceOrderApi.Services;
 
 namespace ReportExporting.PlaceOrderApi.Handlers;
 
@@ -17,8 +17,10 @@ public class ExportRequestHandler : IRequestHandler<PlaceOrderRequest, ReportReq
     public async Task<ReportRequest> Handle(PlaceOrderRequest request, CancellationToken cancellationToken)
     {
         var tableEntity =
-            await _mediator.Send(new AddItemToTableRequest { PayLoad = new ReportRequestEntity(request.PayLoad) },
+            await _mediator.Send(new AddItemToTableRequest { PayLoad = DataFactory.CreateTableEntity(request.PayLoad) },
                 cancellationToken);
+        request.PayLoad.Status = tableEntity.Status;
+        request.PayLoad.Guid = new Guid(tableEntity.PartitionKey);
         return request.PayLoad;
     }
 }

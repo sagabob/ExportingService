@@ -14,8 +14,9 @@ namespace ReportExporting.PlaceOrderApi.Handlers
         }
         public async Task<ReportRequestEntity> Handle(AddItemToTableRequest request, CancellationToken cancellationToken)
         {
-            await _tableTableStorageService.AddEntityAsync(request.PayLoad);
-            return request.PayLoad;
+            var updatedTableEntity = await _tableTableStorageService.AddEntityAsync(request.PayLoad);
+
+            return updatedTableEntity;
         }
     }
 }

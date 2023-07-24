@@ -1,4 +1,5 @@
 ﻿using Azure.Data.Tables;
+using ReportExporting.Core;
 
 namespace ReportExporting.PlaceOrderApi.Services;
 
@@ -23,7 +24,21 @@ public class TableStorageService : ITableStorageService
     public async Task<ReportRequestEntity> AddEntityAsync(ReportRequestEntity entity)
     {
         var tableClient = await GetTableClient();
-        var response = await tableClient.UpsertEntityAsync(entity);
+        try
+        {
+            var response = await tableClient.UpsertEntityAsync(entity);
+            if (response.Status == 204)
+            {
+                var updatedEntity =
+                    await tableClient.GetEntityAsync<ReportRequestEntity>(entity.PartitionKey, entity.RowKey);
+                return updatedEntity;
+            }
+        }
+        catch (Exception)
+        {
+            entity.Status = ExportingProgress.FailToPutOnStore;
+        }
+
         return entity;
     }
 

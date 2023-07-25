@@ -1,4 +1,3 @@
-using Azure.Data.Tables;
 using Azure.Identity;
 using Microsoft.Extensions.Azure;
 using ReportExporting.PlaceOrderApi.Services;
@@ -13,18 +12,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
-var tableStorageEndpoint = builder.Configuration.GetValue<string>("TableStorageServiceUrl");
-
-builder.Services.AddSingleton(x =>
-    new TableServiceClient(
-        new Uri(tableStorageEndpoint!),
-        new DefaultAzureCredential()));
 
 builder.Services.AddScoped<ITableStorageService, TableStorageService>();
 
 builder.Services.AddAzureClients(cfg =>
 {
     cfg.AddServiceBusClient(builder.Configuration.GetSection("ServiceBus"))
+        .WithCredential(new DefaultAzureCredential());
+
+    cfg.AddTableServiceClient(new Uri(builder.Configuration.GetValue<string>("TableStorageServiceUrl")!))
         .WithCredential(new DefaultAzureCredential());
 });
 

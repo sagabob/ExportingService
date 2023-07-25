@@ -16,11 +16,23 @@ public class ExportRequestHandler : IRequestHandler<PlaceOrderRequest, ReportReq
 
     public async Task<ReportRequest> Handle(PlaceOrderRequest request, CancellationToken cancellationToken)
     {
+        //place it on the Azure Table
         var tableEntity =
             await _mediator.Send(new AddItemToTableRequest { PayLoad = DataFactory.CreateTableEntity(request.PayLoad) },
                 cancellationToken);
         request.PayLoad.Status = tableEntity.Status;
         request.PayLoad.Guid = new Guid(tableEntity.PartitionKey);
+
+        //place it on the Queue for process
+        var outputQueueRequest = await _mediator.Send(new AddItemToQueueRequest() { PayLoad = request.PayLoad }, cancellationToken);
+
+        tableEntity =
+            await _mediator.Send(new AddItemToTableRequest { PayLoad = DataFactory.CreateTableEntity(outputQueueRequest) },
+                cancellationToken);
+
+        request.PayLoad.Status = tableEntity.Status;
+      
+
         return request.PayLoad;
     }
 }

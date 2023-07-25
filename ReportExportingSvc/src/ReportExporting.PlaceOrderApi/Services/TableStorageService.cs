@@ -43,4 +43,5 @@ public class TableStorageService : ITableStorageService
     {
         await TableClient.DeleteEntityAsync(category, id);
     }
+    
 }

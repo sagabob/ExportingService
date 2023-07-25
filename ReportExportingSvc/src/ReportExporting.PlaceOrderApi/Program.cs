@@ -1,10 +1,7 @@
 using Azure.Data.Tables;
 using Azure.Identity;
-using MassTransit;
-using ReportExporting.PlaceOrderApi.Services;
-using System.Reflection;
 using Microsoft.Extensions.Azure;
-using Microsoft.Extensions.Configuration;
+using ReportExporting.PlaceOrderApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +22,11 @@ builder.Services.AddSingleton(x =>
 
 builder.Services.AddScoped<ITableStorageService, TableStorageService>();
 
-
+builder.Services.AddAzureClients(cfg =>
+{
+    cfg.AddServiceBusClient(builder.Configuration.GetSection("ServiceBus"))
+        .WithCredential(new DefaultAzureCredential());
+});
 
 
 var app = builder.Build();

@@ -1,6 +1,10 @@
 using Azure.Data.Tables;
 using Azure.Identity;
+using MassTransit;
 using ReportExporting.PlaceOrderApi.Services;
+using System.Reflection;
+using Microsoft.Extensions.Azure;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +24,9 @@ builder.Services.AddSingleton(x =>
         new DefaultAzureCredential()));
 
 builder.Services.AddScoped<ITableStorageService, TableStorageService>();
+
+
+
 
 var app = builder.Build();
 

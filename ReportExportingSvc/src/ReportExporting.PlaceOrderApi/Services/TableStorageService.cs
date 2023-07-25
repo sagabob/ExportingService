@@ -5,32 +5,29 @@ namespace ReportExporting.PlaceOrderApi.Services;
 
 public class TableStorageService : ITableStorageService
 {
-    private readonly IConfiguration _configuration;
-
-    private readonly TableServiceClient _tableServiceClient;
-
     public TableStorageService(TableServiceClient tableServiceClient, IConfiguration configuration)
     {
-        _configuration = configuration;
-        _tableServiceClient = tableServiceClient;
+        TableClient = tableServiceClient.GetTableClient(configuration["TableName"]);
+        TableClient.CreateIfNotExists();
     }
+
+    public TableClient TableClient { get; }
+
 
     public async Task<ReportRequestEntity> GetEntityAsync(string category, string id)
     {
-        var tableClient = await GetTableClient();
-        return await tableClient.GetEntityAsync<ReportRequestEntity>(category, id);
+        return await TableClient.GetEntityAsync<ReportRequestEntity>(category, id);
     }
 
     public async Task<ReportRequestEntity> AddEntityAsync(ReportRequestEntity entity)
     {
-        var tableClient = await GetTableClient();
         try
         {
-            var response = await tableClient.UpsertEntityAsync(entity);
+            var response = await TableClient.UpsertEntityAsync(entity);
             if (response.Status == 204)
             {
                 var updatedEntity =
-                    await tableClient.GetEntityAsync<ReportRequestEntity>(entity.PartitionKey, entity.RowKey);
+                    await TableClient.GetEntityAsync<ReportRequestEntity>(entity.PartitionKey, entity.RowKey);
                 return updatedEntity;
             }
         }
@@ -44,14 +41,6 @@ public class TableStorageService : ITableStorageService
 
     public async Task DeleteEntityAsync(string category, string id)
     {
-        var tableClient = await GetTableClient();
-        await tableClient.DeleteEntityAsync(category, id);
-    }
-
-    private async Task<TableClient> GetTableClient()
-    {
-        var tableClient = _tableServiceClient.GetTableClient(_configuration["TableName"]);
-        await tableClient.CreateIfNotExistsAsync();
-        return tableClient;
+        await TableClient.DeleteEntityAsync(category, id);
     }
 }

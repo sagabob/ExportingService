@@ -26,6 +26,8 @@ public class ExportRequestHandler : IRequestHandler<PlaceOrderRequest, ReportReq
         //place it on the Queue for process
         var outputQueueRequest = await _mediator.Send(new AddItemToQueueRequest() { PayLoad = request.PayLoad }, cancellationToken);
 
+
+        //update the current status with Azure table
         tableEntity =
             await _mediator.Send(new AddItemToTableRequest { PayLoad = DataFactory.CreateTableEntity(outputQueueRequest) },
                 cancellationToken);

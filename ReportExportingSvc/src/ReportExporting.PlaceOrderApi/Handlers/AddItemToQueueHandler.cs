@@ -21,8 +21,7 @@ public class AddItemToQueueHandler : IRequestHandler<AddItemToQueueRequest, Repo
         request.PayLoad.Status = ExportingProgress.PlaceOnQueue;
         try
         {
-            var msg = JsonConvert.SerializeObject(request.PayLoad);
-            var message = new ServiceBusMessage(Encoding.UTF8.GetBytes(msg))
+            var message = new ServiceBusMessage(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(request.PayLoad)))
             {
                 ContentType = "application/json",
                 MessageId = request.PayLoad.Guid.ToString()

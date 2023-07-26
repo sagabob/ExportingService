@@ -22,10 +22,15 @@ public class AddItemToQueueHandler : IRequestHandler<AddItemToQueueRequest, Repo
         try
         {
             var msg = JsonConvert.SerializeObject(request.PayLoad);
-            var message = new ServiceBusMessage(Encoding.UTF8.GetBytes(msg));
+            var message = new ServiceBusMessage(Encoding.UTF8.GetBytes(msg))
+            {
+                ContentType = "application/json",
+                MessageId = request.PayLoad.Guid.ToString()
+            };
+
             await _serviceBusSender.SendMessageAsync(message, cancellationToken);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             request.PayLoad.Status = ExportingProgress.FailToPlaceOnQueue;
         }

@@ -10,10 +10,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//register mediator pattern library
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
-
-
-builder.Services.AddScoped<ITableStorageService, TableStorageService>();
 
 builder.Services.AddAzureClients(cfg =>
 {
@@ -24,6 +23,7 @@ builder.Services.AddAzureClients(cfg =>
         .WithCredential(new DefaultAzureCredential());
 });
 
+builder.Services.AddScoped<ITableStorageService, TableStorageService>();
 
 var app = builder.Build();
 

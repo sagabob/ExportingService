@@ -1,4 +1,7 @@
-﻿using Azure.Messaging.ServiceBus;
+﻿using System.Text;
+using Azure.Messaging.ServiceBus;
+using Newtonsoft.Json;
+using ReportExporting.Core;
 
 namespace ReportExporting.ProcessOrderApi.Handlers;
 
@@ -22,7 +25,6 @@ public class MessageHandler
 
     public async Task Register()
     {
-
         _processor.ProcessMessageAsync += ReceiveMessageHandler;
         _processor.ProcessErrorAsync += ErrorHandler;
 
@@ -31,11 +33,25 @@ public class MessageHandler
 
     private static async Task ReceiveMessageHandler(ProcessMessageEventArgs args)
     {
-        var body = args.Message.Body.ToString();
-        Console.WriteLine(body);
+        try
+        {
+            var messageBody = Encoding.UTF8.GetString(args.Message.Body);
+            var request = JsonConvert.DeserializeObject<ReportRequest>(messageBody);
 
-        // we can evaluate application logic and use that to determine how to settle the message.
-        await args.CompleteMessageAsync(args.Message);
+            if (request != null)
+
+        }
+        catch (Exception e)
+        {
+        }
+        finally
+        {
+            // we can evaluate application logic and use that to determine how to settle the message.
+            await args.CompleteMessageAsync(args.Message);
+        }
+        
+
+        
     }
 
     private static Task ErrorHandler(ProcessErrorEventArgs args)

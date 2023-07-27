@@ -1,5 +1,6 @@
 using Azure.Identity;
 using Microsoft.Extensions.Azure;
+using ReportExporting.ExportApi.Generators;
 using ReportExporting.ProcessOrderApi.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,7 +21,10 @@ builder.Services.AddAzureClients(cfg =>
         .WithCredential(new DefaultAzureCredential());
 });
 
-builder.Services.AddSingleton<MessageHandler>();
+builder.Services.AddScoped<PdfReportGenerator>();
+builder.Services.AddScoped<WordReportGenerator>();
+builder.Services.AddScoped<IReportGeneratorService, ReportGeneratorFactory>();
+builder.Services.AddScoped<MessageHandler>();
 
 var app = builder.Build();
 

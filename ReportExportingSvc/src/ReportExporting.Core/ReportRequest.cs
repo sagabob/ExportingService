@@ -2,6 +2,7 @@
 
 public class ReportRequest
 {
+    public string FileName { get; set; }
     public ReportUrl[] Urls { get; set; }
     public string EmailAddress { get; set; }
     public Guid? Guid { get; set; }

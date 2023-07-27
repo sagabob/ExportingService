@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReportExporting.PlaceOrderA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportExporting.ProcessOrderApi", "src\ReportExporting.ProcessOrderApi\ReportExporting.ProcessOrderApi.csproj", "{F8AA633C-F316-4BBE-8C8C-B4ED012EBD8F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportExporting.ExportApi", "src\ReportExporting.ExportApi\ReportExporting.ExportApi.csproj", "{6DDD6F29-CC91-4B46-B5F0-8A7EA976F5D1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{F8AA633C-F316-4BBE-8C8C-B4ED012EBD8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8AA633C-F316-4BBE-8C8C-B4ED012EBD8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8AA633C-F316-4BBE-8C8C-B4ED012EBD8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DDD6F29-CC91-4B46-B5F0-8A7EA976F5D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DDD6F29-CC91-4B46-B5F0-8A7EA976F5D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DDD6F29-CC91-4B46-B5F0-8A7EA976F5D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DDD6F29-CC91-4B46-B5F0-8A7EA976F5D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +52,7 @@ Global
 		{1F2439E8-8F27-4CB2-941B-960DADAB5C82} = {10CE345D-EE25-4C03-A850-262BFC2E0333}
 		{EBBDE46A-CCB7-4DAE-A9E2-B1B0E0FD7C9A} = {CD4B171E-11C4-4BEC-9B29-9118441D601A}
 		{F8AA633C-F316-4BBE-8C8C-B4ED012EBD8F} = {10CE345D-EE25-4C03-A850-262BFC2E0333}
+		{6DDD6F29-CC91-4B46-B5F0-8A7EA976F5D1} = {10CE345D-EE25-4C03-A850-262BFC2E0333}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D4F27B8D-FDCB-4BB5-BD1E-41B4DF807685}

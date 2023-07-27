@@ -8,5 +8,9 @@ public enum ReportFormat
 
 public enum ReportProduct
 {
-    Profile, Atlas, Forecast, Housing
+    Profile,
+    Atlas,
+    Economy,
+    Forecast,
+    Housing
 }

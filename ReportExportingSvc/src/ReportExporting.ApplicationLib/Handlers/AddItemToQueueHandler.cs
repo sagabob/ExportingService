@@ -10,17 +10,21 @@ namespace ReportExporting.ApplicationLib.Handlers;
 
 public class AddItemToQueueHandler : IRequestHandler<AddItemToQueueRequest, ReportRequestObject>
 {
-    private readonly ServiceBusSender _serviceBusSender;
+    private readonly IConfiguration _configuration;
+    private readonly ServiceBusClient _serviceBusClient;
 
     public AddItemToQueueHandler(ServiceBusClient serviceBusClient, IConfiguration configuration)
     {
-        _serviceBusSender = serviceBusClient.CreateSender(configuration["QueueName"]);
+        _serviceBusClient = serviceBusClient;
+        _configuration = configuration;
     }
 
     public async Task<ReportRequestObject> Handle(AddItemToQueueRequest request, CancellationToken cancellationToken)
     {
         if (request.PayLoad.Status == ExportingStatus.Failure)
             return request.PayLoad;
+
+        var serviceBusSender = _serviceBusClient.CreateSender(_configuration[request.QueueType.ToString()]);
 
         request.PayLoad.Progress.Add(ExportingProgress.PlaceOnQueue);
         try
@@ -31,7 +35,7 @@ public class AddItemToQueueHandler : IRequestHandler<AddItemToQueueRequest, Repo
                 MessageId = request.PayLoad.Id.ToString()
             };
 
-            await _serviceBusSender.SendMessageAsync(message, cancellationToken);
+            await serviceBusSender.SendMessageAsync(message, cancellationToken);
         }
         catch (Exception)
         {

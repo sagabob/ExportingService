@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ReportExporting.ApplicationLib\ReportExporting.ApplicationLib.csproj" />
     <ProjectReference Include="..\ReportExporting.Core\ReportExporting.Core.csproj" />
   </ItemGroup>
 

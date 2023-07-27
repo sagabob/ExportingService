@@ -4,7 +4,7 @@ using ReportExporting.ExportApi.Generators;
 
 namespace ReportExporting.ProcessOrderApi.Handlers
 {
-    public class HandleExportRequest
+    public class HandleExportRequest: IHandleExportRequest
     {
         private readonly IReportGeneratorService _reportGeneratorService;
 

@@ -1,15 +1,15 @@
-﻿using ReportExporting.Core;
+﻿using ReportExporting.ApplicationLib.Entities;
 
 namespace ReportExporting.ExportApi.Models;
 
 public class ExportObjectFactory
 {
-    public static ExportObject CreateExportObject(ReportRequest reportRequest)
+    public static ExportObject CreateExportObject(ReportRequestObject reportRequest)
     {
         return new ExportObject
         {
             Urls = reportRequest.Urls,
-            Id = reportRequest.Guid.ToString() ?? string.Empty,
+            Id = reportRequest.Id.ToString(),
             Product = reportRequest.Product,
             Format = reportRequest.Format
         };

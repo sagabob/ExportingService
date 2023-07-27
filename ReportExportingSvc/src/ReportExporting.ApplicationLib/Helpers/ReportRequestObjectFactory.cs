@@ -5,7 +5,7 @@ namespace ReportExporting.ApplicationLib.Helpers;
 
 public class ReportRequestObjectFactory
 {
-    public ReportRequestObject CreateFromReportRequest(ReportRequest request)
+    public static ReportRequestObject CreateFromReportRequest(ReportRequest request)
     {
         return new ReportRequestObject
         {

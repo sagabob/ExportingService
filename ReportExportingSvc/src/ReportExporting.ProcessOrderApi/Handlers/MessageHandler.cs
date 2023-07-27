@@ -7,10 +7,13 @@ namespace ReportExporting.ProcessOrderApi.Handlers;
 
 public class MessageHandler
 {
+    private readonly IHandleExportRequest _handleExportRequest;
     private readonly ServiceBusProcessor _processor;
 
-    public MessageHandler(ServiceBusClient serviceBusClient, IConfiguration configuration)
+    public MessageHandler(ServiceBusClient serviceBusClient, IConfiguration configuration, IHandleExportRequest handleExportRequest)
     {
+        _handleExportRequest = handleExportRequest;
+        
         var options = new ServiceBusProcessorOptions
         {
             // By default after the message handler returns, the processor will complete the message
@@ -31,7 +34,7 @@ public class MessageHandler
         await _processor.StartProcessingAsync();
     }
 
-    private static async Task ReceiveMessageHandler(ProcessMessageEventArgs args)
+    private async Task ReceiveMessageHandler(ProcessMessageEventArgs args)
     {
         try
         {
@@ -39,9 +42,12 @@ public class MessageHandler
             var request = JsonConvert.DeserializeObject<ReportRequestObject>(messageBody);
 
             if (request != null)
+                _handleExportRequest.ProcessExportRequest(request);
         }
         catch (Exception)
         {
+            // ignored
+            // will handle it later
         }
         finally
         {

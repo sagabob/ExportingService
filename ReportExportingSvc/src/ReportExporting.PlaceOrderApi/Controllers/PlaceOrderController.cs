@@ -1,8 +1,11 @@
 ﻿using System.Net.Mime;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using ReportExporting.ApplicationLib.Entities;
+using ReportExporting.ApplicationLib.Helpers;
+using ReportExporting.ApplicationLib.Messages;
 using ReportExporting.Core;
-using ReportExporting.PlaceOrderApi.Requests;
+using ReportExporting.PlaceOrderApi.Messages;
 
 namespace ReportExporting.PlaceOrderApi.Controllers;
 
@@ -21,10 +24,18 @@ public class PlaceOrderController : ControllerBase
     [Consumes(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<ReportRequest>> PlaceExportOrder(ReportRequest request)
+    public async Task<ActionResult<ExportingReportResponse>> PlaceExportOrder(ReportRequest request)
     {
-        var result = await _mediator.Send(new PlaceOrderRequest { PayLoad = request });
-        return Ok(result);
+        var result = await _mediator.Send(new PlaceOrderRequest
+            { PayLoad = ReportRequestObjectFactory.CreateFromReportRequest(request) });
+
+
+        if (result.Status == ExportingStatus.Failure)
+            return Forbid("Fail to process the order");
+
+        var successResult = new ExportingReportResponse { OrderId = result.Id.ToString(), Status = "Order submitted" };
+
+        return Ok(successResult);
     }
 
     [HttpGet("test", Name = "Test")]
@@ -34,7 +45,6 @@ public class PlaceOrderController : ControllerBase
         {
             Title = "Sample Report",
             Product = ReportProduct.Profile,
-            Status = ExportingProgress.Submitting,
             EmailAddress = "bobpham.tdp@gmail.com",
             Urls = new[]
             {

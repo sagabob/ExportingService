@@ -2,13 +2,13 @@
 using ReportExporting.Core;
 using ReportExporting.ExportApi.Generators;
 
-namespace ReportExporting.ProcessOrderApi.Handlers
+namespace ReportExporting.ExportApi.Handlers
 {
-    public class HandleExportRequest: IHandleExportRequest
+    public class ExportRequestHandler: IExportRequestHandler
     {
         private readonly IReportGeneratorService _reportGeneratorService;
 
-        public HandleExportRequest (IReportGeneratorService reportGeneratorService )
+        public ExportRequestHandler (IReportGeneratorService reportGeneratorService )
         {
             _reportGeneratorService = reportGeneratorService;
         }
@@ -34,10 +34,7 @@ namespace ReportExporting.ProcessOrderApi.Handlers
                     : ExportingProgress.FailExportingWord);
                 request.Status = ExportingStatus.Failure;
             }
-            finally
-            {
-
-            }
+           
 
             return exportedFileStream;
 

@@ -1,12 +1,10 @@
-﻿using MediatR;
-using ReportExporting.ApplicationLib.Entities;
+﻿using ReportExporting.ApplicationLib.Entities;
 using ReportExporting.ApplicationLib.Helpers;
-using ReportExporting.ApplicationLib.Messages;
 using ReportExporting.ApplicationLib.Services;
 
 namespace ReportExporting.ApplicationLib.Handlers;
 
-public class UpsertItemToTableHandler : IRequestHandler<UpsertItemToTableRequest, ReportRequestObject>
+public class UpsertItemToTableHandler : IUpsertItemToTableHandler
 {
     private readonly ITableStorageService _tableTableStorageService;
 
@@ -15,28 +13,28 @@ public class UpsertItemToTableHandler : IRequestHandler<UpsertItemToTableRequest
         _tableTableStorageService = tableTableStorageService;
     }
 
-    public async Task<ReportRequestObject> Handle(UpsertItemToTableRequest request, CancellationToken cancellationToken)
+    public async Task<ReportRequestObject> Handle(ReportRequestObject request)
     {
-        request.PayLoad.Progress.Add(ExportingProgress.UpsertToStore);
+        request.Progress.Add(ExportingProgress.UpsertToStore);
         try
         {
             var response =
                 await _tableTableStorageService.AddEntityAsync(
-                    ReportRequestTableEntityFactory.CreateTableEntity(request.PayLoad));
+                    ReportRequestTableEntityFactory.CreateTableEntity(request));
 
             if (response.Status != 204)
             {
-                request.PayLoad.Progress.Add(ExportingProgress.FailToUpsertToStore);
-                request.PayLoad.Status = ExportingStatus.Failure;
+                request.Progress.Add(ExportingProgress.FailToUpsertToStore);
+                request.Status = ExportingStatus.Failure;
             }
         }
         catch (Exception)
         {
-            request.PayLoad.Progress.Add(ExportingProgress.FailToUpsertToStore);
-            request.PayLoad.Status = ExportingStatus.Failure;
+            request.Progress.Add(ExportingProgress.FailToUpsertToStore);
+            request.Status = ExportingStatus.Failure;
         }
 
 
-        return request.PayLoad;
+        return request;
     }
 }

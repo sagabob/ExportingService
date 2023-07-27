@@ -7,12 +7,13 @@ public enum ExportingProgress
     FailToUpsertToStore,
     PlaceOnQueue,
     FailToPlaceOnQueue,
+    ItemReceivedFromQueue,
     OnDeadLetterQueue,
-    ExportingPdf,
     FailExportingPdf,
     ExportedPdf,
-    ExportingWord,
     FailExportingWord,
     ExportedWord,
+    UploadFileToBlob,
+    FailUploadingFileToBlob,
     Complete
 }

@@ -1,14 +1,12 @@
 ﻿using System.Text;
 using Azure.Messaging.ServiceBus;
-using MediatR;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using ReportExporting.ApplicationLib.Entities;
-using ReportExporting.ApplicationLib.Messages;
 
 namespace ReportExporting.ApplicationLib.Handlers;
 
-public class AddItemToQueueHandler : IRequestHandler<AddItemToQueueRequest, ReportRequestObject>
+public class AddItemToQueueHandler : IAddItemToQueueHandler
 {
     private readonly IConfiguration _configuration;
     private readonly ServiceBusClient _serviceBusClient;
@@ -19,30 +17,30 @@ public class AddItemToQueueHandler : IRequestHandler<AddItemToQueueRequest, Repo
         _configuration = configuration;
     }
 
-    public async Task<ReportRequestObject> Handle(AddItemToQueueRequest request, CancellationToken cancellationToken)
+    public async Task<ReportRequestObject> Handle(ReportRequestObject request, QueueType queueType)
     {
-        if (request.PayLoad.Status == ExportingStatus.Failure)
-            return request.PayLoad;
+        if (request.Status == ExportingStatus.Failure)
+            return request;
 
-        var serviceBusSender = _serviceBusClient.CreateSender(_configuration[request.QueueType.ToString()]);
+        var serviceBusSender = _serviceBusClient.CreateSender(_configuration[queueType.ToString()]);
 
-        request.PayLoad.Progress.Add(ExportingProgress.PlaceOnQueue);
+        request.Progress.Add(ExportingProgress.PlaceOnQueue);
         try
         {
-            var message = new ServiceBusMessage(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(request.PayLoad)))
+            var message = new ServiceBusMessage(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(request)))
             {
                 ContentType = "application/json",
-                MessageId = request.PayLoad.Id.ToString()
+                MessageId = request.Id.ToString()
             };
 
-            await serviceBusSender.SendMessageAsync(message, cancellationToken);
+            await serviceBusSender.SendMessageAsync(message);
         }
         catch (Exception)
         {
-            request.PayLoad.Status = ExportingStatus.Failure;
-            request.PayLoad.Progress.Add(ExportingProgress.FailToPlaceOnQueue);
+            request.Status = ExportingStatus.Failure;
+            request.Progress.Add(ExportingProgress.FailToPlaceOnQueue);
         }
 
-        return request.PayLoad;
+        return request;
     }
 }

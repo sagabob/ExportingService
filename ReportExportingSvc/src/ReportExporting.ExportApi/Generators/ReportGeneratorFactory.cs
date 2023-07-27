@@ -1,4 +1,5 @@
-﻿using ReportExporting.Core;
+﻿using ReportExporting.ApplicationLib.Entities;
+using ReportExporting.Core;
 using ReportExporting.ExportApi.Models;
 
 namespace ReportExporting.ExportApi.Generators;
@@ -14,7 +15,7 @@ public class ReportGeneratorFactory: IReportGeneratorService
         _wordReportGenerator = wordReportGenerator;
     }
 
-    public async Task<Stream> GenerateReport(ReportRequest request)
+    public async Task<Stream?> GenerateReport(ReportRequestObject request)
     {
         var exportConfiguration = ExportConfigurationFactory.GetConfiguration(request);
         var exportObject = ExportObjectFactory.CreateExportObject(request);

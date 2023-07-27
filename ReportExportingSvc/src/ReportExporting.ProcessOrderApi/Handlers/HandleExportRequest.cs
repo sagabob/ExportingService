@@ -13,13 +13,33 @@ namespace ReportExporting.ProcessOrderApi.Handlers
             _reportGeneratorService = reportGeneratorService;
         }
 
-        public void ProcessExportRequest(ReportRequestObject request)
+        public async Task<Stream?> ProcessExportRequest(ReportRequestObject request)
         {
-            var output = _reportGeneratorService.GenerateReport(request);
+            Stream? exportedFileStream = null;
+            try
+            {
+                exportedFileStream = await _reportGeneratorService.GenerateReport(request);
 
-            request.FileName =
-                $"{request.Product}-{request.Id}.{(request.Format == ReportFormat.Pdf? "pdf": "docx")}";
+                request.FileName =
+                    $"{request.Product}-{request.Id}.{(request.Format == ReportFormat.Pdf ? "pdf" : "docx")}";
 
+                request.Progress.Add(request.Format == ReportFormat.Pdf
+                    ? ExportingProgress.ExportedPdf
+                    : ExportingProgress.ExportedWord);
+            }
+            catch (Exception)
+            {
+                request.Progress.Add(request.Format == ReportFormat.Pdf
+                    ? ExportingProgress.FailExportingPdf
+                    : ExportingProgress.FailExportingWord);
+                request.Status = ExportingStatus.Failure;
+            }
+            finally
+            {
+
+            }
+
+            return exportedFileStream;
 
         }
     }

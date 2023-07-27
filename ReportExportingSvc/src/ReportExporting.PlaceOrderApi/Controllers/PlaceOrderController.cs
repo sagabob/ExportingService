@@ -61,7 +61,7 @@ public class PlaceOrderController : ControllerBase
             }
         };
 
-        var result = await _mediator.Send(new PlaceOrderRequest { PayLoad = request });
+        var result = await _mediator.Send(new PlaceOrderRequest { PayLoad = ReportRequestObjectFactory.CreateFromReportRequest(request) });
 
         return Ok(result);
     }

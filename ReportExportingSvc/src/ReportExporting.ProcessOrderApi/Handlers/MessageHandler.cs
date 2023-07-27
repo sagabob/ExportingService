@@ -42,7 +42,7 @@ public class MessageHandler
             var request = JsonConvert.DeserializeObject<ReportRequestObject>(messageBody);
 
             if (request != null)
-                _handleExportRequest.ProcessExportRequest(request);
+                await _handleExportRequest.ProcessExportRequest(request);
         }
         catch (Exception)
         {

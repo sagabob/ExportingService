@@ -10,7 +10,7 @@ public class PdfReportGenerator : IReportGenerator
         License.LicenseKey = configuration["IronPdfLicense"];
     }
 
-    public async Task<Stream> GenerateReportAsync(ExportObject exportObject, ExportConfiguration config)
+    public async Task<Stream?> GenerateReportAsync(ExportObject exportObject, ExportConfiguration config)
     {
         var renderer = new ChromePdfRenderer();
         renderer.RenderingOptions.WaitFor.RenderDelay(5000);

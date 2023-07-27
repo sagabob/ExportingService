@@ -17,7 +17,7 @@ public class WordReportGenerator : IReportGenerator
         _pdfToWordConverter = new PdfFocus();
     }
 
-    public async Task<Stream> GenerateReportAsync(ExportObject exportObject, ExportConfiguration config)
+    public async Task<Stream?> GenerateReportAsync(ExportObject exportObject, ExportConfiguration config)
     {
         var pdfStream = await _pdfReportGenerator.GenerateReportAsync(exportObject, config);
 

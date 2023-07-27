@@ -1,11 +1,12 @@
 ﻿using MediatR;
+using ReportExporting.ApplicationLib.Entities;
+using ReportExporting.ApplicationLib.Helpers;
+using ReportExporting.ApplicationLib.Messages;
 using ReportExporting.Core;
-using ReportExporting.PlaceOrderApi.Helpers;
-using ReportExporting.PlaceOrderApi.Requests;
 
 namespace ReportExporting.PlaceOrderApi.Handlers;
 
-public class ExportRequestHandler : IRequestHandler<PlaceOrderRequest, ReportRequest>
+public class ExportRequestHandler : IRequestHandler<PlaceOrderRequest, ReportRequestObject>
 {
     private readonly IMediator _mediator;
 
@@ -14,14 +15,16 @@ public class ExportRequestHandler : IRequestHandler<PlaceOrderRequest, ReportReq
         _mediator = mediator;
     }
 
-    public async Task<ReportRequest> Handle(PlaceOrderRequest request, CancellationToken cancellationToken)
+    public async Task<ReportRequestObject> Handle(PlaceOrderRequest request, CancellationToken cancellationToken)
     {
+        request.PayLoad.Progress.Add(Ex);
+
         //place it on the Azure Table
         var tableEntity =
-            await _mediator.Send(new AddItemToTableRequest { PayLoad = DataFactory.CreateTableEntity(request.PayLoad) },
+            await _mediator.Send(new UpsertItemToTableRequest { PayLoad = ReportRequestTableEntityFactory.CreateTableEntity(request.PayLoad) },
                 cancellationToken);
-        request.PayLoad.Status = tableEntity.Status;
-        request.PayLoad.Guid = new Guid(tableEntity.PartitionKey);
+       
+        
 
         //place it on the Queue for process
         var outputQueueRequest = await _mediator.Send(new AddItemToQueueRequest() { PayLoad = request.PayLoad }, cancellationToken);

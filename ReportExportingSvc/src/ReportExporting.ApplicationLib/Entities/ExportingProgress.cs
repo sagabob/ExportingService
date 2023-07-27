@@ -1,10 +1,10 @@
-﻿namespace ReportExporting.Core;
+﻿namespace ReportExporting.ApplicationLib.Entities;
 
 public enum ExportingProgress
 {
     Submitting,
-    PutOnStore,
-    FailToPutOnStore,
+    UpsertToStore,
+    FailToUpsertToStore,
     PlaceOnQueue,
     FailToPlaceOnQueue,
     OnDeadLetterQueue,

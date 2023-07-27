@@ -4,7 +4,7 @@ using ReportExporting.ExportApi.Handlers;
 
 namespace ReportExporting.ProcessOrderApi.Handlers;
 
-public class HandleExportProcess
+public class HandleExportProcess: IHandleExportProcess
 {
     private readonly IExportRequestHandler _exportRequestHandler;
     private readonly IUploadItemToBlobHandler _uploadItemToBlobHandler;

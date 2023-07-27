@@ -1,6 +1,9 @@
-﻿namespace ReportExporting.ProcessOrderApi.Handlers
+﻿using ReportExporting.ApplicationLib.Entities;
+
+namespace ReportExporting.ProcessOrderApi.Handlers
 {
-    public class IHandleExportProcess
+    public interface IHandleExportProcess
     {
+        Task<ReportRequestObject> Handle(ReportRequestObject request);
     }
 }

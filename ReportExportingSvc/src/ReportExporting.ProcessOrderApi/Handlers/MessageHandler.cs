@@ -8,12 +8,12 @@ namespace ReportExporting.ProcessOrderApi.Handlers;
 
 public class MessageHandler
 {
-    private readonly IExportRequestHandler _handleExportRequest;
+    private readonly IHandleExportProcess _handleExportProcess;
     private readonly ServiceBusProcessor _processor;
 
-    public MessageHandler(ServiceBusClient serviceBusClient, IConfiguration configuration, IExportRequestHandler handleExportRequest)
+    public MessageHandler(ServiceBusClient serviceBusClient, IConfiguration configuration, IHandleExportProcess handleExportProcess)
     {
-        _handleExportRequest = handleExportRequest;
+        _handleExportProcess = handleExportProcess;
         
         var options = new ServiceBusProcessorOptions
         {
@@ -45,7 +45,7 @@ public class MessageHandler
             if (request != null)
             {
                 request.Progress.Add(ExportingProgress.ItemReceivedFromQueue);
-                await _handleExportRequest.ProcessExportRequest(request);
+                await _handleExportProcess.Handle(request);
             }
                
         }

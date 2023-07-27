@@ -1,4 +1,5 @@
-﻿using ReportExporting.Core;
+﻿using ReportExporting.ApplicationLib.Entities;
+using ReportExporting.Core;
 using ReportExporting.ExportApi.Generators;
 
 namespace ReportExporting.ProcessOrderApi.Handlers
@@ -12,12 +13,12 @@ namespace ReportExporting.ProcessOrderApi.Handlers
             _reportGeneratorService = reportGeneratorService;
         }
 
-        public void ProcessExportRequest(ReportRequest request)
+        public void ProcessExportRequest(ReportRequestObject request)
         {
             var output = _reportGeneratorService.GenerateReport(request);
 
-            var fileName =
-                $"{request.Product}-{request.Guid}.{(request.Format == ReportFormat.Pdf? "pdf": "docx")}";
+            request.FileName =
+                $"{request.Product}-{request.Id}.{(request.Format == ReportFormat.Pdf? "pdf": "docx")}";
 
 
         }

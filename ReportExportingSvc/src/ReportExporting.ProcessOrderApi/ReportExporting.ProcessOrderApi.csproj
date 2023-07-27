@@ -12,7 +12,7 @@
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.15.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.9" />
     <PackageReference Include="Microsoft.Extensions.Azure" Version="1.6.3" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ReportExporting.ApplicationLib\ReportExporting.ApplicationLib.csproj" />
     <ProjectReference Include="..\ReportExporting.Core\ReportExporting.Core.csproj" />
     <ProjectReference Include="..\ReportExporting.ExportApi\ReportExporting.ExportApi.csproj" />
   </ItemGroup>

@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Azure.Messaging.ServiceBus;
 using Newtonsoft.Json;
-using ReportExporting.Core;
+using ReportExporting.ApplicationLib.Entities;
 
 namespace ReportExporting.ProcessOrderApi.Handlers;
 
@@ -36,12 +36,11 @@ public class MessageHandler
         try
         {
             var messageBody = Encoding.UTF8.GetString(args.Message.Body);
-            var request = JsonConvert.DeserializeObject<ReportRequest>(messageBody);
+            var request = JsonConvert.DeserializeObject<ReportRequestObject>(messageBody);
 
             if (request != null)
-
         }
-        catch (Exception e)
+        catch (Exception)
         {
         }
         finally
@@ -49,9 +48,6 @@ public class MessageHandler
             // we can evaluate application logic and use that to determine how to settle the message.
             await args.CompleteMessageAsync(args.Message);
         }
-        
-
-        
     }
 
     private static Task ErrorHandler(ProcessErrorEventArgs args)

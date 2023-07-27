@@ -19,6 +19,9 @@ public class AddItemToQueueHandler : IRequestHandler<AddItemToQueueRequest, Repo
 
     public async Task<ReportRequestObject> Handle(AddItemToQueueRequest request, CancellationToken cancellationToken)
     {
+        if (request.PayLoad.Status == ExportingStatus.Failure)
+            return request.PayLoad;
+
         request.PayLoad.Progress.Add(ExportingProgress.PlaceOnQueue);
         try
         {

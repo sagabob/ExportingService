@@ -3,7 +3,7 @@ using ReportExporting.ApplicationLib.Services;
 
 namespace ReportExporting.ApplicationLib.Handlers;
 
-public class UploadItemToBlobHandler: IUploadItemToBlobHandler
+public class UploadItemToBlobHandler : IUploadItemToBlobHandler
 {
     private readonly IBlobStorageService _blobStorageService;
 
@@ -14,6 +14,9 @@ public class UploadItemToBlobHandler: IUploadItemToBlobHandler
 
     public async Task<ReportRequestObject> Handle(Stream fileStream, ReportRequestObject request)
     {
+        if (request.Status == ExportingStatus.Failure)
+            return request;
+
         try
         {
             var response = await _blobStorageService.UploadExportFileAync(fileStream, request.FileName);

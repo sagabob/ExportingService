@@ -19,8 +19,19 @@ public class HandleExportProcess
         _upsertItemToTableHandler = upsertItemToTableHandler;
     }
 
-    public void Handle(ReportRequestObject request)
+    public async Task<ReportRequestObject> Handle(ReportRequestObject request)
     {
+        // do export 
+        var exportFileStream = await _exportRequestHandler.ProcessExportRequest(request);
 
+        // update record
+        var result = await _upsertItemToTableHandler.Handle(request);
+
+        // upload file
+        if (exportFileStream != null) await _uploadItemToBlobHandler.Handle(exportFileStream, result);
+
+        result = await _upsertItemToTableHandler.Handle(result);
+
+        return result;
     }
 }

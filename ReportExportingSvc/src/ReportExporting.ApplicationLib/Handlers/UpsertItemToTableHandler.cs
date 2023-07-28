@@ -18,9 +18,9 @@ public class UpsertItemToTableHandler : IUpsertItemToTableHandler
         request.Progress.Add(ExportingProgress.UpsertToStore);
         try
         {
+            var tableEntity = ReportRequestTableEntityFactory.CreateTableEntity(request);
             var response =
-                await _tableTableStorageService.AddEntityAsync(
-                    ReportRequestTableEntityFactory.CreateTableEntity(request));
+                await _tableTableStorageService.AddEntityAsync(tableEntity);
 
             if (response.Status != 204)
             {

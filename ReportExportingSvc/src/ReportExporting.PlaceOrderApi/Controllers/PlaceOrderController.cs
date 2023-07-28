@@ -38,7 +38,7 @@ public class PlaceOrderController : ControllerBase
         return Ok(successResult);
     }
 
-    [HttpGet( Name = "TestPdfExport")]
+    [HttpGet("TestPdfExport", Name = "TestPdfExport")]
     public async Task<ActionResult<ExportingReportResponse>> TestPdfExport()
     {
         var request = new ReportRequest
@@ -74,7 +74,7 @@ public class PlaceOrderController : ControllerBase
     }
 
 
-    [HttpGet(Name = "TestWordExport")]
+    [HttpGet("TestWordExport",Name = "TestWordExport")]
     public async Task<ActionResult<ExportingReportResponse>> TestWordExport()
     {
         var request = new ReportRequest

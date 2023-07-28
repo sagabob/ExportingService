@@ -21,6 +21,7 @@ public class ExportRequestHandler : IRequestHandler<PlaceOrderRequest, ReportReq
     public async Task<ReportRequestObject> Handle(PlaceOrderRequest request, CancellationToken cancellationToken)
     {
         request.PayLoad.Progress.Add(ExportingProgress.Submitting);
+        request.PayLoad.Status = ExportingStatus.Ongoing;
 
         //place it on the Azure Table
         var result = await _upsertItemToTableHandler.Handle(request.PayLoad);

@@ -4,7 +4,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ReportExporting.ApplicationLib.Messages;
 using ReportExporting.PlaceOrderApi.Controllers;
-
 using Xunit;
 
 namespace ReportExporting.PlaceOrderApiTests;

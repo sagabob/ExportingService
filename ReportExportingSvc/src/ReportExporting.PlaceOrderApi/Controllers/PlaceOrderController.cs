@@ -38,14 +38,51 @@ public class PlaceOrderController : ControllerBase
         return Ok(successResult);
     }
 
-    [HttpGet("test", Name = "Test")]
-    public async Task<ActionResult<ExportingReportResponse>> Test()
+    [HttpGet( Name = "TestPdfExport")]
+    public async Task<ActionResult<ExportingReportResponse>> TestPdfExport()
     {
         var request = new ReportRequest
         {
             Title = "Sample Report",
             Product = ReportProduct.Profile,
             EmailAddress = "bobpham.tdp@gmail.com",
+            Format = ReportFormat.Pdf,
+            Urls = new[]
+            {
+                new()
+                {
+                    Url = "https://profile.id.com.au/adelaide/ancestry",
+                    Title = "Ancestry"
+                },
+                new ReportUrl
+                {
+                    Url = "https://profile.id.com.au/adelaide/industries",
+                    Title = "Industries"
+                }
+            }
+        };
+
+        var result = await _mediator.Send(new PlaceOrderRequest
+            { PayLoad = ReportRequestObjectFactory.CreateFromReportRequest(request) });
+
+        if (result.Status == ExportingStatus.Failure)
+            return Forbid("Fail to process the order");
+
+        var successResult = new ExportingReportResponse { OrderId = result.Id.ToString(), Status = "Order submitted" };
+
+        return Ok(successResult);
+    }
+
+
+    [HttpGet(Name = "TestWordExport")]
+    public async Task<ActionResult<ExportingReportResponse>> TestWordExport()
+    {
+        var request = new ReportRequest
+        {
+            Title = "Sample Report",
+            Product = ReportProduct.Profile,
+            EmailAddress = "bobpham.tdp@gmail.com",
+            Format = ReportFormat.Word,
             Urls = new[]
             {
                 new()

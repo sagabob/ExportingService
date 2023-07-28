@@ -1,4 +1,5 @@
 ﻿using ReportExporting.ApplicationLib.Entities;
+using ReportExporting.Core;
 
 namespace ReportExporting.ApplicationLib.Helpers;
 
@@ -12,7 +13,7 @@ public class ReportRequestTableEntityFactory
             EmailAddress = request.EmailAddress,
             PartitionKey = request.Id.ToString(),
             RowKey = request.Id.ToString(),
-            Status = request.Progress.ToString(),
+            Status = Enum.GetName(typeof(ReportFormat), request.Progress),
             FullProgress = request.GetFullProgress()
         };
     }

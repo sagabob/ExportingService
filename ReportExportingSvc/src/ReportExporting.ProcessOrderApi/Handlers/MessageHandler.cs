@@ -2,7 +2,6 @@
 using Azure.Messaging.ServiceBus;
 using Newtonsoft.Json;
 using ReportExporting.ApplicationLib.Entities;
-using ReportExporting.ExportApi.Handlers;
 
 namespace ReportExporting.ProcessOrderApi.Handlers;
 
@@ -11,10 +10,11 @@ public class MessageHandler
     private readonly IHandleExportProcess _handleExportProcess;
     private readonly ServiceBusProcessor _processor;
 
-    public MessageHandler(ServiceBusClient serviceBusClient, IConfiguration configuration, IHandleExportProcess handleExportProcess)
+    public MessageHandler(ServiceBusClient serviceBusClient, IConfiguration configuration,
+        IHandleExportProcess handleExportProcess)
     {
         _handleExportProcess = handleExportProcess;
-        
+
         var options = new ServiceBusProcessorOptions
         {
             // By default after the message handler returns, the processor will complete the message
@@ -47,7 +47,6 @@ public class MessageHandler
                 request.Progress.Add(ExportingProgress.ItemReceivedFromQueue);
                 await _handleExportProcess.Handle(request);
             }
-               
         }
         catch (Exception)
         {

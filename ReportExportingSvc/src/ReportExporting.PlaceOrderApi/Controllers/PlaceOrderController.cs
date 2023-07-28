@@ -39,7 +39,7 @@ public class PlaceOrderController : ControllerBase
     }
 
     [HttpGet("test", Name = "Test")]
-    public async Task<IActionResult> Test()
+    public async Task<ActionResult<ExportingReportResponse>> Test()
     {
         var request = new ReportRequest
         {
@@ -61,8 +61,14 @@ public class PlaceOrderController : ControllerBase
             }
         };
 
-        var result = await _mediator.Send(new PlaceOrderRequest { PayLoad = ReportRequestObjectFactory.CreateFromReportRequest(request) });
+        var result = await _mediator.Send(new PlaceOrderRequest
+            { PayLoad = ReportRequestObjectFactory.CreateFromReportRequest(request) });
 
-        return Ok(result);
+        if (result.Status == ExportingStatus.Failure)
+            return Forbid("Fail to process the order");
+
+        var successResult = new ExportingReportResponse { OrderId = result.Id.ToString(), Status = "Order submitted" };
+
+        return Ok(successResult);
     }
 }

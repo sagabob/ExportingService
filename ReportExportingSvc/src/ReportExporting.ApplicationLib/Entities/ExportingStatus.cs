@@ -2,7 +2,7 @@
 
 public enum ExportingStatus
 {
-    Failure,
+    Ongoing,
     Success,
-    Ongoing
+    Failure
 }

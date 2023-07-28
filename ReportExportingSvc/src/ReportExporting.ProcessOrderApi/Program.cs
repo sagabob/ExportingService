@@ -1,6 +1,9 @@
 using Azure.Identity;
 using Microsoft.Extensions.Azure;
+using ReportExporting.ApplicationLib.Handlers;
+using ReportExporting.ApplicationLib.Services;
 using ReportExporting.ExportApi.Generators;
+using ReportExporting.ExportApi.Handlers;
 using ReportExporting.ProcessOrderApi.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,17 +22,29 @@ builder.Services.AddAzureClients(cfg =>
 
     cfg.AddTableServiceClient(new Uri(builder.Configuration.GetValue<string>("TableStorageServiceUrl")!))
         .WithCredential(new DefaultAzureCredential());
+
+    cfg.AddBlobServiceClient(new Uri(builder.Configuration.GetValue<string>("TableStorageServiceUrl")!))
+        .WithCredential(new DefaultAzureCredential());
 });
 
-builder.Services.AddScoped<PdfReportGenerator>();
-builder.Services.AddScoped<WordReportGenerator>();
-builder.Services.AddScoped<IReportGeneratorService, ReportGeneratorFactory>();
-builder.Services.AddScoped<MessageHandler>();
+builder.Services.AddSingleton<ITableStorageService, TableStorageService>();
+builder.Services.AddSingleton<IBlobStorageService, BlobStorageService>();
+
+builder.Services.AddSingleton<PdfReportGenerator>();
+builder.Services.AddSingleton<WordReportGenerator>();
+builder.Services.AddSingleton<IReportGeneratorService, ReportGeneratorFactory>();
+
+builder.Services.AddSingleton<IExportRequestHandler, ExportRequestHandler>();
+builder.Services.AddSingleton<IUpsertItemToTableHandler, UpsertItemToTableHandler>();
+builder.Services.AddSingleton<IAddItemToQueueHandler, AddItemToQueueHandler>();
+builder.Services.AddSingleton<IUploadItemToBlobHandler, UploadItemToBlobHandler>();
+
+builder.Services.AddSingleton<MessageHandler>();
 
 var app = builder.Build();
 
 
-app.Services.GetService<MessageHandler>()?.Register();
+//app.Services.GetService<MessageHandler>()?.Register();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

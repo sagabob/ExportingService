@@ -27,8 +27,9 @@ namespace ReportExporting.ExportApi.Handlers
                     ? ExportingProgress.ExportedPdf
                     : ExportingProgress.ExportedWord);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 request.Progress.Add(request.Format == ReportFormat.Pdf
                     ? ExportingProgress.FailExportingPdf
                     : ExportingProgress.FailExportingWord);

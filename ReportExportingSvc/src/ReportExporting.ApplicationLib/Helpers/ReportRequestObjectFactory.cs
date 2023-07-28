@@ -13,7 +13,8 @@ public class ReportRequestObjectFactory
             EmailAddress = request.EmailAddress,
             Format = request.Format,
             Title = request.Title,
-            Product = request.Product
+            Product = request.Product,
+            Urls = request.Urls
         };
     }
 }

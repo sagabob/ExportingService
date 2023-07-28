@@ -23,7 +23,7 @@ builder.Services.AddAzureClients(cfg =>
     cfg.AddTableServiceClient(new Uri(builder.Configuration.GetValue<string>("TableStorageServiceUrl")!))
         .WithCredential(new DefaultAzureCredential());
 
-    cfg.AddBlobServiceClient(new Uri(builder.Configuration.GetValue<string>("TableStorageServiceUrl")!))
+    cfg.AddBlobServiceClient(new Uri(builder.Configuration.GetValue<string>("BlobStorageServiceUrl")!))
         .WithCredential(new DefaultAzureCredential());
 });
 
@@ -39,12 +39,13 @@ builder.Services.AddSingleton<IUpsertItemToTableHandler, UpsertItemToTableHandle
 builder.Services.AddSingleton<IAddItemToQueueHandler, AddItemToQueueHandler>();
 builder.Services.AddSingleton<IUploadItemToBlobHandler, UploadItemToBlobHandler>();
 
-builder.Services.AddSingleton<MessageHandler>();
+builder.Services.AddSingleton<IHandleExportProcess, HandleExportProcess>();
+builder.Services.AddSingleton<IMessageHandler, MessageHandler>();
 
 var app = builder.Build();
 
 
-//app.Services.GetService<MessageHandler>()?.Register();
+app.Services.GetService<IMessageHandler>()?.Register();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -60,3 +61,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+

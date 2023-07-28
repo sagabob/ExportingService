@@ -5,16 +5,23 @@ using ReportExporting.ApplicationLib.Entities;
 
 namespace ReportExporting.ProcessOrderApi.Handlers;
 
-public class MessageHandler
+public class MessageHandler : IMessageHandler
 {
+    private readonly IConfiguration _configuration;
     private readonly IHandleExportProcess _handleExportProcess;
-    private readonly ServiceBusProcessor _processor;
+    private readonly ServiceBusClient _serviceBusClient;
+    private ServiceBusProcessor? _processor;
 
     public MessageHandler(ServiceBusClient serviceBusClient, IConfiguration configuration,
         IHandleExportProcess handleExportProcess)
     {
+        _serviceBusClient = serviceBusClient;
+        _configuration = configuration;
         _handleExportProcess = handleExportProcess;
+    }
 
+    public async Task Register()
+    {
         var options = new ServiceBusProcessorOptions
         {
             // By default after the message handler returns, the processor will complete the message
@@ -22,17 +29,27 @@ public class MessageHandler
             AutoCompleteMessages = false,
 
             // I can also allow for multi-threading
-            MaxConcurrentCalls = 2
+            MaxConcurrentCalls = 1
         };
-        _processor = serviceBusClient.CreateProcessor(configuration["QueueName"], options);
-    }
+        _processor = _serviceBusClient.CreateProcessor(_configuration["WorkQueue"], options);
 
-    public async Task Register()
-    {
         _processor.ProcessMessageAsync += ReceiveMessageHandler;
         _processor.ProcessErrorAsync += ErrorHandler;
 
-        await _processor.StartProcessingAsync();
+        await _processor.StartProcessingAsync().ConfigureAwait(false);
+        ;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_processor != null) await _processor.DisposeAsync().ConfigureAwait(false);
+
+        await _serviceBusClient.DisposeAsync().ConfigureAwait(false);
+    }
+
+    public async Task CloseQueueAsync()
+    {
+        if (_processor != null) await _processor.CloseAsync().ConfigureAwait(false);
     }
 
     private async Task ReceiveMessageHandler(ProcessMessageEventArgs args)
@@ -45,7 +62,7 @@ public class MessageHandler
             if (request != null)
             {
                 request.Progress.Add(ExportingProgress.ItemReceivedFromQueue);
-                await _handleExportProcess.Handle(request);
+                await _handleExportProcess.Handle(request).ConfigureAwait(false); ;
             }
         }
         catch (Exception)

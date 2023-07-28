@@ -35,7 +35,7 @@ public class PdfReportGenerator : IReportGenerator
     public static Task<PdfDocument>? RenderCoverPage(ChromePdfRenderer renderer, ExportConfiguration config)
     {
         if (!config.ShowCoverPage) return null;
-        var cover = renderer.RenderUrlAsPdfAsync("<h1> This is Cover Page</h1>");
+        var cover = renderer.RenderHtmlAsPdfAsync("<h1> This is Cover Page</h1>");
         renderer.RenderingOptions.FirstPageNumber = 2;
         return cover;
     }

@@ -38,6 +38,8 @@ builder.Services.AddSingleton<IExportRequestHandler, ExportRequestHandler>();
 builder.Services.AddSingleton<IUpsertItemToTableHandler, UpsertItemToTableHandler>();
 builder.Services.AddSingleton<IAddItemToQueueHandler, AddItemToQueueHandler>();
 builder.Services.AddSingleton<IUploadItemToBlobHandler, UploadItemToBlobHandler>();
+builder.Services.AddSingleton<IAddItemToQueueHandler, AddItemToQueueHandler>();
+
 
 builder.Services.AddSingleton<IHandleExportProcess, HandleExportProcess>();
 builder.Services.AddSingleton<IMessageHandler, MessageHandler>();

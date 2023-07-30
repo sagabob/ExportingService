@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace ReportExporting.ApplicationLib.Services;
 
-public class BlobStorageService: IBlobStorageService
+public class BlobStorageService : IBlobStorageService
 {
     public BlobStorageService(BlobServiceClient blobServiceClient, IConfiguration configuration)
     {
@@ -13,11 +13,21 @@ public class BlobStorageService: IBlobStorageService
         BlobClient.CreateIfNotExists();
     }
 
+    public BlobContainerClient BlobClient { get; }
+
     public async Task<Response<BlobContentInfo>> UploadExportFileAync(Stream fileStream, string? blobName)
     {
-        var response =  await BlobClient.UploadBlobAsync(blobName, fileStream);
+        var response = await BlobClient.UploadBlobAsync(blobName, fileStream);
 
         return response;
     }
-    public BlobContainerClient BlobClient { get; }
+
+    public async Task<Response> DownloadExportFileAync(string? fileName,  Stream fileStream)
+    {
+        var blob = BlobClient.GetBlobClient(fileName);
+
+        var response = await blob.DownloadToAsync(fileStream);
+
+        return response;
+    }
 }

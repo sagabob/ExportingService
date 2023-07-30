@@ -1,4 +1,4 @@
-﻿namespace ReportExporting.ProcessOrderApi.Handlers;
+﻿namespace ReportExporting.NotificationApi.Handlers;
 
 public interface IMessageHandler
 {

@@ -24,7 +24,9 @@ public class AddItemToQueueHandler : IAddItemToQueueHandler
 
         var serviceBusSender = _serviceBusClient.CreateSender(_configuration[queueType.ToString()]);
 
-        request.Progress.Add(ExportingProgress.PlaceOnQueue);
+        request.Progress.Add(queueType == QueueType.WorkQueue
+            ? ExportingProgress.PlaceOrderOnQueue
+            : ExportingProgress.SendOrderToEmailQueue);
         try
         {
             var message = new ServiceBusMessage(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(request)))
@@ -35,10 +37,13 @@ public class AddItemToQueueHandler : IAddItemToQueueHandler
 
             await serviceBusSender.SendMessageAsync(message);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             request.Status = ExportingStatus.Failure;
-            request.Progress.Add(ExportingProgress.FailToPlaceOnQueue);
+            request.Progress.Add(queueType == QueueType.WorkQueue
+                ? ExportingProgress.FailToPlaceOrderOnQueue
+                : ExportingProgress.FailSendingOrderToEmailQueue);
+            request.ErrorMessage = ex.Message;
         }
 
         return request;

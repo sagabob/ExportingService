@@ -10,7 +10,6 @@ public class TableStorageService : ITableStorageService
     public TableStorageService(TableServiceClient tableServiceClient, IConfiguration configuration)
     {
         TableClient = tableServiceClient.GetTableClient(configuration["TableName"]);
-        TableClient.CreateIfNotExists();
     }
 
     public TableClient TableClient { get; }

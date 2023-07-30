@@ -10,7 +10,6 @@ public class BlobStorageService : IBlobStorageService
     public BlobStorageService(BlobServiceClient blobServiceClient, IConfiguration configuration)
     {
         BlobClient = blobServiceClient.GetBlobContainerClient(configuration["ContainerName"]);
-        BlobClient.CreateIfNotExists();
     }
 
     public BlobContainerClient BlobClient { get; }

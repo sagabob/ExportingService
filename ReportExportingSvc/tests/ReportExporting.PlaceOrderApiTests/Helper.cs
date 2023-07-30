@@ -10,6 +10,7 @@ public class Helper
         {
             Title = "Sample Report",
             Product = ReportProduct.Profile,
+            EmailAddress = "bobpham.tdp@gmail.com",
             Urls = new[]
             {
                 new()

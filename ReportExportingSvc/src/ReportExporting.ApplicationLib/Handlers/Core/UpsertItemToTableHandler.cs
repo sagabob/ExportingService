@@ -2,7 +2,7 @@
 using ReportExporting.ApplicationLib.Helpers;
 using ReportExporting.ApplicationLib.Services;
 
-namespace ReportExporting.ApplicationLib.Handlers;
+namespace ReportExporting.ApplicationLib.Handlers.Core;
 
 public class UpsertItemToTableHandler : IUpsertItemToTableHandler
 {

@@ -12,10 +12,10 @@ public class EmailContentHelpers
         {
             From = new EmailAddress(fromEmail, fromName),
             Subject = $"Notify on failure of report {reportRequestObject.FileName}",
-            HtmlContent = "<h3>Here is the order detail & error</h3>"
+            PlainTextContent = "Here is the order detail & error"
         };
         msg.AddTo(toEmail);
-        await msg.AddAttachmentAsync(reportRequestObject.FileName, exportedFileStream);
+        await msg.AddAttachmentAsync($"Request-{reportRequestObject.FileName}.json", exportedFileStream);
 
         return msg;
     }
@@ -27,11 +27,11 @@ public class EmailContentHelpers
         {
             From = new EmailAddress(fromEmail, fromName),
             Subject = $"Your ordered report {reportRequestObject.FileName}",
-            HtmlContent = "<h3>Thank you for using our service, please see the attachment</h3>"
+            PlainTextContent = "Thank you for using our service, please see the attachment"
         };
 
         msg.AddTo(reportRequestObject.EmailAddress);
-        await msg.AddAttachmentAsync($"{reportRequestObject.FileName}.json", exportedFileStream);
+        await msg.AddAttachmentAsync($"{reportRequestObject.FileName}", exportedFileStream);
 
         return msg;
     }

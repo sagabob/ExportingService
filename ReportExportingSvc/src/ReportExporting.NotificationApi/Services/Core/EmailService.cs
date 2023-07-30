@@ -4,7 +4,7 @@ using ReportExporting.ApplicationLib.Entities;
 using ReportExporting.NotificationApi.Helpers;
 using SendGrid;
 
-namespace ReportExporting.NotificationApi.Services;
+namespace ReportExporting.NotificationApi.Services.Core;
 
 public class EmailService : IEmailService
 {

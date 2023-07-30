@@ -3,8 +3,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ReportExporting.ApplicationLib.Entities;
 using ReportExporting.ApplicationLib.Helpers;
-using ReportExporting.ApplicationLib.Messages;
 using ReportExporting.Core;
+using ReportExporting.PlaceOrderApi.Handlers;
 using ReportExporting.PlaceOrderApi.Messages;
 
 namespace ReportExporting.PlaceOrderApi.Controllers;
@@ -13,11 +13,11 @@ namespace ReportExporting.PlaceOrderApi.Controllers;
 [ApiController]
 public class PlaceOrderController : ControllerBase
 {
-    private readonly IMediator _mediator;
-
-    public PlaceOrderController(IMediator mediator)
+    private readonly IExportRequestHandler _exportRequestHandler;
+   
+    public PlaceOrderController(IExportRequestHandler exportRequestHandler)
     {
-        _mediator = mediator;
+        _exportRequestHandler = exportRequestHandler;
     }
 
     [HttpPost]
@@ -26,10 +26,8 @@ public class PlaceOrderController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<ExportingReportResponse>> PlaceExportOrder(ReportRequest request)
     {
-        var result = await _mediator.Send(new PlaceOrderRequest
-            { PayLoad = ReportRequestObjectFactory.CreateFromReportRequest(request) });
-
-
+        var result = await _exportRequestHandler.Handle(ReportRequestObjectFactory.CreateFromReportRequest(request));
+        
         if (result.Status == ExportingStatus.Failure)
             return Forbid("Fail to process the order");
 

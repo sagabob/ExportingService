@@ -1,10 +1,13 @@
 using Azure.Identity;
 using Microsoft.Extensions.Azure;
 using ReportExporting.ApplicationLib.Handlers;
+using ReportExporting.ApplicationLib.Handlers.Core;
 using ReportExporting.ApplicationLib.Services;
+using ReportExporting.ApplicationLib.Services.Core;
 using ReportExporting.ExportApi.Generators;
 using ReportExporting.ExportApi.Handlers;
 using ReportExporting.ProcessOrderApi.Handlers;
+using ReportExporting.ProcessOrderApi.Handlers.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 

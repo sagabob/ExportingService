@@ -2,7 +2,7 @@
 using ReportExporting.ApplicationLib.Handlers;
 using ReportExporting.NotificationApi.Services;
 
-namespace ReportExporting.NotificationApi.Handlers;
+namespace ReportExporting.NotificationApi.Handlers.Core;
 
 public class SendEmailHandler : ISendEmailHandler
 {

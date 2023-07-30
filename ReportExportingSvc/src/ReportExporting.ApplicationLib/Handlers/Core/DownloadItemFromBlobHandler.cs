@@ -1,9 +1,9 @@
 ﻿using ReportExporting.ApplicationLib.Entities;
 using ReportExporting.ApplicationLib.Services;
 
-namespace ReportExporting.ApplicationLib.Handlers;
+namespace ReportExporting.ApplicationLib.Handlers.Core;
 
-public class DownloadItemFromBlobHandler: IDownloadItemFromBlobHandler
+public class DownloadItemFromBlobHandler : IDownloadItemFromBlobHandler
 {
     private readonly IBlobStorageService _blobStorageService;
 
@@ -21,7 +21,7 @@ public class DownloadItemFromBlobHandler: IDownloadItemFromBlobHandler
         {
             var response = await _blobStorageService.DownloadExportFileAync(request.FileName, fileStream);
 
-            if (response.Status == 204)
+            if (response.Status == 206)
             {
                 request.Progress.Add(ExportingProgress.UploadFileToBlob);
             }

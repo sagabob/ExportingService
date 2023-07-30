@@ -1,9 +1,13 @@
 using Azure.Identity;
 using Microsoft.Extensions.Azure;
 using ReportExporting.ApplicationLib.Handlers;
+using ReportExporting.ApplicationLib.Handlers.Core;
 using ReportExporting.ApplicationLib.Services;
+using ReportExporting.ApplicationLib.Services.Core;
 using ReportExporting.NotificationApi.Handlers;
+using ReportExporting.NotificationApi.Handlers.Core;
 using ReportExporting.NotificationApi.Services;
+using ReportExporting.NotificationApi.Services.Core;
 using SendGrid.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,6 +45,8 @@ builder.Services.AddSingleton<IUpsertItemToTableHandler, UpsertItemToTableHandle
 builder.Services.AddSingleton<IAddItemToQueueHandler, AddItemToQueueHandler>();
 builder.Services.AddSingleton<IDownloadItemFromBlobHandler, DownloadItemFromBlobHandler>();
 builder.Services.AddSingleton<IAddItemToQueueHandler, AddItemToQueueHandler>();
+builder.Services.AddSingleton<ISendEmailHandler, SendEmailHandler>();
+
 
 builder.Services.AddSingleton<IMessageForEmailHandler, MessageForEmailHandler>();
 

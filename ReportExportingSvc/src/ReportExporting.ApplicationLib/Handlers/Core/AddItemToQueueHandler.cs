@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using ReportExporting.ApplicationLib.Entities;
 
-namespace ReportExporting.ApplicationLib.Handlers;
+namespace ReportExporting.ApplicationLib.Handlers.Core;
 
 public class AddItemToQueueHandler : IAddItemToQueueHandler
 {

@@ -2,7 +2,7 @@
 using ReportExporting.ApplicationLib.Handlers;
 using ReportExporting.ExportApi.Handlers;
 
-namespace ReportExporting.ProcessOrderApi.Handlers;
+namespace ReportExporting.ProcessOrderApi.Handlers.Core;
 
 public class HandleExportProcess : IHandleExportProcess
 {

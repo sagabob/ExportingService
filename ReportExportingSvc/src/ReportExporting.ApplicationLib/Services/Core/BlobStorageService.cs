@@ -2,8 +2,9 @@
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Microsoft.Extensions.Configuration;
+using System.IO;
 
-namespace ReportExporting.ApplicationLib.Services;
+namespace ReportExporting.ApplicationLib.Services.Core;
 
 public class BlobStorageService : IBlobStorageService
 {
@@ -21,11 +22,12 @@ public class BlobStorageService : IBlobStorageService
         return response;
     }
 
-    public async Task<Response> DownloadExportFileAync(string? fileName,  Stream fileStream)
+    public async Task<Response> DownloadExportFileAync(string? fileName, Stream fileStream)
     {
         var blob = BlobClient.GetBlobClient(fileName);
 
         var response = await blob.DownloadToAsync(fileStream);
+        fileStream.Seek(0, SeekOrigin.Begin);
 
         return response;
     }

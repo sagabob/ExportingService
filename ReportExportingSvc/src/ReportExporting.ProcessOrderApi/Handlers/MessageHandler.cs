@@ -71,11 +71,11 @@ public class MessageHandler : IMessageHandler
         }
     }
 
-    private static Task ErrorHandler(ProcessErrorEventArgs args)
+    private async Task ErrorHandler(ProcessErrorEventArgs args)
     {
         // the error source tells me at what point in the processing an error occurred
         Console.WriteLine(args.ErrorSource);
-
-        return Task.CompletedTask;
+        var blankReportRequestObject = new ReportRequestObject { ErrorMessage = args.Exception.Message };
+        await _addItemToQueueHandler.Handle(blankReportRequestObject, QueueType.EmailQueue);
     }
 }

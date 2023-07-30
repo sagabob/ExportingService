@@ -76,11 +76,13 @@ public class MessageHandler : IMessageHandler
         }
     }
 
-    private static Task ErrorHandler(ProcessErrorEventArgs args)
+    private async Task ErrorHandler(ProcessErrorEventArgs args)
     {
         // the error source tells me at what point in the processing an error occurred
-        Console.WriteLine(args.ErrorSource);
+        Console.WriteLine(args.Exception.Message);
 
-        return Task.CompletedTask;
+        var blankReportRequestObject = new ReportRequestObject { ErrorMessage = args.Exception.Message };
+
+        await _sendEmailHandler.HandleSendingEmailToAdmin(blankReportRequestObject);
     }
 }

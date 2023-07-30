@@ -6,11 +6,12 @@ using ReportExporting.ApplicationLib.Helpers;
 using ReportExporting.PlaceOrderApi.Controllers;
 using ReportExporting.PlaceOrderApi.Handlers;
 using ReportExporting.PlaceOrderApi.Messages;
+using ReportExporting.PlaceOrderApiTests.Helpers;
 using Xunit;
 
 namespace ReportExporting.PlaceOrderApiTests;
 
-public class PlaceOrderControllerTest
+public class PlaceOrderControllerTests
 {
     [Theory]
     [InlineData(ExportingStatus.Ongoing)]
@@ -18,7 +19,7 @@ public class PlaceOrderControllerTest
     public async Task CanGetValidSubmittedOrderWhenOrderStatusNotFailure(ExportingStatus status)
     {
         //Arrange
-        var request = Helper.GetFakeReportRequest();
+        var request = TestHelper.GetFakeReportRequest();
         var requestObject = ReportRequestObjectFactory.CreateFromReportRequest(request);
         requestObject.Status = status;
 
@@ -51,7 +52,7 @@ public class PlaceOrderControllerTest
     [Fact]
     public async Task ReturnAFailedRequestWhenStatusFailure()
     {
-        var request = Helper.GetFakeReportRequest();
+        var request = TestHelper.GetFakeReportRequest();
         var requestObject = ReportRequestObjectFactory.CreateFromReportRequest(request);
         requestObject.Status = ExportingStatus.Failure;
 
@@ -71,7 +72,6 @@ public class PlaceOrderControllerTest
         var outputMsg = actionResult.Result as ForbidResult;
         //Assert
 
-        outputMsg.AuthenticationSchemes[0].Should().Be("Fail to process the order");
+        outputMsg!.AuthenticationSchemes[0].Should().Be("Fail to process the order");
     }
-
 }

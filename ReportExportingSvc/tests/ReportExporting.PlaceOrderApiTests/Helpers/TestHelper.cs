@@ -1,8 +1,8 @@
 ﻿using ReportExporting.Core;
 
-namespace ReportExporting.PlaceOrderApiTests;
+namespace ReportExporting.PlaceOrderApiTests.Helpers;
 
-public class Helper
+public class TestHelper
 {
     public static ReportRequest GetFakeReportRequest()
     {

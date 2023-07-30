@@ -12,7 +12,7 @@ namespace ReportExporting.PlaceOrderApiTests;
 
 public class ExportRequestHandlerTests
 {
-    private IExportRequestHandler _exportRequestHandler;
+    private readonly IExportRequestHandler _exportRequestHandler;
 
     private readonly Mock<IAddItemToQueueHandler> _addItemToQueueHandlerMock;
 

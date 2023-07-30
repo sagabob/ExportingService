@@ -5,14 +5,14 @@ using ReportExporting.ApplicationLib.Entities;
 
 namespace ReportExporting.NotificationApi.Handlers;
 
-public class MessageHandler : IMessageHandler
+public class MessageForEmailHandler : IMessageForEmailHandler
 {
     private readonly IConfiguration _configuration;
     private readonly ISendEmailHandler _sendEmailHandler;
     private readonly ServiceBusClient _serviceBusClient;
     private ServiceBusProcessor? _processor;
 
-    public MessageHandler(ServiceBusClient serviceBusClient, IConfiguration configuration,
+    public MessageForEmailHandler(ServiceBusClient serviceBusClient, IConfiguration configuration,
         ISendEmailHandler sendEmailHandler)
     {
         _serviceBusClient = serviceBusClient;

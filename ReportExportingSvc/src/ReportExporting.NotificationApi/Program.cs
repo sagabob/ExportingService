@@ -42,9 +42,11 @@ builder.Services.AddSingleton<IAddItemToQueueHandler, AddItemToQueueHandler>();
 builder.Services.AddSingleton<IDownloadItemFromBlobHandler, DownloadItemFromBlobHandler>();
 builder.Services.AddSingleton<IAddItemToQueueHandler, AddItemToQueueHandler>();
 
+builder.Services.AddSingleton<IMessageForEmailHandler, MessageForEmailHandler>();
+
 var app = builder.Build();
 
-app.Services.GetService<IMessageHandler>()?.Register();
+app.Services.GetService<IMessageForEmailHandler>()?.Register();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

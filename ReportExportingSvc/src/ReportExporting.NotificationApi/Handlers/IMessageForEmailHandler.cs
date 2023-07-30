@@ -1,6 +1,6 @@
 ﻿namespace ReportExporting.NotificationApi.Handlers;
 
-public interface IMessageHandler
+public interface IMessageForEmailHandler
 {
     Task Register();
 }

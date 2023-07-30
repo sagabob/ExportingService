@@ -1,9 +1,10 @@
 ﻿using FluentAssertions;
-using Lamar;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Moq;
+using ReportExporting.ApplicationLib.Entities;
+using ReportExporting.ApplicationLib.Helpers;
 using ReportExporting.PlaceOrderApi.Controllers;
-using ReportExporting.PlaceOrderApi.Messages;
+using ReportExporting.PlaceOrderApi.Handlers;
 using Xunit;
 
 namespace ReportExporting.PlaceOrderApiTests;
@@ -13,22 +14,19 @@ public class PlaceOrderControllerTest
     [Fact]
     public async Task CanPostExportRequestAsync()
     {
-        var container = new Container(cfg =>
-        {
-            cfg.Scan(scanner =>
-            {
-                scanner.AssemblyContainingType<PlaceOrderRequest>();
-                scanner.ConnectImplementationsToTypesClosing(typeof(IRequestHandler<,>));
-            });
-            cfg.For<IMediator>().Use<Mediator>();
-        });
-
-        var mediator = container.GetInstance<IMediator>();
-
         //Arrange
         var request = Helper.GetFakeReportRequest();
+        var requestObject = ReportRequestObjectFactory.CreateFromReportRequest(request);
+        requestObject.Status = ExportingStatus.Ongoing;
+        requestObject.Progress.Add(ExportingProgress.Submitting);
 
-        var placeOrderController = new PlaceOrderController(mediator);
+
+        var exportRequestHandlerMock = new Mock<IExportRequestHandler>();
+
+
+        exportRequestHandlerMock.Setup(p => p.Handle(requestObject)).ReturnsAsync(requestObject);
+
+        var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object);
 
         //Act
         var actionResult = await placeOrderController.PlaceExportOrder(request);

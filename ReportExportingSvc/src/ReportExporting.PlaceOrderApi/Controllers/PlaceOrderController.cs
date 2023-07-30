@@ -1,5 +1,4 @@
 ﻿using System.Net.Mime;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using ReportExporting.ApplicationLib.Entities;
 using ReportExporting.ApplicationLib.Helpers;
@@ -14,7 +13,7 @@ namespace ReportExporting.PlaceOrderApi.Controllers;
 public class PlaceOrderController : ControllerBase
 {
     private readonly IExportRequestHandler _exportRequestHandler;
-   
+
     public PlaceOrderController(IExportRequestHandler exportRequestHandler)
     {
         _exportRequestHandler = exportRequestHandler;
@@ -27,7 +26,7 @@ public class PlaceOrderController : ControllerBase
     public async Task<ActionResult<ExportingReportResponse>> PlaceExportOrder(ReportRequest request)
     {
         var result = await _exportRequestHandler.Handle(ReportRequestObjectFactory.CreateFromReportRequest(request));
-        
+
         if (result.Status == ExportingStatus.Failure)
             return Forbid("Fail to process the order");
 
@@ -60,8 +59,7 @@ public class PlaceOrderController : ControllerBase
             }
         };
 
-        var result = await _mediator.Send(new PlaceOrderRequest
-            { PayLoad = ReportRequestObjectFactory.CreateFromReportRequest(request) });
+        var result = await _exportRequestHandler.Handle(ReportRequestObjectFactory.CreateFromReportRequest(request));
 
         if (result.Status == ExportingStatus.Failure)
             return Forbid("Fail to process the order");
@@ -72,7 +70,7 @@ public class PlaceOrderController : ControllerBase
     }
 
 
-    [HttpGet("TestWordExport",Name = "TestWordExport")]
+    [HttpGet("TestWordExport", Name = "TestWordExport")]
     public async Task<ActionResult<ExportingReportResponse>> TestWordExport()
     {
         var request = new ReportRequest
@@ -96,8 +94,7 @@ public class PlaceOrderController : ControllerBase
             }
         };
 
-        var result = await _mediator.Send(new PlaceOrderRequest
-            { PayLoad = ReportRequestObjectFactory.CreateFromReportRequest(request) });
+        var result = await _exportRequestHandler.Handle(ReportRequestObjectFactory.CreateFromReportRequest(request));
 
         if (result.Status == ExportingStatus.Failure)
             return Forbid("Fail to process the order");

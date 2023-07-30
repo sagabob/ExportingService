@@ -25,7 +25,9 @@ public class PlaceOrderController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<ExportingReportResponse>> PlaceExportOrder(ReportRequest request)
     {
-        var result = await _exportRequestHandler.Handle(ReportRequestObjectFactory.CreateFromReportRequest(request));
+        var requestObject = ReportRequestObjectFactory.CreateFromReportRequest(request);
+
+        var result = await _exportRequestHandler.Handle(requestObject);
 
         if (result.Status == ExportingStatus.Failure)
             return Forbid("Fail to process the order");

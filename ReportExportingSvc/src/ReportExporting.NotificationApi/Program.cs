@@ -1,6 +1,9 @@
 using Azure.Identity;
+using Microsoft.Extensions.Azure;
 using ReportExporting.ApplicationLib.Handlers;
+using ReportExporting.ApplicationLib.Services;
 using ReportExporting.NotificationApi.Handlers;
+using ReportExporting.NotificationApi.Services;
 using SendGrid.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,7 +33,9 @@ builder.Services.AddSendGrid(options =>
     options.ApiKey = builder.Configuration
         .GetSection("SendGridEmailSettings").GetValue<string>("APIKey");
 });
-
+builder.Services.AddSingleton<ITableStorageService, TableStorageService>();
+builder.Services.AddSingleton<IBlobStorageService, BlobStorageService>();
+builder.Services.AddSingleton<IEmailService, EmailService>();
 
 builder.Services.AddSingleton<IUpsertItemToTableHandler, UpsertItemToTableHandler>();
 builder.Services.AddSingleton<IAddItemToQueueHandler, AddItemToQueueHandler>();

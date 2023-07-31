@@ -2,6 +2,8 @@ using Azure.Identity;
 using Microsoft.Extensions.Azure;
 using ReportExporting.ApplicationLib.Handlers;
 using ReportExporting.ApplicationLib.Handlers.Core;
+using ReportExporting.ApplicationLib.Helpers.Core;
+using ReportExporting.ApplicationLib.Helpers;
 using ReportExporting.ApplicationLib.Services;
 using ReportExporting.ApplicationLib.Services.Core;
 using ReportExporting.NotificationApi.Handlers;
@@ -37,6 +39,9 @@ builder.Services.AddSendGrid(options =>
     options.ApiKey = builder.Configuration
         .GetSection("SendGridEmailSettings").GetValue<string>("APIKey");
 });
+
+builder.Services.AddSingleton<IReportRequestTableEntityFactory, ReportRequestTableEntityFactory>();
+
 builder.Services.AddSingleton<ITableStorageService, TableStorageService>();
 builder.Services.AddSingleton<IBlobStorageService, BlobStorageService>();
 builder.Services.AddSingleton<IEmailService, EmailService>();

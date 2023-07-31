@@ -2,6 +2,8 @@ using Azure.Identity;
 using Microsoft.Extensions.Azure;
 using ReportExporting.ApplicationLib.Handlers;
 using ReportExporting.ApplicationLib.Handlers.Core;
+using ReportExporting.ApplicationLib.Helpers.Core;
+using ReportExporting.ApplicationLib.Helpers;
 using ReportExporting.ApplicationLib.Services;
 using ReportExporting.ApplicationLib.Services.Core;
 using ReportExporting.ExportApi.Generators;
@@ -29,6 +31,8 @@ builder.Services.AddAzureClients(cfg =>
     cfg.AddBlobServiceClient(new Uri(builder.Configuration.GetValue<string>("BlobStorageServiceUrl")!))
         .WithCredential(new DefaultAzureCredential());
 });
+
+builder.Services.AddSingleton<IReportRequestTableEntityFactory, ReportRequestTableEntityFactory>();
 
 builder.Services.AddSingleton<ITableStorageService, TableStorageService>();
 builder.Services.AddSingleton<IBlobStorageService, BlobStorageService>();

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using ReportExporting.ApplicationLib.Entities;
+using ReportExporting.ApplicationLib.Helpers;
 using ReportExporting.ApplicationLib.Helpers.Core;
 using ReportExporting.PlaceOrderApi.Controllers;
 using ReportExporting.PlaceOrderApi.Handlers;
@@ -13,6 +14,12 @@ namespace ReportExporting.PlaceOrderApiTests;
 
 public class PlaceOrderControllerTests
 {
+    private readonly IReportRequestObjectFactory _reportRequestObjectFactory;
+    public PlaceOrderControllerTests()
+    {
+        _reportRequestObjectFactory = new ReportRequestObjectFactory();
+    }
+
     [Theory]
     [InlineData(ExportingStatus.Ongoing)]
     [InlineData(ExportingStatus.Success)]
@@ -20,7 +27,7 @@ public class PlaceOrderControllerTests
     {
         //Arrange
         var request = TestHelper.GetFakeReportRequest();
-        var requestObject = ReportRequestObjectFactory.CreateFromReportRequest(request);
+        var requestObject = _reportRequestObjectFactory.CreateFromReportRequest(request);
         requestObject.Status = status;
 
 
@@ -30,7 +37,7 @@ public class PlaceOrderControllerTests
         exportRequestHandlerMock.Setup(p => p.Handle(It.IsAny<ReportRequestObject>()))
             .ReturnsAsync(() => requestObject);
 
-        var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object);
+        var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object, _reportRequestObjectFactory);
 
         //Act
         var actionResult = await placeOrderController.PlaceExportOrder(request);
@@ -53,7 +60,7 @@ public class PlaceOrderControllerTests
     public async Task ReturnAFailedRequestWhenStatusFailure()
     {
         var request = TestHelper.GetFakeReportRequest();
-        var requestObject = ReportRequestObjectFactory.CreateFromReportRequest(request);
+        var requestObject = _reportRequestObjectFactory.CreateFromReportRequest(request);
         requestObject.Status = ExportingStatus.Failure;
 
         var exportRequestHandlerMock = new Mock<IExportRequestHandler>();
@@ -62,7 +69,7 @@ public class PlaceOrderControllerTests
         exportRequestHandlerMock.Setup(p => p.Handle(It.IsAny<ReportRequestObject>()))
             .ReturnsAsync(() => requestObject);
 
-        var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object);
+        var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object, _reportRequestObjectFactory);
 
         //Act
         var actionResult = await placeOrderController.PlaceExportOrder(request);

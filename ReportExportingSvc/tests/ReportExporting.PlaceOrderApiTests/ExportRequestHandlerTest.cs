@@ -2,6 +2,7 @@
 using Moq;
 using ReportExporting.ApplicationLib.Entities;
 using ReportExporting.ApplicationLib.Handlers;
+using ReportExporting.ApplicationLib.Helpers;
 using ReportExporting.ApplicationLib.Helpers.Core;
 using ReportExporting.PlaceOrderApi.Handlers;
 using ReportExporting.PlaceOrderApi.Handlers.Core;
@@ -17,8 +18,13 @@ public class ExportRequestHandlerTests
     private readonly Mock<IAddItemToQueueHandler> _addItemToQueueHandlerMock;
 
     private readonly Mock<IUpsertItemToTableHandler> _upsertItemToTableHandlerMock;
+
+    private readonly IReportRequestObjectFactory _reportRequestObjectFactory;
     public ExportRequestHandlerTests()
     {
+
+        _reportRequestObjectFactory = new ReportRequestObjectFactory();
+
         _addItemToQueueHandlerMock = new Mock<IAddItemToQueueHandler>();
         _upsertItemToTableHandlerMock = new Mock<IUpsertItemToTableHandler>();
 
@@ -31,7 +37,7 @@ public class ExportRequestHandlerTests
     {
         //Arrange
         var request = TestHelper.GetFakeReportRequest();
-        var requestObject = ReportRequestObjectFactory.CreateFromReportRequest(request);
+        var requestObject = _reportRequestObjectFactory.CreateFromReportRequest(request);
 
         requestObject.Status = ExportingStatus.Ongoing;
 
@@ -57,7 +63,7 @@ public class ExportRequestHandlerTests
     {
         // Arrange
         var request = TestHelper.GetFakeReportRequest();
-        var requestObject = ReportRequestObjectFactory.CreateFromReportRequest(request);
+        var requestObject = _reportRequestObjectFactory.CreateFromReportRequest(request);
 
         requestObject.Status = ExportingStatus.Ongoing;
 

@@ -1,16 +1,12 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.Net.Mime;
 using FluentValidation;
-using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using ReportExporting.ApplicationLib.Entities;
 using ReportExporting.ApplicationLib.Helpers;
-using ReportExporting.ApplicationLib.Helpers.Core;
 using ReportExporting.Core;
 using ReportExporting.PlaceOrderApi.Handlers;
 using ReportExporting.PlaceOrderApi.Messages;
-using ValidationResult = FluentValidation.Results.ValidationResult;
 
 namespace ReportExporting.PlaceOrderApi.Controllers;
 
@@ -20,13 +16,15 @@ public class PlaceOrderController : ControllerBase
 {
     private readonly IExportRequestHandler _exportRequestHandler;
     private readonly IReportRequestObjectFactory _reportRequestObjectFactory;
-  
+    private readonly IValidator<ReportRequest> _reportValidator;
 
-    public PlaceOrderController(IExportRequestHandler exportRequestHandler, IReportRequestObjectFactory reportRequestObjectFactory)
+
+    public PlaceOrderController(IExportRequestHandler exportRequestHandler,
+        IReportRequestObjectFactory reportRequestObjectFactory, IValidator<ReportRequest> reportValidator)
     {
         _exportRequestHandler = exportRequestHandler;
         _reportRequestObjectFactory = reportRequestObjectFactory;
-        
+        _reportValidator = reportValidator;
     }
 
     [HttpPost]
@@ -35,10 +33,10 @@ public class PlaceOrderController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<ExportingReportResponse>> PlaceExportOrder(ReportRequest request)
     {
-        if (!ModelState.IsValid)
-        {
-            return StatusCode(StatusCodes.Status400BadRequest, ModelState);
-        }
+        var validationResult = await _reportValidator.ValidateAsync(request);
+
+        if (!validationResult.IsValid) 
+            return BadRequest("Invalid report request");
 
         var requestObject = _reportRequestObjectFactory.CreateFromReportRequest(request);
 
@@ -51,6 +49,4 @@ public class PlaceOrderController : ControllerBase
 
         return Ok(successResult);
     }
-
-  
 }

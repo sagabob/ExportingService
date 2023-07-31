@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using Azure.Identity;
 using FluentValidation;
@@ -22,8 +23,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
+builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<ExportRequestValidator>();
+
+
 
 builder.Services.AddAzureClients(cfg =>
 {

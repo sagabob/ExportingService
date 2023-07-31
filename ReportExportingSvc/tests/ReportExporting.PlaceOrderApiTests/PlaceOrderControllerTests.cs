@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using ReportExporting.ApplicationLib.Entities;
-using ReportExporting.ApplicationLib.Helpers;
+using ReportExporting.ApplicationLib.Helpers.Core;
 using ReportExporting.PlaceOrderApi.Controllers;
 using ReportExporting.PlaceOrderApi.Handlers;
 using ReportExporting.PlaceOrderApi.Messages;

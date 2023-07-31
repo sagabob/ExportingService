@@ -1,5 +1,5 @@
 ﻿using ReportExporting.ApplicationLib.Entities;
-using ReportExporting.ApplicationLib.Helpers;
+using ReportExporting.ApplicationLib.Helpers.Core;
 using ReportExporting.ApplicationLib.Services;
 
 namespace ReportExporting.ApplicationLib.Handlers.Core;

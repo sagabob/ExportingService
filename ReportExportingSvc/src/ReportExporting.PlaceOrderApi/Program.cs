@@ -2,6 +2,8 @@ using Azure.Identity;
 using Microsoft.Extensions.Azure;
 using ReportExporting.ApplicationLib.Handlers;
 using ReportExporting.ApplicationLib.Handlers.Core;
+using ReportExporting.ApplicationLib.Helpers;
+using ReportExporting.ApplicationLib.Helpers.Core;
 using ReportExporting.ApplicationLib.Services;
 using ReportExporting.ApplicationLib.Services.Core;
 using ReportExporting.PlaceOrderApi.Handlers;
@@ -28,7 +30,11 @@ builder.Services.AddAzureClients(cfg =>
         .WithCredential(new DefaultAzureCredential());
 });
 
+builder.Services.AddScoped<IReportRequestObjectFactory, ReportRequestObjectFactory>();
+builder.Services.AddScoped<IReportRequestTableEntityFactory, ReportRequestTableEntityFactory>();
+
 builder.Services.AddScoped<ITableStorageService, TableStorageService>();
+
 builder.Services.AddScoped<IUpsertItemToTableHandler, UpsertItemToTableHandler>();
 builder.Services.AddScoped<IAddItemToQueueHandler, AddItemToQueueHandler>();
 builder.Services.AddScoped<IExportRequestHandler, ExportRequestHandler>();

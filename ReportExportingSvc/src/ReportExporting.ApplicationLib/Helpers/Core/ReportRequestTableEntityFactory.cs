@@ -1,10 +1,10 @@
 ﻿using ReportExporting.ApplicationLib.Entities;
 
-namespace ReportExporting.ApplicationLib.Helpers;
+namespace ReportExporting.ApplicationLib.Helpers.Core;
 
-public class ReportRequestTableEntityFactory
+public class ReportRequestTableEntityFactory: IReportRequestTableEntityFactory
 {
-    public static ReportRequestTableEntity CreateTableEntity(ReportRequestObject request)
+    public ReportRequestTableEntity CreateTableEntity(ReportRequestObject request)
     {
         return new ReportRequestTableEntity
         {

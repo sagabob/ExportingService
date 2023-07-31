@@ -2,7 +2,7 @@
 using Moq;
 using ReportExporting.ApplicationLib.Entities;
 using ReportExporting.ApplicationLib.Handlers;
-using ReportExporting.ApplicationLib.Helpers;
+using ReportExporting.ApplicationLib.Helpers.Core;
 using ReportExporting.PlaceOrderApi.Handlers;
 using ReportExporting.PlaceOrderApi.Handlers.Core;
 using ReportExporting.PlaceOrderApiTests.Helpers;

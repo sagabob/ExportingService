@@ -6,7 +6,7 @@ public class ExportObject
 {
     public string Id { get; set; }
 
-    public ReportUrl[] Urls { get; set; }
+    public ReportUrl[]? Urls { get; set; }
 
     public ReportProduct Product { get; set; }
 

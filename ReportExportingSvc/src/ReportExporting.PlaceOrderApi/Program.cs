@@ -1,4 +1,7 @@
+using System.Reflection;
 using Azure.Identity;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.Extensions.Azure;
 using ReportExporting.ApplicationLib.Handlers;
 using ReportExporting.ApplicationLib.Handlers.Core;
@@ -6,6 +9,7 @@ using ReportExporting.ApplicationLib.Helpers;
 using ReportExporting.ApplicationLib.Helpers.Core;
 using ReportExporting.ApplicationLib.Services;
 using ReportExporting.ApplicationLib.Services.Core;
+using ReportExporting.Core;
 using ReportExporting.PlaceOrderApi.Handlers;
 using ReportExporting.PlaceOrderApi.Handlers.Core;
 
@@ -18,8 +22,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//register mediator pattern library
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+
+builder.Services.AddValidatorsFromAssemblyContaining<ExportRequestValidator>();
 
 builder.Services.AddAzureClients(cfg =>
 {
@@ -32,6 +36,8 @@ builder.Services.AddAzureClients(cfg =>
 
 builder.Services.AddScoped<IReportRequestObjectFactory, ReportRequestObjectFactory>();
 builder.Services.AddScoped<IReportRequestTableEntityFactory, ReportRequestTableEntityFactory>();
+
+
 
 builder.Services.AddScoped<ITableStorageService, TableStorageService>();
 

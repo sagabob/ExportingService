@@ -1,9 +1,6 @@
-﻿namespace ReportExporting.ProcessOrderApi.Handlers
+﻿namespace ReportExporting.ProcessOrderApi.Handlers;
+
+public interface IMessageHandler
 {
-    public interface IMessageHandler
-    {
-        Task Register();
-        Task CloseQueueAsync();
-        ValueTask DisposeAsync();
-    }
+    Task Register();
 }

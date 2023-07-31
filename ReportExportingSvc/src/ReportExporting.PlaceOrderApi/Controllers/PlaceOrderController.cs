@@ -1,10 +1,11 @@
-﻿using System.Net.Mime;
-using MediatR;
+﻿using System;
+using System.Net.Mime;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using ReportExporting.ApplicationLib.Entities;
 using ReportExporting.ApplicationLib.Helpers;
-using ReportExporting.ApplicationLib.Messages;
 using ReportExporting.Core;
+using ReportExporting.PlaceOrderApi.Handlers;
 using ReportExporting.PlaceOrderApi.Messages;
 
 namespace ReportExporting.PlaceOrderApi.Controllers;
@@ -13,11 +14,17 @@ namespace ReportExporting.PlaceOrderApi.Controllers;
 [ApiController]
 public class PlaceOrderController : ControllerBase
 {
-    private readonly IMediator _mediator;
+    private readonly IExportRequestHandler _exportRequestHandler;
+    private readonly IReportRequestObjectFactory _reportRequestObjectFactory;
+    private readonly IValidator<ReportRequest> _reportValidator;
 
-    public PlaceOrderController(IMediator mediator)
+
+    public PlaceOrderController(IExportRequestHandler exportRequestHandler,
+        IReportRequestObjectFactory reportRequestObjectFactory, IValidator<ReportRequest> reportValidator)
     {
-        _mediator = mediator;
+        _exportRequestHandler = exportRequestHandler;
+        _reportRequestObjectFactory = reportRequestObjectFactory;
+        _reportValidator = reportValidator;
     }
 
     [HttpPost]
@@ -26,43 +33,14 @@ public class PlaceOrderController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<ExportingReportResponse>> PlaceExportOrder(ReportRequest request)
     {
-        var result = await _mediator.Send(new PlaceOrderRequest
-            { PayLoad = ReportRequestObjectFactory.CreateFromReportRequest(request) });
+        var validationResult = await _reportValidator.ValidateAsync(request);
 
+        if (!validationResult.IsValid) 
+            return BadRequest("Invalid report request");
 
-        if (result.Status == ExportingStatus.Failure)
-            return Forbid("Fail to process the order");
+        var requestObject = _reportRequestObjectFactory.CreateFromReportRequest(request);
 
-        var successResult = new ExportingReportResponse { OrderId = result.Id.ToString(), Status = "Order submitted" };
-
-        return Ok(successResult);
-    }
-
-    [HttpGet("test", Name = "Test")]
-    public async Task<ActionResult<ExportingReportResponse>> Test()
-    {
-        var request = new ReportRequest
-        {
-            Title = "Sample Report",
-            Product = ReportProduct.Profile,
-            EmailAddress = "bobpham.tdp@gmail.com",
-            Urls = new[]
-            {
-                new()
-                {
-                    Url = "https://profile.id.com.au/adelaide/ancestry",
-                    Title = "Ancestry"
-                },
-                new ReportUrl
-                {
-                    Url = "https://profile.id.com.au/adelaide/industries",
-                    Title = "Industries"
-                }
-            }
-        };
-
-        var result = await _mediator.Send(new PlaceOrderRequest
-            { PayLoad = ReportRequestObjectFactory.CreateFromReportRequest(request) });
+        var result = await _exportRequestHandler.Handle(requestObject);
 
         if (result.Status == ExportingStatus.Failure)
             return Forbid("Fail to process the order");

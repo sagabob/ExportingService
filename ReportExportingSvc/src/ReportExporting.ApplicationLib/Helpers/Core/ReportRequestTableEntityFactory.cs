@@ -1,10 +1,10 @@
 ﻿using ReportExporting.ApplicationLib.Entities;
 
-namespace ReportExporting.ApplicationLib.Helpers;
+namespace ReportExporting.ApplicationLib.Helpers.Core;
 
-public class ReportRequestTableEntityFactory
+public class ReportRequestTableEntityFactory: IReportRequestTableEntityFactory
 {
-    public static ReportRequestTableEntity CreateTableEntity(ReportRequestObject request)
+    public ReportRequestTableEntity CreateTableEntity(ReportRequestObject request)
     {
         return new ReportRequestTableEntity
         {
@@ -12,7 +12,7 @@ public class ReportRequestTableEntityFactory
             EmailAddress = request.EmailAddress,
             PartitionKey = request.Id.ToString(),
             RowKey = request.Id.ToString(),
-            Status = request.Progress.ToString(),
+            Status = Enum.GetName(typeof(ExportingStatus), request.Status),
             FullProgress = request.GetFullProgress()
         };
     }

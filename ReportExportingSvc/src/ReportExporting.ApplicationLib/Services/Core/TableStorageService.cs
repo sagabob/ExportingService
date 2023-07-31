@@ -3,14 +3,13 @@ using Azure.Data.Tables;
 using Microsoft.Extensions.Configuration;
 using ReportExporting.ApplicationLib.Entities;
 
-namespace ReportExporting.ApplicationLib.Services;
+namespace ReportExporting.ApplicationLib.Services.Core;
 
 public class TableStorageService : ITableStorageService
 {
     public TableStorageService(TableServiceClient tableServiceClient, IConfiguration configuration)
     {
         TableClient = tableServiceClient.GetTableClient(configuration["TableName"]);
-        TableClient.CreateIfNotExists();
     }
 
     public TableClient TableClient { get; }

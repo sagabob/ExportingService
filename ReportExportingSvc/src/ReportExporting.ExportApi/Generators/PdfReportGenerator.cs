@@ -16,7 +16,7 @@ public class PdfReportGenerator : IReportGenerator
         renderer.RenderingOptions.WaitFor.RenderDelay(5000);
         renderer.RenderingOptions.Timeout = 60;
 
-        var cover = await RenderCoverPage(renderer, config)!;
+        var cover = await RenderCoverPage(renderer, config, exportObject)!;
 
         var pdfDocuments = new List<PdfDocument> { cover };
 
@@ -32,10 +32,11 @@ public class PdfReportGenerator : IReportGenerator
     }
 
 
-    public static Task<PdfDocument>? RenderCoverPage(ChromePdfRenderer renderer, ExportConfiguration config)
+    public static Task<PdfDocument>? RenderCoverPage(ChromePdfRenderer renderer, ExportConfiguration config,
+        ExportObject exportObject)
     {
         if (!config.ShowCoverPage) return null;
-        var cover = renderer.RenderHtmlAsPdfAsync("<h1> This is Cover Page</h1>");
+        var cover = renderer.RenderHtmlAsPdfAsync($"<h1>{exportObject.Product.ToString()}</h1>");
         renderer.RenderingOptions.FirstPageNumber = 2;
         return cover;
     }

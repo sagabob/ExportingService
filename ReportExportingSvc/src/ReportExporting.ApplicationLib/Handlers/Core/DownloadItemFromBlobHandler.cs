@@ -1,13 +1,13 @@
 ﻿using ReportExporting.ApplicationLib.Entities;
 using ReportExporting.ApplicationLib.Services;
 
-namespace ReportExporting.ApplicationLib.Handlers;
+namespace ReportExporting.ApplicationLib.Handlers.Core;
 
-public class UploadItemToBlobHandler : IUploadItemToBlobHandler
+public class DownloadItemFromBlobHandler : IDownloadItemFromBlobHandler
 {
     private readonly IBlobStorageService _blobStorageService;
 
-    public UploadItemToBlobHandler(IBlobStorageService blobStorageService)
+    public DownloadItemFromBlobHandler(IBlobStorageService blobStorageService)
     {
         _blobStorageService = blobStorageService;
     }
@@ -19,21 +19,21 @@ public class UploadItemToBlobHandler : IUploadItemToBlobHandler
 
         try
         {
-            var response = await _blobStorageService.UploadExportFileAync(fileStream, request.FileName);
+            var response = await _blobStorageService.DownloadExportFileAync(request.FileName, fileStream);
 
-            if (response.HasValue)
+            if (response.Status == 206)
             {
                 request.Progress.Add(ExportingProgress.UploadFileToBlob);
             }
             else
             {
-                request.Progress.Add(ExportingProgress.FailUploadingFileToBlob);
+                request.Progress.Add(ExportingProgress.FailDownloadingBlobToStream);
                 request.Status = ExportingStatus.Failure;
             }
         }
         catch (Exception)
         {
-            request.Progress.Add(ExportingProgress.FailUploadingFileToBlob);
+            request.Progress.Add(ExportingProgress.FailDownloadingBlobToStream);
             request.Status = ExportingStatus.Failure;
         }
 

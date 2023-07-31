@@ -1,8 +1,8 @@
 ﻿using ReportExporting.Core;
 
-namespace ReportExporting.PlaceOrderApiTests;
+namespace ReportExporting.PlaceOrderApiTests.Helpers;
 
-public class Helper
+public class TestHelper
 {
     public static ReportRequest GetFakeReportRequest()
     {
@@ -10,6 +10,7 @@ public class Helper
         {
             Title = "Sample Report",
             Product = ReportProduct.Profile,
+            EmailAddress = "bobpham.tdp@gmail.com",
             Urls = new[]
             {
                 new()

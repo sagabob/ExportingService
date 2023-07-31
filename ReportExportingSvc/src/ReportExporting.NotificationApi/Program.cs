@@ -6,14 +6,16 @@ using ReportExporting.ApplicationLib.Helpers.Core;
 using ReportExporting.ApplicationLib.Helpers;
 using ReportExporting.ApplicationLib.Services;
 using ReportExporting.ApplicationLib.Services.Core;
-using ReportExporting.ExportApi.Generators;
-using ReportExporting.ExportApi.Handlers;
-using ReportExporting.ProcessOrderApi.Handlers;
-using ReportExporting.ProcessOrderApi.Handlers.Core;
+using ReportExporting.NotificationApi.Handlers;
+using ReportExporting.NotificationApi.Handlers.Core;
+using ReportExporting.NotificationApi.Services;
+using ReportExporting.NotificationApi.Services.Core;
+using SendGrid.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -32,29 +34,30 @@ builder.Services.AddAzureClients(cfg =>
         .WithCredential(new DefaultAzureCredential());
 });
 
+builder.Services.AddSendGrid(options =>
+{
+    options.ApiKey = builder.Configuration
+        .GetSection("SendGridEmailSettings").GetValue<string>("APIKey");
+});
+
 builder.Services.AddSingleton<IReportRequestTableEntityFactory, ReportRequestTableEntityFactory>();
 
 builder.Services.AddSingleton<ITableStorageService, TableStorageService>();
 builder.Services.AddSingleton<IBlobStorageService, BlobStorageService>();
+builder.Services.AddSingleton<IEmailService, EmailService>();
 
-builder.Services.AddSingleton<PdfReportGenerator>();
-builder.Services.AddSingleton<WordReportGenerator>();
-builder.Services.AddSingleton<IReportGeneratorService, ReportGeneratorFactory>();
-
-builder.Services.AddSingleton<IExportRequestHandler, ExportRequestHandler>();
 builder.Services.AddSingleton<IUpsertItemToTableHandler, UpsertItemToTableHandler>();
 builder.Services.AddSingleton<IAddItemToQueueHandler, AddItemToQueueHandler>();
-builder.Services.AddSingleton<IUploadItemToBlobHandler, UploadItemToBlobHandler>();
+builder.Services.AddSingleton<IDownloadItemFromBlobHandler, DownloadItemFromBlobHandler>();
 builder.Services.AddSingleton<IAddItemToQueueHandler, AddItemToQueueHandler>();
+builder.Services.AddSingleton<ISendEmailHandler, SendEmailHandler>();
 
 
-builder.Services.AddSingleton<IHandleExportProcess, HandleExportProcess>();
-builder.Services.AddSingleton<IMessageHandler, MessageHandler>();
+builder.Services.AddSingleton<IMessageForEmailHandler, MessageForEmailHandler>();
 
 var app = builder.Build();
 
-
-app.Services.GetService<IMessageHandler>()?.Register();
+app.Services.GetService<IMessageForEmailHandler>()?.Register();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -70,5 +73,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-

@@ -1,11 +1,11 @@
 ﻿using ReportExporting.ApplicationLib.Entities;
 using ReportExporting.Core;
 
-namespace ReportExporting.ApplicationLib.Helpers;
+namespace ReportExporting.ApplicationLib.Helpers.Core;
 
-public class ReportRequestObjectFactory
+public class ReportRequestObjectFactory: IReportRequestObjectFactory
 {
-    public static ReportRequestObject CreateFromReportRequest(ReportRequest request)
+    public ReportRequestObject CreateFromReportRequest(ReportRequest request)
     {
         return new ReportRequestObject
         {

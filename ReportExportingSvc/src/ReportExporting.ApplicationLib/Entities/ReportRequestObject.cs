@@ -18,4 +18,6 @@ public class ReportRequestObject : ReportRequest
     {
         return string.Join(", ", Progress.ToArray());
     }
+
+    public string? ErrorMessage { get; set; }
 }

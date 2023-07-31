@@ -1,11 +1,9 @@
-﻿using MediatR;
-using ReportExporting.ApplicationLib.Entities;
+﻿using ReportExporting.ApplicationLib.Entities;
 using ReportExporting.ApplicationLib.Handlers;
-using ReportExporting.ApplicationLib.Messages;
 
-namespace ReportExporting.PlaceOrderApi.Handlers;
+namespace ReportExporting.PlaceOrderApi.Handlers.Core;
 
-public class ExportRequestHandler : IRequestHandler<PlaceOrderRequest, ReportRequestObject>
+public class ExportRequestHandler : IExportRequestHandler
 {
     private readonly IAddItemToQueueHandler _addItemToQueueHandler;
     private readonly IUpsertItemToTableHandler _upsertItemToTableHandler;
@@ -18,12 +16,13 @@ public class ExportRequestHandler : IRequestHandler<PlaceOrderRequest, ReportReq
         _upsertItemToTableHandler = upsertItemToTableHandler;
     }
 
-    public async Task<ReportRequestObject> Handle(PlaceOrderRequest request, CancellationToken cancellationToken)
+    public async Task<ReportRequestObject> Handle(ReportRequestObject request)
     {
-        request.PayLoad.Progress.Add(ExportingProgress.Submitting);
+        request.Progress.Add(ExportingProgress.Submitting);
+        request.Status = ExportingStatus.Ongoing;
 
         //place it on the Azure Table
-        var result = await _upsertItemToTableHandler.Handle(request.PayLoad);
+        var result = await _upsertItemToTableHandler.Handle(request);
 
 
         //place it on the Queue for process

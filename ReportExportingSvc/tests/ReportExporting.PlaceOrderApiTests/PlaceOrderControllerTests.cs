@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using ReportExporting.ApplicationLib.Entities;
@@ -16,6 +15,7 @@ namespace ReportExporting.PlaceOrderApiTests;
 public class PlaceOrderControllerTests
 {
     private readonly IReportRequestObjectFactory _reportRequestObjectFactory;
+
     public PlaceOrderControllerTests()
     {
         _reportRequestObjectFactory = new ReportRequestObjectFactory();
@@ -38,7 +38,8 @@ public class PlaceOrderControllerTests
         exportRequestHandlerMock.Setup(p => p.Handle(It.IsAny<ReportRequestObject>()))
             .ReturnsAsync(() => requestObject);
 
-        var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object, _reportRequestObjectFactory, new ExportRequestValidator());
+        var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object,
+            _reportRequestObjectFactory, new ExportRequestValidator());
 
         //Act
         var actionResult = await placeOrderController.PlaceExportOrder(request);
@@ -57,7 +58,6 @@ public class PlaceOrderControllerTests
         response!.Status.Should().Be("Order submitted");
 
         exportRequestHandlerMock.Verify(x => x.Handle(It.IsAny<ReportRequestObject>()), Times.Once);
-
     }
 
     [Fact]
@@ -73,7 +73,8 @@ public class PlaceOrderControllerTests
         exportRequestHandlerMock.Setup(p => p.Handle(It.IsAny<ReportRequestObject>()))
             .ReturnsAsync(() => requestObject);
 
-        var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object, _reportRequestObjectFactory, new ExportRequestValidator());
+        var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object,
+            _reportRequestObjectFactory, new ExportRequestValidator());
 
         //Act
         var actionResult = await placeOrderController.PlaceExportOrder(request);
@@ -88,7 +89,6 @@ public class PlaceOrderControllerTests
         exportRequestHandlerMock.Verify(x => x.Handle(It.IsAny<ReportRequestObject>()), Times.Once);
     }
 
-   
 
     [Theory]
     [InlineData(null, false)]
@@ -98,14 +98,14 @@ public class PlaceOrderControllerTests
     [InlineData("bobpham.tdp@gmail.com", true)]
     [InlineData("bobpham-tdp@gmail.com", true)]
     [InlineData("bobpham_tdp@gmail.com", true)]
-    [InlineData("bobpham_tdp@gmail.&com",false)]
+    [InlineData("bobpham_tdp@gmail.&com", false)]
     public async Task ReturnBadRequestWhenRequestHasInvalidEmailAddress(string emailAddress, bool expectedResult)
     {
         var request = TestHelper.GetFakeReportRequest();
         request.EmailAddress = emailAddress;
 
         var requestObject = _reportRequestObjectFactory.CreateFromReportRequest(request);
-     
+
 
         var exportRequestHandlerMock = new Mock<IExportRequestHandler>();
 
@@ -113,7 +113,8 @@ public class PlaceOrderControllerTests
         exportRequestHandlerMock.Setup(p => p.Handle(It.IsAny<ReportRequestObject>()))
             .ReturnsAsync(() => requestObject);
 
-        var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object, _reportRequestObjectFactory, new ExportRequestValidator());
+        var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object,
+            _reportRequestObjectFactory, new ExportRequestValidator());
 
         //Act
         var actionResult = await placeOrderController.PlaceExportOrder(request);
@@ -137,7 +138,6 @@ public class PlaceOrderControllerTests
 
             response!.Status.Should().Be("Order submitted");
         }
- 
     }
 
     [Theory]
@@ -158,7 +158,8 @@ public class PlaceOrderControllerTests
         exportRequestHandlerMock.Setup(p => p.Handle(It.IsAny<ReportRequestObject>()))
             .ReturnsAsync(() => requestObject);
 
-        var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object, _reportRequestObjectFactory, new ExportRequestValidator());
+        var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object,
+            _reportRequestObjectFactory, new ExportRequestValidator());
 
         //Act
         var actionResult = await placeOrderController.PlaceExportOrder(request);
@@ -182,6 +183,5 @@ public class PlaceOrderControllerTests
 
             response!.Status.Should().Be("Order submitted");
         }
-       
     }
 }

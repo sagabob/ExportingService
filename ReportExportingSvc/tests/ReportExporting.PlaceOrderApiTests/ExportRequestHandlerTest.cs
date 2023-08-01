@@ -26,6 +26,7 @@ public class ExportRequestHandlerTests
         _reportRequestObjectFactory = new ReportRequestObjectFactory();
 
         _addItemToQueueHandlerMock = new Mock<IAddItemToQueueHandler>();
+
         _upsertItemToTableHandlerMock = new Mock<IUpsertItemToTableHandler>();
 
         _exportRequestHandler =

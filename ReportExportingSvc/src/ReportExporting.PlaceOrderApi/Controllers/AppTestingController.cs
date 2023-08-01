@@ -4,6 +4,7 @@ using ReportExporting.ApplicationLib.Helpers;
 using ReportExporting.Core;
 using ReportExporting.PlaceOrderApi.Handlers;
 using ReportExporting.PlaceOrderApi.Messages;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ReportExporting.PlaceOrderApi.Controllers;
 
@@ -21,6 +22,7 @@ public class AppTestingController : ControllerBase
         _reportRequestObjectFactory = reportRequestObjectFactory;
     }
 
+    [ExcludeFromCodeCoverage]
     [HttpGet("TestPdfExport", Name = "TestPdfExport")]
     public async Task<ActionResult<ExportingReportResponse>> TestPdfExport()
     {
@@ -55,7 +57,7 @@ public class AppTestingController : ControllerBase
         return Ok(successResult);
     }
 
-
+    [ExcludeFromCodeCoverage]
     [HttpGet("TestWordExport", Name = "TestWordExport")]
     public async Task<ActionResult<ExportingReportResponse>> TestWordExport()
     {

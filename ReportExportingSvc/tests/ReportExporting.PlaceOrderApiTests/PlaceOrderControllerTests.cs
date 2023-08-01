@@ -90,6 +90,32 @@ public class PlaceOrderControllerTests
     }
 
 
+    [Fact]
+    public async Task ReturnBadRequestWhenRequestHasNoUrls()
+    {
+        var request = TestHelper.GetFakeReportRequest();
+        request.Urls = null;
+
+        var exportRequestHandlerMock = new Mock<IExportRequestHandler>();
+
+        var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object,
+            _reportRequestObjectFactory, new ExportRequestValidator());
+
+        // Act
+        var actionResult = await placeOrderController.PlaceExportOrder(request);
+
+
+        // Assertion
+        actionResult.Result.Should().NotBeNull();
+
+        var outputMsg = actionResult.Result as BadRequestObjectResult;
+
+        outputMsg!.StatusCode.Should().Be(400);
+        outputMsg.Value.Should().Be("Invalid report request");
+
+    }
+
+
     [Theory]
     [InlineData(null, false)]
     [InlineData("", false)]
@@ -137,6 +163,8 @@ public class PlaceOrderControllerTests
             response!.OrderId.Should().Be(requestObject.Id.ToString());
 
             response!.Status.Should().Be("Order submitted");
+
+            exportRequestHandlerMock.Verify(x => x.Handle(It.IsAny<ReportRequestObject>()), Times.Once);
         }
     }
 
@@ -182,6 +210,8 @@ public class PlaceOrderControllerTests
             response!.OrderId.Should().Be(requestObject.Id.ToString());
 
             response!.Status.Should().Be("Order submitted");
+
+            exportRequestHandlerMock.Verify(x => x.Handle(It.IsAny<ReportRequestObject>()), Times.Once);
         }
     }
 }

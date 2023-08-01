@@ -21,6 +21,6 @@ public class ReportUrlValidator : AbstractValidator<ReportUrl>
 {
     public ReportUrlValidator()
     {
-        RuleFor(x => x.Url).NotNull();
+        RuleFor(x => x.Url).NotNull().NotEmpty();
     }
 }

@@ -24,16 +24,23 @@ public class HandleExportProcess : IHandleExportProcess
 
     public async Task<ReportRequestObject> Handle(ReportRequestObject request)
     {
-        // do export 
-        var exportFileStream = await _exportRequestHandler.ProcessExportRequest(request);
+        request.Progress.Add(ExportingProgress.DoExportingOnOrder);
 
         // update record
         var result = await _upsertItemToTableHandler.Handle(request);
 
+        // do export 
+        var exportFileStream = await _exportRequestHandler.ProcessExportRequest(result);
+
+        // update record
+        result = await _upsertItemToTableHandler.Handle(result);
+
         // upload file
         if (exportFileStream != null) await _uploadItemToBlobHandler.Handle(exportFileStream, result);
 
+
         result = await _addItemToQueueHandler.Handle(result, QueueType.EmailQueue);
+
 
         result = await _upsertItemToTableHandler.Handle(result);
 

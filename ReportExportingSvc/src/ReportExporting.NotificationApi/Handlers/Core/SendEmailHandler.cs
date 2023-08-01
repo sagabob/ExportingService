@@ -21,13 +21,17 @@ public class SendEmailHandler : ISendEmailHandler
 
     public async Task<ReportRequestObject> HandleSendingEmailToClient(ReportRequestObject reportRequestObject)
     {
+        var updatedResult = await _upsertItemToTableHandler.Handle(reportRequestObject);
+
         var fileStream = new MemoryStream();
-        var blobResult = await
-            _downloadItemFromBlobHandler.Handle(fileStream, reportRequestObject);
 
-        var updatedResult = await _upsertItemToTableHandler.Handle(blobResult);
+        // get the export file by downloading from blob container
+        updatedResult = await
+            _downloadItemFromBlobHandler.Handle(fileStream, updatedResult);
 
-        if (blobResult.Status == ExportingStatus.Failure)
+        updatedResult = await _upsertItemToTableHandler.Handle(updatedResult);
+
+        if (updatedResult.Status == ExportingStatus.Failure)
         {
             updatedResult = await _emailService.SendingEmailToAdminAsync(updatedResult);
 

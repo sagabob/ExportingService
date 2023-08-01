@@ -23,7 +23,7 @@ public class DownloadItemFromBlobHandler : IDownloadItemFromBlobHandler
 
             if (response.Status == 206)
             {
-                request.Progress.Add(ExportingProgress.UploadFileToBlob);
+                request.Progress.Add(ExportingProgress.DownloadBlobToStream);
             }
             else
             {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using ReportExporting.ApplicationLib.Entities;
 using ReportExporting.ApplicationLib.Helpers;
 using ReportExporting.Core;
@@ -14,12 +15,14 @@ public class AppTestingController : ControllerBase
 {
     private readonly IExportRequestHandler _exportRequestHandler;
     private readonly IReportRequestObjectFactory _reportRequestObjectFactory;
+    private readonly IValidator<ReportRequest> _reportValidator;
 
     public AppTestingController(IExportRequestHandler exportRequestHandler,
-        IReportRequestObjectFactory reportRequestObjectFactory)
+        IReportRequestObjectFactory reportRequestObjectFactory,  IValidator<ReportRequest> reportValidator)
     {
         _exportRequestHandler = exportRequestHandler;
         _reportRequestObjectFactory = reportRequestObjectFactory;
+        _reportValidator = reportValidator;
     }
 
     [ExcludeFromCodeCoverage]
@@ -46,6 +49,11 @@ public class AppTestingController : ControllerBase
                 }
             }
         };
+        
+        var validationResult = await _reportValidator.ValidateAsync(request);
+
+        if (!validationResult.IsValid)
+            return BadRequest("Invalid report request");
 
         var result = await _exportRequestHandler.Handle(_reportRequestObjectFactory.CreateFromReportRequest(request));
 
@@ -81,6 +89,11 @@ public class AppTestingController : ControllerBase
                 }
             }
         };
+
+        var validationResult = await _reportValidator.ValidateAsync(request);
+
+        if (!validationResult.IsValid)
+            return BadRequest("Invalid report request");
 
         var result = await _exportRequestHandler.Handle(_reportRequestObjectFactory.CreateFromReportRequest(request));
 

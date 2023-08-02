@@ -4,6 +4,7 @@ using Moq;
 using ReportExporting.ApplicationLib.Entities;
 using ReportExporting.ApplicationLib.Helpers;
 using ReportExporting.ApplicationLib.Helpers.Core;
+using ReportExporting.Core;
 using ReportExporting.PlaceOrderApi.Controllers;
 using ReportExporting.PlaceOrderApi.Handlers;
 using ReportExporting.PlaceOrderApi.Messages;
@@ -94,7 +95,7 @@ public class PlaceOrderControllerTests
     public async Task ReturnBadRequestWhenRequestHasNoUrls()
     {
         var request = TestHelper.GetFakeReportRequest();
-        request.Urls = null;
+        request.Urls = null!;
 
         var exportRequestHandlerMock = new Mock<IExportRequestHandler>();
 
@@ -114,6 +115,50 @@ public class PlaceOrderControllerTests
         outputMsg.Value.Should().Be("Invalid report request");
 
     }
+
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("bob")]
+    public async Task ReturnBadRequestWhenRequestHasInvalidUrls(string inputUrl)
+    {
+        var request = TestHelper.GetFakeReportRequest();
+        request.Urls = null!;
+
+        request.Urls = new[]
+        {
+            new()
+            {
+                Url = "https://profile.id.com.au/adelaide/ancestry",
+                Title = "Ancestry"
+            },
+            new ReportUrl
+            {
+                Url = inputUrl,
+                Title = "Industries"
+            }
+        };
+
+        var exportRequestHandlerMock = new Mock<IExportRequestHandler>();
+
+        var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object,
+            _reportRequestObjectFactory, new ExportRequestValidator());
+
+        // Act
+        var actionResult = await placeOrderController.PlaceExportOrder(request);
+
+
+        // Assertion
+        actionResult.Result.Should().NotBeNull();
+
+        var outputMsg = actionResult.Result as BadRequestObjectResult;
+
+        outputMsg!.StatusCode.Should().Be(400);
+        outputMsg.Value.Should().Be("Invalid report request");
+
+    }
+
 
 
     [Theory]

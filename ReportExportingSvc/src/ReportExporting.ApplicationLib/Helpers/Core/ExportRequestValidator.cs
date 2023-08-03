@@ -15,6 +15,10 @@ public class ExportRequestValidator : AbstractValidator<ReportRequest>
         RuleFor(p => p.Urls).NotNull();
 
         RuleForEach(x => x.Urls).NotNull().SetValidator(new ReportUrlValidator());
+
+        RuleFor(p => p.Product).NotNull().IsInEnum();
+
+        RuleFor(p => p.Format).NotNull().IsInEnum();
     }
 }
 

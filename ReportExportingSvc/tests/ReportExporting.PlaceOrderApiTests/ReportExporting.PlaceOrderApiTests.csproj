@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\ReportExporting.ApplicationLib\ReportExporting.ApplicationLib.csproj" />
     <ProjectReference Include="..\..\src\ReportExporting.Core\ReportExporting.Core.csproj" />
     <ProjectReference Include="..\..\src\ReportExporting.PlaceOrderApi\ReportExporting.PlaceOrderApi.csproj" />
   </ItemGroup>

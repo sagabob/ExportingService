@@ -2,7 +2,6 @@
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Microsoft.Extensions.Configuration;
-using System.IO;
 
 namespace ReportExporting.ApplicationLib.Services.Core;
 

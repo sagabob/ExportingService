@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReportExporting.Notificatio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReportExporting.ProcessOrderApiTests", "tests\ReportExporting.ProcessOrderApiTests\ReportExporting.ProcessOrderApiTests.csproj", "{EDA9BE01-E4BF-42B9-BC82-E851B099E7F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportExporting.NotificationApiTests", "tests\ReportExporting.NotificationApiTests\ReportExporting.NotificationApiTests.csproj", "{BF356ADC-9E04-4DC3-BD31-D1D11184F7AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReportExporting.NotificationApiTests", "tests\ReportExporting.NotificationApiTests\ReportExporting.NotificationApiTests.csproj", "{BF356ADC-9E04-4DC3-BD31-D1D11184F7AB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReportExporting.ApplicationLibTests", "tests\ReportExporting.ApplicationLibTests\ReportExporting.ApplicationLibTests.csproj", "{3AC6E555-1C9E-416B-B95F-76AFB6804F98}"
 EndProject

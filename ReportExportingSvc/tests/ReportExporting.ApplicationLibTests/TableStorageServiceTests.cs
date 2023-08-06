@@ -31,7 +31,7 @@ public class TableStorageServiceTests
         var tableStorageService =
             new TableStorageService(tableServiceClientMock.Object, configuration.Object);
 
-        tableStorageService.UpsertEntityAsync()
+      
 
     }
 }

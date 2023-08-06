@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReportExporting.Notificatio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReportExporting.ApplicationLibTests", "tests\ReportExporting.ApplicationLibTests\ReportExporting.ApplicationLibTests.csproj", "{3AC6E555-1C9E-416B-B95F-76AFB6804F98}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportExporting.TestHelpers", "tests\ReportExporting.TestHelpers\ReportExporting.TestHelpers.csproj", "{9FC2032C-19C8-4A01-9BB7-A34A721B4484}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,10 @@ Global
 		{3AC6E555-1C9E-416B-B95F-76AFB6804F98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AC6E555-1C9E-416B-B95F-76AFB6804F98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AC6E555-1C9E-416B-B95F-76AFB6804F98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FC2032C-19C8-4A01-9BB7-A34A721B4484}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FC2032C-19C8-4A01-9BB7-A34A721B4484}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FC2032C-19C8-4A01-9BB7-A34A721B4484}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FC2032C-19C8-4A01-9BB7-A34A721B4484}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,6 +94,7 @@ Global
 		{EDA9BE01-E4BF-42B9-BC82-E851B099E7F7} = {CD4B171E-11C4-4BEC-9B29-9118441D601A}
 		{BF356ADC-9E04-4DC3-BD31-D1D11184F7AB} = {CD4B171E-11C4-4BEC-9B29-9118441D601A}
 		{3AC6E555-1C9E-416B-B95F-76AFB6804F98} = {CD4B171E-11C4-4BEC-9B29-9118441D601A}
+		{9FC2032C-19C8-4A01-9BB7-A34A721B4484} = {CD4B171E-11C4-4BEC-9B29-9118441D601A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D4F27B8D-FDCB-4BB5-BD1E-41B4DF807685}

@@ -6,23 +6,22 @@ using ReportExporting.ApplicationLib.Helpers;
 using ReportExporting.ApplicationLib.Helpers.Core;
 using ReportExporting.PlaceOrderApi.Handlers;
 using ReportExporting.PlaceOrderApi.Handlers.Core;
-using ReportExporting.PlaceOrderApiTests.Helpers;
+using ReportExporting.TestHelpers;
 using Xunit;
 
 namespace ReportExporting.PlaceOrderApiTests;
 
 public class ExportRequestHandlerTests
 {
+    private readonly Mock<IAddItemToQueueHandler> _addItemToQueueHandlerMock;
     private readonly IExportRequestHandler _exportRequestHandler;
 
-    private readonly Mock<IAddItemToQueueHandler> _addItemToQueueHandlerMock;
+    private readonly IReportRequestObjectFactory _reportRequestObjectFactory;
 
     private readonly Mock<IUpsertItemToTableHandler> _upsertItemToTableHandlerMock;
 
-    private readonly IReportRequestObjectFactory _reportRequestObjectFactory;
     public ExportRequestHandlerTests()
     {
-
         _reportRequestObjectFactory = new ReportRequestObjectFactory();
 
         _addItemToQueueHandlerMock = new Mock<IAddItemToQueueHandler>();
@@ -37,13 +36,13 @@ public class ExportRequestHandlerTests
     public async Task ShouldHandleExportRequest()
     {
         //Arrange
-        var request = TestHelper.GetFakeReportRequest();
+        var request = TestDataFactory.GetFakeReportRequest();
         var requestObject = _reportRequestObjectFactory.CreateFromReportRequest(request);
 
         requestObject.Status = ExportingStatus.Ongoing;
 
         _addItemToQueueHandlerMock.Setup(x => x.Handle(It.IsAny<ReportRequestObject>(), QueueType.WorkQueue))
-            .ReturnsAsync( () => requestObject);
+            .ReturnsAsync(() => requestObject);
 
 
         _upsertItemToTableHandlerMock.Setup(x => x.Handle(It.IsAny<ReportRequestObject>()))
@@ -56,14 +55,13 @@ public class ExportRequestHandlerTests
         updatedRequest.Status.Should().Be(ExportingStatus.Ongoing);
 
         updatedRequest.Progress.Should().Contain(ExportingProgress.Submitting);
-
     }
 
     [Fact]
     public async Task ExportHandlerUseQueueAndTable()
     {
         // Arrange
-        var request = TestHelper.GetFakeReportRequest();
+        var request = TestDataFactory.GetFakeReportRequest();
         var requestObject = _reportRequestObjectFactory.CreateFromReportRequest(request);
 
         requestObject.Status = ExportingStatus.Ongoing;
@@ -79,7 +77,8 @@ public class ExportRequestHandlerTests
         await _exportRequestHandler.Handle(requestObject);
 
         // Assert
-        _addItemToQueueHandlerMock.Verify(p => p.Handle(It.IsAny<ReportRequestObject>(), QueueType.WorkQueue), Times.Once());
+        _addItemToQueueHandlerMock.Verify(p => p.Handle(It.IsAny<ReportRequestObject>(), QueueType.WorkQueue),
+            Times.Once());
 
         _upsertItemToTableHandlerMock.Verify(x => x.Handle(requestObject), Times.Exactly(2));
     }

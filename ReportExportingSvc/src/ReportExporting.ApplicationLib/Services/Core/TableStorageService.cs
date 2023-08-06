@@ -13,22 +13,13 @@ public class TableStorageService : ITableStorageService
     }
 
     public TableClient TableClient { get; }
+    
 
-
-    public async Task<ReportRequestTableEntity> GetEntityAsync(string category, string id)
-    {
-        return await TableClient.GetEntityAsync<ReportRequestTableEntity>(category, id);
-    }
-
-    public async Task<Response> AddEntityAsync(ReportRequestTableEntity entity)
+    public async Task<Response> UpsertEntityAsync(ReportRequestTableEntity entity)
     {
         var response = await TableClient.UpsertEntityAsync(entity);
 
         return response;
     }
 
-    public async Task DeleteEntityAsync(string category, string id)
-    {
-        await TableClient.DeleteEntityAsync(category, id);
-    }
 }

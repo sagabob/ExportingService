@@ -8,7 +8,7 @@ using ReportExporting.Core;
 using ReportExporting.PlaceOrderApi.Controllers;
 using ReportExporting.PlaceOrderApi.Handlers;
 using ReportExporting.PlaceOrderApi.Messages;
-using ReportExporting.PlaceOrderApiTests.Helpers;
+using ReportExporting.TestHelpers;
 using Xunit;
 
 namespace ReportExporting.PlaceOrderApiTests;
@@ -28,7 +28,7 @@ public class PlaceOrderControllerTests
     public async Task CanGetValidSubmittedOrderWhenOrderStatusNotFailure(ExportingStatus status)
     {
         //Arrange
-        var request = TestHelper.GetFakeReportRequest();
+        var request = TestDataFactory.GetFakeReportRequest();
         var requestObject = _reportRequestObjectFactory.CreateFromReportRequest(request);
         requestObject.Status = status;
 
@@ -64,7 +64,7 @@ public class PlaceOrderControllerTests
     [Fact]
     public async Task ReturnFailedRequestWhenStatusFailure()
     {
-        var request = TestHelper.GetFakeReportRequest();
+        var request = TestDataFactory.GetFakeReportRequest();
         var requestObject = _reportRequestObjectFactory.CreateFromReportRequest(request);
         requestObject.Status = ExportingStatus.Failure;
 
@@ -94,7 +94,7 @@ public class PlaceOrderControllerTests
     [Fact]
     public async Task ReturnBadRequestWhenRequestHasNoUrls()
     {
-        var request = TestHelper.GetFakeReportRequest();
+        var request = TestDataFactory.GetFakeReportRequest();
         request.Urls = null!;
 
         var exportRequestHandlerMock = new Mock<IExportRequestHandler>();
@@ -113,7 +113,6 @@ public class PlaceOrderControllerTests
 
         outputMsg!.StatusCode.Should().Be(400);
         outputMsg.Value.Should().Be("Invalid report request");
-
     }
 
 
@@ -123,7 +122,7 @@ public class PlaceOrderControllerTests
     [InlineData("bob")]
     public async Task ReturnBadRequestWhenRequestHasInvalidUrls(string inputUrl)
     {
-        var request = TestHelper.GetFakeReportRequest();
+        var request = TestDataFactory.GetFakeReportRequest();
         request.Urls = null!;
 
         request.Urls = new[]
@@ -156,9 +155,7 @@ public class PlaceOrderControllerTests
 
         outputMsg!.StatusCode.Should().Be(400);
         outputMsg.Value.Should().Be("Invalid report request");
-
     }
-
 
 
     [Theory]
@@ -172,7 +169,7 @@ public class PlaceOrderControllerTests
     [InlineData("bobpham_tdp@gmail.&com", false)]
     public async Task ReturnBadRequestWhenRequestHasInvalidEmailAddress(string emailAddress, bool expectedResult)
     {
-        var request = TestHelper.GetFakeReportRequest();
+        var request = TestDataFactory.GetFakeReportRequest();
         request.EmailAddress = emailAddress;
 
         var requestObject = _reportRequestObjectFactory.CreateFromReportRequest(request);
@@ -219,7 +216,7 @@ public class PlaceOrderControllerTests
     [InlineData("population estimate", true)]
     public async Task ReturnBadRequestWhenRequestHasInvalidTitle(string title, bool result)
     {
-        var request = TestHelper.GetFakeReportRequest();
+        var request = TestDataFactory.GetFakeReportRequest();
         request.Title = title;
 
         var requestObject = _reportRequestObjectFactory.CreateFromReportRequest(request);

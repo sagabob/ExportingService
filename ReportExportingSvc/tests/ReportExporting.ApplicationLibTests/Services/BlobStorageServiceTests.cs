@@ -7,7 +7,7 @@ using Moq;
 using ReportExporting.ApplicationLib.Services.Core;
 using Xunit;
 
-namespace ReportExporting.ApplicationLibTests;
+namespace ReportExporting.ApplicationLibTests.Services;
 
 public class BlobStorageServiceTests
 {

@@ -10,7 +10,7 @@ using ReportExporting.ApplicationLib.Services.Core;
 using ReportExporting.TestHelpers;
 using Xunit;
 
-namespace ReportExporting.ApplicationLibTests;
+namespace ReportExporting.ApplicationLibTests.Services;
 
 public class TableStorageServiceTests
 {

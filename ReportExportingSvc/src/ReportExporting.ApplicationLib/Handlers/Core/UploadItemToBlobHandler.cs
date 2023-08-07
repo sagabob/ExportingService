@@ -19,13 +19,10 @@ public class UploadItemToBlobHandler : IUploadItemToBlobHandler
 
         try
         {
+            request.Progress.Add(ExportingProgress.UploadFileToBlob);
             var response = await _blobStorageService.UploadExportFileAync(fileStream, request.FileName);
 
-            if (response.HasValue)
-            {
-                request.Progress.Add(ExportingProgress.UploadFileToBlob);
-            }
-            else
+            if (!response.HasValue)
             {
                 request.Progress.Add(ExportingProgress.FailUploadingFileToBlob);
                 request.Status = ExportingStatus.Failure;

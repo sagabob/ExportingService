@@ -2,9 +2,9 @@
 using ReportExporting.Core;
 using ReportExporting.ExportApi.Models;
 
-namespace ReportExporting.ExportApi.Generators;
+namespace ReportExporting.ExportApi.Generators.Core;
 
-public class ReportGeneratorFactory: IReportGeneratorService
+public class ReportGeneratorFactory : IReportGeneratorService
 {
     private readonly PdfReportGenerator _pdfReportGenerator;
     private readonly WordReportGenerator _wordReportGenerator;

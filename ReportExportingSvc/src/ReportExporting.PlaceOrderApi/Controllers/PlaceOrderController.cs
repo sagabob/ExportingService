@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net.Mime;
+﻿using System.Net.Mime;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using ReportExporting.ApplicationLib.Entities;
@@ -35,7 +34,7 @@ public class PlaceOrderController : ControllerBase
     {
         var validationResult = await _reportValidator.ValidateAsync(request);
 
-        if (!validationResult.IsValid) 
+        if (!validationResult.IsValid)
             return BadRequest("Invalid report request");
 
         var requestObject = _reportRequestObjectFactory.CreateFromReportRequest(request);

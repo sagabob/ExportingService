@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using ReportExporting.ExportApi.Models;
 
-namespace ReportExporting.ExportApi.Generators;
+namespace ReportExporting.ExportApi.Generators.Core;
 
 public class PdfReportGenerator : IReportGenerator
 {
@@ -20,7 +20,7 @@ public class PdfReportGenerator : IReportGenerator
 
         var pdfDocuments = new List<PdfDocument> { cover };
 
-        foreach (var urlItem in exportObject.Urls)
+        foreach (var urlItem in exportObject.Urls!)
         {
             var pdf = await renderer.RenderUrlAsPdfAsync(urlItem.Url);
             pdfDocuments.Add(pdf);

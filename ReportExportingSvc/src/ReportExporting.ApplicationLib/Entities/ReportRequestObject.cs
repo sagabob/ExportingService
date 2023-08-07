@@ -14,10 +14,10 @@ public class ReportRequestObject : ReportRequest
     public ExportingStatus Status { get; set; }
     public List<ExportingProgress> Progress { get; set; }
 
+    public string? ErrorMessage { get; set; }
+
     public string GetFullProgress()
     {
         return string.Join(", ", Progress.ToArray());
     }
-
-    public string? ErrorMessage { get; set; }
 }

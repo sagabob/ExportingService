@@ -9,6 +9,7 @@ public enum ExportingProgress
     FailToPlaceOrderOnQueue,
     OrderReceivedFromQueue,
     OrderOnDeadLetterQueue,
+    DoExportingOnOrder,
     FailExportingPdf,
     ExportedPdf,
     FailExportingWord,

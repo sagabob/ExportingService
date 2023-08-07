@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Diagnostics.CodeAnalysis;
+using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using ReportExporting.ApplicationLib.Entities;
 using ReportExporting.ApplicationLib.Helpers;
 using ReportExporting.Core;
@@ -13,14 +15,17 @@ public class AppTestingController : ControllerBase
 {
     private readonly IExportRequestHandler _exportRequestHandler;
     private readonly IReportRequestObjectFactory _reportRequestObjectFactory;
+    private readonly IValidator<ReportRequest> _reportValidator;
 
     public AppTestingController(IExportRequestHandler exportRequestHandler,
-        IReportRequestObjectFactory reportRequestObjectFactory)
+        IReportRequestObjectFactory reportRequestObjectFactory, IValidator<ReportRequest> reportValidator)
     {
         _exportRequestHandler = exportRequestHandler;
         _reportRequestObjectFactory = reportRequestObjectFactory;
+        _reportValidator = reportValidator;
     }
 
+    [ExcludeFromCodeCoverage]
     [HttpGet("TestPdfExport", Name = "TestPdfExport")]
     public async Task<ActionResult<ExportingReportResponse>> TestPdfExport()
     {
@@ -28,7 +33,7 @@ public class AppTestingController : ControllerBase
         {
             Title = "Sample Report",
             Product = ReportProduct.Profile,
-            EmailAddress = "bobpham.tdp@gmail.com",
+            EmailAddress = "bobp@id.com.au",
             Format = ReportFormat.Pdf,
             Urls = new[]
             {
@@ -45,6 +50,11 @@ public class AppTestingController : ControllerBase
             }
         };
 
+        var validationResult = await _reportValidator.ValidateAsync(request);
+
+        if (!validationResult.IsValid)
+            return BadRequest("Invalid report request");
+
         var result = await _exportRequestHandler.Handle(_reportRequestObjectFactory.CreateFromReportRequest(request));
 
         if (result.Status == ExportingStatus.Failure)
@@ -55,7 +65,7 @@ public class AppTestingController : ControllerBase
         return Ok(successResult);
     }
 
-
+    [ExcludeFromCodeCoverage]
     [HttpGet("TestWordExport", Name = "TestWordExport")]
     public async Task<ActionResult<ExportingReportResponse>> TestWordExport()
     {
@@ -63,7 +73,7 @@ public class AppTestingController : ControllerBase
         {
             Title = "Sample Report",
             Product = ReportProduct.Profile,
-            EmailAddress = "bobpham.tdp@gmail.com",
+            EmailAddress = "bobp@id.com.au",
             Format = ReportFormat.Word,
             Urls = new[]
             {
@@ -79,6 +89,11 @@ public class AppTestingController : ControllerBase
                 }
             }
         };
+
+        var validationResult = await _reportValidator.ValidateAsync(request);
+
+        if (!validationResult.IsValid)
+            return BadRequest("Invalid report request");
 
         var result = await _exportRequestHandler.Handle(_reportRequestObjectFactory.CreateFromReportRequest(request));
 

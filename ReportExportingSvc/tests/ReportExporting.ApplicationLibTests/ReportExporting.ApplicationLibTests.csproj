@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ReportExporting.ApplicationLib\ReportExporting.ApplicationLib.csproj" />
+    <ProjectReference Include="..\ReportExporting.TestHelpers\ReportExporting.TestHelpers.csproj" />
   </ItemGroup>
 
 </Project>

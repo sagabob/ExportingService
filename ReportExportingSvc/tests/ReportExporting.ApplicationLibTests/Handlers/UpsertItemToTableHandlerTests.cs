@@ -102,7 +102,7 @@ public class UpsertItemToTableHandlerTests
         var tableStorageServiceMock = new Mock<ITableStorageService>();
 
         tableStorageServiceMock.Setup(x => x.UpsertEntityAsync(It.IsAny<ReportRequestTableEntity>()))
-            .ThrowsAsync(new TableTransactionFailedException(new RequestFailedException("Fail")));
+            .ThrowsAsync(new TableTransactionFailedException(new RequestFailedException("Fail updating")));
 
         IUpsertItemToTableHandler upsertItemToTableHandler =
             new UpsertItemToTableHandler(tableStorageServiceMock.Object, _tableEntityFactory);

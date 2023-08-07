@@ -19,16 +19,17 @@ public class AddItemToQueueHandler : IAddItemToQueueHandler
 
     public async Task<ReportRequestObject> Handle(ReportRequestObject request, QueueType queueType)
     {
-        if (request.Status == ExportingStatus.Failure)
+        if (request.Status == ExportingStatus.Failure && queueType == QueueType.WorkQueue)
             return request;
 
-        var serviceBusSender = _serviceBusClient.CreateSender(_configuration[queueType.ToString()]);
-
-        request.Progress.Add(queueType == QueueType.WorkQueue
-            ? ExportingProgress.PlaceOrderOnQueue
-            : ExportingProgress.SendOrderToEmailQueue);
         try
         {
+            var serviceBusSender = _serviceBusClient.CreateSender(_configuration[queueType.ToString()]);
+
+            request.Progress.Add(queueType == QueueType.WorkQueue
+                ? ExportingProgress.PlaceOrderOnQueue
+                : ExportingProgress.SendOrderToEmailQueue);
+
             var message = new ServiceBusMessage(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(request)))
             {
                 ContentType = "application/json",

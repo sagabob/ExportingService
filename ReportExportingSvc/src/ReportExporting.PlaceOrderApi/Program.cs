@@ -1,5 +1,3 @@
-using System;
-using System.Reflection;
 using Azure.Identity;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -10,7 +8,6 @@ using ReportExporting.ApplicationLib.Helpers;
 using ReportExporting.ApplicationLib.Helpers.Core;
 using ReportExporting.ApplicationLib.Services;
 using ReportExporting.ApplicationLib.Services.Core;
-using ReportExporting.Core;
 using ReportExporting.PlaceOrderApi.Handlers;
 using ReportExporting.PlaceOrderApi.Handlers.Core;
 
@@ -27,7 +24,6 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<ExportRequestValidator>();
 
 
-
 builder.Services.AddAzureClients(cfg =>
 {
     cfg.AddServiceBusClient(builder.Configuration.GetSection("ServiceBus"))
@@ -39,7 +35,6 @@ builder.Services.AddAzureClients(cfg =>
 
 builder.Services.AddScoped<IReportRequestObjectFactory, ReportRequestObjectFactory>();
 builder.Services.AddScoped<IReportRequestTableEntityFactory, ReportRequestTableEntityFactory>();
-
 
 
 builder.Services.AddScoped<ITableStorageService, TableStorageService>();

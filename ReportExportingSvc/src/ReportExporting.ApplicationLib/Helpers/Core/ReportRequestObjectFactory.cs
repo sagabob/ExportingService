@@ -3,7 +3,7 @@ using ReportExporting.Core;
 
 namespace ReportExporting.ApplicationLib.Helpers.Core;
 
-public class ReportRequestObjectFactory: IReportRequestObjectFactory
+public class ReportRequestObjectFactory : IReportRequestObjectFactory
 {
     public ReportRequestObject CreateFromReportRequest(ReportRequest request)
     {

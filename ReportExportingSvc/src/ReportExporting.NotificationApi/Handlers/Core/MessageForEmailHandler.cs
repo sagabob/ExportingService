@@ -50,6 +50,8 @@ public class MessageForEmailHandler : IMessageForEmailHandler
 
             if (request != null)
             {
+                request.Progress.Add(ExportingProgress.OrderReceivedFromEmailQueue);
+
                 if (request.Status != ExportingStatus.Failure)
                     await _sendEmailHandler.HandleSendingEmailToClient(request);
                 else

@@ -1,14 +1,14 @@
 ﻿using FluentAssertions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using ReportExporting.ApplicationLib.Entities;
 using ReportExporting.ApplicationLib.Helpers;
 using ReportExporting.ApplicationLib.Helpers.Core;
+using ReportExporting.Core;
 using ReportExporting.PlaceOrderApi.Controllers;
 using ReportExporting.PlaceOrderApi.Handlers;
 using ReportExporting.PlaceOrderApi.Messages;
-using ReportExporting.PlaceOrderApiTests.Helpers;
+using ReportExporting.TestHelpers;
 using Xunit;
 
 namespace ReportExporting.PlaceOrderApiTests;
@@ -16,6 +16,7 @@ namespace ReportExporting.PlaceOrderApiTests;
 public class PlaceOrderControllerTests
 {
     private readonly IReportRequestObjectFactory _reportRequestObjectFactory;
+
     public PlaceOrderControllerTests()
     {
         _reportRequestObjectFactory = new ReportRequestObjectFactory();
@@ -27,18 +28,18 @@ public class PlaceOrderControllerTests
     public async Task CanGetValidSubmittedOrderWhenOrderStatusNotFailure(ExportingStatus status)
     {
         //Arrange
-        var request = TestHelper.GetFakeReportRequest();
+        var request = TestDataFactory.GetFakeReportRequest();
         var requestObject = _reportRequestObjectFactory.CreateFromReportRequest(request);
         requestObject.Status = status;
 
-
+        //Mocking setup
         var exportRequestHandlerMock = new Mock<IExportRequestHandler>();
-
 
         exportRequestHandlerMock.Setup(p => p.Handle(It.IsAny<ReportRequestObject>()))
             .ReturnsAsync(() => requestObject);
 
-        var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object, _reportRequestObjectFactory, new ExportRequestValidator());
+        var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object,
+            _reportRequestObjectFactory, new ExportRequestValidator());
 
         //Act
         var actionResult = await placeOrderController.PlaceExportOrder(request);
@@ -56,39 +57,115 @@ public class PlaceOrderControllerTests
 
         response!.Status.Should().Be("Order submitted");
 
+        //Confirm the handler is called
         exportRequestHandlerMock.Verify(x => x.Handle(It.IsAny<ReportRequestObject>()), Times.Once);
-
     }
 
     [Fact]
     public async Task ReturnFailedRequestWhenStatusFailure()
     {
-        var request = TestHelper.GetFakeReportRequest();
+        //Arrange
+        var request = TestDataFactory.GetFakeReportRequest();
         var requestObject = _reportRequestObjectFactory.CreateFromReportRequest(request);
         requestObject.Status = ExportingStatus.Failure;
 
-        var exportRequestHandlerMock = new Mock<IExportRequestHandler>();
 
+        //Mocking setup
+        var exportRequestHandlerMock = new Mock<IExportRequestHandler>();
 
         exportRequestHandlerMock.Setup(p => p.Handle(It.IsAny<ReportRequestObject>()))
             .ReturnsAsync(() => requestObject);
 
-        var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object, _reportRequestObjectFactory, new ExportRequestValidator());
+        var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object,
+            _reportRequestObjectFactory, new ExportRequestValidator());
 
         //Act
         var actionResult = await placeOrderController.PlaceExportOrder(request);
 
+
+        //Assert
         actionResult.Result.Should().NotBeNull();
 
         var outputMsg = actionResult.Result as ForbidResult;
-        //Assert
 
         outputMsg!.AuthenticationSchemes[0].Should().Be("Fail to process the order");
 
+        //Confirm the handler is called
         exportRequestHandlerMock.Verify(x => x.Handle(It.IsAny<ReportRequestObject>()), Times.Once);
     }
 
-   
+
+    [Fact]
+    public async Task ReturnBadRequestWhenRequestHasNoUrls()
+    {
+        //Arrange
+        var request = TestDataFactory.GetFakeReportRequest();
+        request.Urls = null!;
+
+        //Mocking setup
+        var exportRequestHandlerMock = new Mock<IExportRequestHandler>();
+
+        var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object,
+            _reportRequestObjectFactory, new ExportRequestValidator());
+
+
+        //Act
+        var actionResult = await placeOrderController.PlaceExportOrder(request);
+
+
+        //Assertion
+        actionResult.Result.Should().NotBeNull();
+
+        var outputMsg = actionResult.Result as BadRequestObjectResult;
+
+        outputMsg!.StatusCode.Should().Be(400);
+        outputMsg.Value.Should().Be("Invalid report request");
+    }
+
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("bob")]
+    public async Task ReturnBadRequestWhenRequestHasInvalidUrls(string inputUrl)
+    {
+        //Arrange
+        var request = TestDataFactory.GetFakeReportRequest();
+        request.Urls = null!;
+
+        request.Urls = new[]
+        {
+            new()
+            {
+                Url = "https://profile.id.com.au/adelaide/ancestry",
+                Title = "Ancestry"
+            },
+            new ReportUrl
+            {
+                Url = inputUrl,
+                Title = "Industries"
+            }
+        };
+
+        //Mocking setup
+        var exportRequestHandlerMock = new Mock<IExportRequestHandler>();
+
+        var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object,
+            _reportRequestObjectFactory, new ExportRequestValidator());
+
+        //Act
+        var actionResult = await placeOrderController.PlaceExportOrder(request);
+
+
+        //Assertion
+        actionResult.Result.Should().NotBeNull();
+
+        var outputMsg = actionResult.Result as BadRequestObjectResult;
+
+        outputMsg!.StatusCode.Should().Be(400);
+        outputMsg.Value.Should().Be("Invalid report request");
+    }
+
 
     [Theory]
     [InlineData(null, false)]
@@ -98,32 +175,40 @@ public class PlaceOrderControllerTests
     [InlineData("bobpham.tdp@gmail.com", true)]
     [InlineData("bobpham-tdp@gmail.com", true)]
     [InlineData("bobpham_tdp@gmail.com", true)]
-    [InlineData("bobpham_tdp@gmail.&com",false)]
+    [InlineData("bobpham_tdp@gmail.&com", false)]
     public async Task ReturnBadRequestWhenRequestHasInvalidEmailAddress(string emailAddress, bool expectedResult)
     {
-        var request = TestHelper.GetFakeReportRequest();
+        //Arrange
+        var request = TestDataFactory.GetFakeReportRequest();
         request.EmailAddress = emailAddress;
 
         var requestObject = _reportRequestObjectFactory.CreateFromReportRequest(request);
-     
 
+
+        //Mocking setup
         var exportRequestHandlerMock = new Mock<IExportRequestHandler>();
 
 
         exportRequestHandlerMock.Setup(p => p.Handle(It.IsAny<ReportRequestObject>()))
             .ReturnsAsync(() => requestObject);
 
-        var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object, _reportRequestObjectFactory, new ExportRequestValidator());
+        var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object,
+            _reportRequestObjectFactory, new ExportRequestValidator());
 
         //Act
         var actionResult = await placeOrderController.PlaceExportOrder(request);
 
+        //Assertion
         if (!expectedResult)
         {
             var outputMsg = actionResult.Result as BadRequestObjectResult;
 
             outputMsg!.StatusCode.Should().Be(400);
             outputMsg.Value.Should().Be("Invalid report request");
+
+
+            //Verify function is not called
+            exportRequestHandlerMock.Verify(x => x.Handle(It.IsAny<ReportRequestObject>()), Times.Never);
         }
         else
         {
@@ -136,8 +221,10 @@ public class PlaceOrderControllerTests
             response!.OrderId.Should().Be(requestObject.Id.ToString());
 
             response!.Status.Should().Be("Order submitted");
+
+            //Verify function is called
+            exportRequestHandlerMock.Verify(x => x.Handle(It.IsAny<ReportRequestObject>()), Times.Once);
         }
- 
     }
 
     [Theory]
@@ -146,29 +233,36 @@ public class PlaceOrderControllerTests
     [InlineData("population estimate", true)]
     public async Task ReturnBadRequestWhenRequestHasInvalidTitle(string title, bool result)
     {
-        var request = TestHelper.GetFakeReportRequest();
+        //Arrange
+        var request = TestDataFactory.GetFakeReportRequest();
         request.Title = title;
 
         var requestObject = _reportRequestObjectFactory.CreateFromReportRequest(request);
 
-
+        //Mocking setup
         var exportRequestHandlerMock = new Mock<IExportRequestHandler>();
-
 
         exportRequestHandlerMock.Setup(p => p.Handle(It.IsAny<ReportRequestObject>()))
             .ReturnsAsync(() => requestObject);
 
-        var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object, _reportRequestObjectFactory, new ExportRequestValidator());
+        var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object,
+            _reportRequestObjectFactory, new ExportRequestValidator());
+
 
         //Act
         var actionResult = await placeOrderController.PlaceExportOrder(request);
 
+
+        //Assertion
         if (!result)
         {
             var outputMsg = actionResult.Result as BadRequestObjectResult;
 
             outputMsg!.StatusCode.Should().Be(400);
             outputMsg.Value.Should().Be("Invalid report request");
+
+            //Verify function is not called
+            exportRequestHandlerMock.Verify(x => x.Handle(It.IsAny<ReportRequestObject>()), Times.Never);
         }
         else
         {
@@ -181,7 +275,9 @@ public class PlaceOrderControllerTests
             response!.OrderId.Should().Be(requestObject.Id.ToString());
 
             response!.Status.Should().Be("Order submitted");
+
+            //Verify function is called
+            exportRequestHandlerMock.Verify(x => x.Handle(It.IsAny<ReportRequestObject>()), Times.Once);
         }
-       
     }
 }

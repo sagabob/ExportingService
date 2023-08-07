@@ -2,7 +2,7 @@
 
 namespace ReportExporting.ApplicationLib.Helpers.Core;
 
-public class ReportRequestTableEntityFactory: IReportRequestTableEntityFactory
+public class ReportRequestTableEntityFactory : IReportRequestTableEntityFactory
 {
     public ReportRequestTableEntity CreateTableEntity(ReportRequestObject request)
     {

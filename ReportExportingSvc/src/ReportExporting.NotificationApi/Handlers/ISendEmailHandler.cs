@@ -1,10 +1,9 @@
 ﻿using ReportExporting.ApplicationLib.Entities;
 
-namespace ReportExporting.NotificationApi.Handlers
+namespace ReportExporting.NotificationApi.Handlers;
+
+public interface ISendEmailHandler
 {
-    public interface ISendEmailHandler
-    {
-        Task<ReportRequestObject> HandleSendingEmailToAdmin(ReportRequestObject reportRequestObject);
-        Task<ReportRequestObject> HandleSendingEmailToClient(ReportRequestObject reportRequestObject);
-    }
+    Task<ReportRequestObject> HandleSendingEmailToAdmin(ReportRequestObject reportRequestObject);
+    Task<ReportRequestObject> HandleSendingEmailToClient(ReportRequestObject reportRequestObject);
 }

@@ -2,7 +2,7 @@
 using ReportExporting.ExportApi.Models;
 using SautinSoft;
 
-namespace ReportExporting.ExportApi.Generators;
+namespace ReportExporting.ExportApi.Generators.Core;
 
 public class WordReportGenerator : IReportGenerator
 {

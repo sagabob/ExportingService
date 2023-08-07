@@ -19,13 +19,10 @@ public class DownloadItemFromBlobHandler : IDownloadItemFromBlobHandler
 
         try
         {
+            request.Progress.Add(ExportingProgress.DownloadBlobToStream);
             var response = await _blobStorageService.DownloadExportFileAync(request.FileName, fileStream);
 
-            if (response.Status == 206)
-            {
-                request.Progress.Add(ExportingProgress.UploadFileToBlob);
-            }
-            else
+            if (response.Status != 206)
             {
                 request.Progress.Add(ExportingProgress.FailDownloadingBlobToStream);
                 request.Status = ExportingStatus.Failure;

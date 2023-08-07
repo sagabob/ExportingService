@@ -1,16 +1,16 @@
 ﻿using ReportExporting.ApplicationLib.Entities;
 using ReportExporting.ApplicationLib.Helpers;
-using ReportExporting.ApplicationLib.Helpers.Core;
 using ReportExporting.ApplicationLib.Services;
 
 namespace ReportExporting.ApplicationLib.Handlers.Core;
 
 public class UpsertItemToTableHandler : IUpsertItemToTableHandler
 {
-    private readonly ITableStorageService _tableTableStorageService;
     private readonly IReportRequestTableEntityFactory _reportRequestTableEntityFactory;
+    private readonly ITableStorageService _tableTableStorageService;
 
-    public UpsertItemToTableHandler(ITableStorageService tableTableStorageService, IReportRequestTableEntityFactory reportRequestTableEntityFactory)
+    public UpsertItemToTableHandler(ITableStorageService tableTableStorageService,
+        IReportRequestTableEntityFactory reportRequestTableEntityFactory)
     {
         _tableTableStorageService = tableTableStorageService;
         _reportRequestTableEntityFactory = reportRequestTableEntityFactory;
@@ -23,7 +23,7 @@ public class UpsertItemToTableHandler : IUpsertItemToTableHandler
         {
             var tableEntity = _reportRequestTableEntityFactory.CreateTableEntity(request);
             var response =
-                await _tableTableStorageService.AddEntityAsync(tableEntity);
+                await _tableTableStorageService.UpsertEntityAsync(tableEntity);
 
             if (response.Status != 204)
             {

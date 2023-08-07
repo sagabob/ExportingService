@@ -19,11 +19,7 @@
 * [About the Project](#about-the-project)
 * [Architecture Diagram](#Diagram)
 * [Built with](#built-with)
-* [Usage](#usage)
-* [Getting Started](#getting-started)
-  * [Prerequisites](#Prerequisites)
-  * [Installation](#Installation)
-* [CI/CD](#continuous-development-delivery)
+* [CI/CD](#CI/CD)
 * [Roadmap](#roadmap)
 * [Contact](#contact)
 
@@ -32,6 +28,18 @@ A simple event driven architecture system exporting Html pages to Pdf/Word. User
 
 ## Diagram
 <img src="https://i.imgur.com/PbBPHAe.png" alt="Architecture Diagram" width="800" height="560">
+
+## Built With
+* DotNet Core 7
+* Azure Storage Services (Tables & Blob)
+* Azure Service Bus (Queue)
+* Built with best security practices, Azure RBAC is used with service principal.
+* TDD is used to drive the development.
+* XUnit and Moq are used for testing.
+
+## CI/CD
+[![Build Status](https://dev.azure.com/bobpham-tdp-saga/TdpAGISApp/_apis/build/status%2FExporting_Service?branchName=main)](https://dev.azure.com/bobpham-tdp-saga/TdpAGISApp/_build/latest?definitionId=48&branchName=main)
+
 
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/bob-pham-93937973/

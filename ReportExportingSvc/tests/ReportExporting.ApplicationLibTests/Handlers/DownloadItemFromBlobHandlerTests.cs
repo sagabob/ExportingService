@@ -1,14 +1,14 @@
-﻿using ReportExporting.ApplicationLib.Helpers.Core;
-using ReportExporting.ApplicationLib.Helpers;
-using Xunit;
-using ReportExporting.ApplicationLib.Entities;
-using ReportExporting.TestHelpers;
-using Azure;
+﻿using Azure;
 using FluentAssertions;
 using Moq;
-using ReportExporting.ApplicationLib.Services;
+using ReportExporting.ApplicationLib.Entities;
 using ReportExporting.ApplicationLib.Handlers;
 using ReportExporting.ApplicationLib.Handlers.Core;
+using ReportExporting.ApplicationLib.Helpers;
+using ReportExporting.ApplicationLib.Helpers.Core;
+using ReportExporting.ApplicationLib.Services;
+using ReportExporting.TestHelpers;
+using Xunit;
 
 namespace ReportExporting.ApplicationLibTests.Handlers;
 
@@ -60,7 +60,7 @@ public class DownloadItemFromBlobHandlerTests
         responseMock.SetupGet(r => r.Status).Returns(206);
 
         var blobStorageServiceMock = new Mock<IBlobStorageService>();
-        blobStorageServiceMock.Setup(x => x.DownloadExportFileAync(It.IsAny<string>(),It.IsAny<Stream>()))
+        blobStorageServiceMock.Setup(x => x.DownloadExportFileAync(It.IsAny<string>(), It.IsAny<Stream>()))
             .ReturnsAsync(responseMock.Object);
 
         IDownloadItemFromBlobHandler downloadItemFromBlobHandler =
@@ -117,7 +117,7 @@ public class DownloadItemFromBlobHandlerTests
         var reportRequestObject = _reportRequestObjectFactory.CreateFromReportRequest(request);
 
         //Mocking setup
-       
+
         var blobStorageServiceMock = new Mock<IBlobStorageService>();
         blobStorageServiceMock.Setup(x => x.DownloadExportFileAync(It.IsAny<string>(), It.IsAny<Stream>()))
             .ThrowsAsync(new Exception("All exceptions"));

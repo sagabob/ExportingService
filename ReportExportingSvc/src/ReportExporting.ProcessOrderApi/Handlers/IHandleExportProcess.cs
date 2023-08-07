@@ -1,9 +1,8 @@
 ﻿using ReportExporting.ApplicationLib.Entities;
 
-namespace ReportExporting.ProcessOrderApi.Handlers
+namespace ReportExporting.ProcessOrderApi.Handlers;
+
+public interface IHandleExportProcess
 {
-    public interface IHandleExportProcess
-    {
-        Task<ReportRequestObject> Handle(ReportRequestObject request);
-    }
+    Task<ReportRequestObject> Handle(ReportRequestObject request);
 }

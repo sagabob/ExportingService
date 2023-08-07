@@ -248,7 +248,7 @@ public class PlaceOrderControllerTests
         var placeOrderController = new PlaceOrderController(exportRequestHandlerMock.Object,
             _reportRequestObjectFactory, new ExportRequestValidator());
 
-        
+
         //Act
         var actionResult = await placeOrderController.PlaceExportOrder(request);
 

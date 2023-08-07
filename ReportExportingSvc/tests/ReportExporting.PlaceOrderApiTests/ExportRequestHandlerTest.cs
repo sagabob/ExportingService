@@ -36,7 +36,7 @@ public class ExportRequestHandlerTests
         //Arrange
         var request = TestDataFactory.GetFakeReportRequest();
         var requestObject = _reportRequestObjectFactory.CreateFromReportRequest(request);
-        
+
         //Mocking setup
         _addItemToQueueHandlerMock.Setup(x => x.Handle(It.IsAny<ReportRequestObject>(), QueueType.WorkQueue))
             .ReturnsAsync(() => requestObject);
@@ -105,5 +105,4 @@ public class ExportRequestHandlerTests
         _addItemToQueueHandlerMock.Verify(p => p.Handle(It.IsAny<ReportRequestObject>(), QueueType.EmailQueue),
             Times.Once());
     }
-
 }

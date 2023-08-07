@@ -13,7 +13,7 @@ public class TableStorageService : ITableStorageService
     }
 
     public TableClient TableClient { get; }
-    
+
 
     public async Task<Response> UpsertEntityAsync(ReportRequestTableEntity entity)
     {
@@ -21,5 +21,4 @@ public class TableStorageService : ITableStorageService
 
         return response;
     }
-
 }

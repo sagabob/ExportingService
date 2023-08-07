@@ -1,11 +1,11 @@
-﻿using FluentValidation;
+﻿using System.Diagnostics.CodeAnalysis;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using ReportExporting.ApplicationLib.Entities;
 using ReportExporting.ApplicationLib.Helpers;
 using ReportExporting.Core;
 using ReportExporting.PlaceOrderApi.Handlers;
 using ReportExporting.PlaceOrderApi.Messages;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ReportExporting.PlaceOrderApi.Controllers;
 
@@ -18,7 +18,7 @@ public class AppTestingController : ControllerBase
     private readonly IValidator<ReportRequest> _reportValidator;
 
     public AppTestingController(IExportRequestHandler exportRequestHandler,
-        IReportRequestObjectFactory reportRequestObjectFactory,  IValidator<ReportRequest> reportValidator)
+        IReportRequestObjectFactory reportRequestObjectFactory, IValidator<ReportRequest> reportValidator)
     {
         _exportRequestHandler = exportRequestHandler;
         _reportRequestObjectFactory = reportRequestObjectFactory;
@@ -49,7 +49,7 @@ public class AppTestingController : ControllerBase
                 }
             }
         };
-        
+
         var validationResult = await _reportValidator.ValidateAsync(request);
 
         if (!validationResult.IsValid)

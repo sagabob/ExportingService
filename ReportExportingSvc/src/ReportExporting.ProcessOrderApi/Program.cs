@@ -2,8 +2,8 @@ using Azure.Identity;
 using Microsoft.Extensions.Azure;
 using ReportExporting.ApplicationLib.Handlers;
 using ReportExporting.ApplicationLib.Handlers.Core;
-using ReportExporting.ApplicationLib.Helpers.Core;
 using ReportExporting.ApplicationLib.Helpers;
+using ReportExporting.ApplicationLib.Helpers.Core;
 using ReportExporting.ApplicationLib.Services;
 using ReportExporting.ApplicationLib.Services.Core;
 using ReportExporting.ExportApi.Generators;
@@ -70,5 +70,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-

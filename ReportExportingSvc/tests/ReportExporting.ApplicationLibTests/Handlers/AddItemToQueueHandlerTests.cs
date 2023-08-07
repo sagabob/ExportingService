@@ -28,15 +28,19 @@ public class AddItemToQueueHandlerTests
     [Fact]
     public async Task HandleShouldRejectFailedRequestOnWorkQueue()
     {
+        //Arrange
         _reportRequestObject.Status = ExportingStatus.Failure;
 
+        //Mocking setup
         Mock<IConfiguration> configurationMock = new();
         var serviceBusClientMock = new Mock<ServiceBusClient>();
         IAddItemToQueueHandler handle =
             new AddItemToQueueHandler(serviceBusClientMock.Object, configurationMock.Object);
 
+        //Act
         var expectedResult = await handle.Handle(_reportRequestObject, QueueType.WorkQueue);
 
+        //Assert
         expectedResult.Should().Be(_reportRequestObject);
     }
 
@@ -44,9 +48,10 @@ public class AddItemToQueueHandlerTests
     [Fact]
     public async Task HandleShouldAllowToSendFailedRequestOnEmailQueue()
     {
-        // Arrange
+        //Arrange
         _reportRequestObject.Status = ExportingStatus.Failure;
 
+        //Mocking setup
         Mock<IConfiguration> configurationMock = new();
         var serviceBusClientMock = new Mock<ServiceBusClient>();
 
@@ -61,20 +66,23 @@ public class AddItemToQueueHandlerTests
         IAddItemToQueueHandler handle =
             new AddItemToQueueHandler(serviceBusClientMock.Object, configurationMock.Object);
 
-
+        //Act
         var expectedResult = await handle.Handle(_reportRequestObject, QueueType.EmailQueue);
 
+        //Assert
         expectedResult.Progress.Contains(ExportingProgress.SendOrderToEmailQueue).Should().BeTrue();
 
+        //Verity the function is called
         serviceBusSender.Verify(x => x.SendMessageAsync(It.IsAny<ServiceBusMessage>(), default), Times.Once);
     }
 
     [Fact]
     public async Task HandleShouldAllowToSendValidRequestOnWorkQueue()
     {
-        // Arrange
+        //Arrange
         _reportRequestObject.Status = ExportingStatus.Ongoing;
 
+        //Mocking setup
         Mock<IConfiguration> configurationMock = new();
         var serviceBusClientMock = new Mock<ServiceBusClient>();
 
@@ -89,22 +97,24 @@ public class AddItemToQueueHandlerTests
         IAddItemToQueueHandler handle =
             new AddItemToQueueHandler(serviceBusClientMock.Object, configurationMock.Object);
 
-        // Act
+        //Act
         var expectedResult = await handle.Handle(_reportRequestObject, QueueType.WorkQueue);
 
 
-        // Assertion
+        //Assertion
         expectedResult.Progress.Contains(ExportingProgress.PlaceOrderOnQueue).Should().BeTrue();
 
+        //Verity function is called
         serviceBusSender.Verify(x => x.SendMessageAsync(It.IsAny<ServiceBusMessage>(), default), Times.Once);
     }
 
     [Fact]
     public async Task HandleShouldManageExceptionInSendingMessage()
     {
-        // Arrange
+        //Arrange
         _reportRequestObject.Status = ExportingStatus.Ongoing;
 
+        //Mocking setup
         Mock<IConfiguration> configurationMock = new();
         var serviceBusClientMock = new Mock<ServiceBusClient>();
 
@@ -120,15 +130,16 @@ public class AddItemToQueueHandlerTests
         IAddItemToQueueHandler handle =
             new AddItemToQueueHandler(serviceBusClientMock.Object, configurationMock.Object);
 
-        // Act
+        //Act
         var expectedResult = await handle.Handle(_reportRequestObject, QueueType.WorkQueue);
 
 
-        // Assertion
+        //Assertion
         expectedResult.Progress.Contains(ExportingProgress.PlaceOrderOnQueue).Should().BeTrue();
         expectedResult.Progress.Contains(ExportingProgress.FailToPlaceOrderOnQueue).Should().BeTrue();
         expectedResult.Status.Should().Be(ExportingStatus.Failure);
 
+        //Verify function is called
         serviceBusSender.Verify(x => x.SendMessageAsync(It.IsAny<ServiceBusMessage>(), default), Times.Once);
     }
 }

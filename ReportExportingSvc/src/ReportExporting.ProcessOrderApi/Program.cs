@@ -7,7 +7,9 @@ using ReportExporting.ApplicationLib.Helpers.Core;
 using ReportExporting.ApplicationLib.Services;
 using ReportExporting.ApplicationLib.Services.Core;
 using ReportExporting.ExportApi.Generators;
+using ReportExporting.ExportApi.Generators.Core;
 using ReportExporting.ExportApi.Handlers;
+using ReportExporting.ExportApi.Handlers.Core;
 using ReportExporting.ProcessOrderApi.Handlers;
 using ReportExporting.ProcessOrderApi.Handlers.Core;
 

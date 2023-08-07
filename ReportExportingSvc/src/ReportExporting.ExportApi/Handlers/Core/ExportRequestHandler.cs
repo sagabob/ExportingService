@@ -2,7 +2,7 @@
 using ReportExporting.Core;
 using ReportExporting.ExportApi.Generators;
 
-namespace ReportExporting.ExportApi.Handlers;
+namespace ReportExporting.ExportApi.Handlers.Core;
 
 public class ExportRequestHandler : IExportRequestHandler
 {
@@ -27,9 +27,8 @@ public class ExportRequestHandler : IExportRequestHandler
                 ? ExportingProgress.ExportedPdf
                 : ExportingProgress.ExportedWord);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine(ex);
             request.Progress.Add(request.Format == ReportFormat.Pdf
                 ? ExportingProgress.FailExportingPdf
                 : ExportingProgress.FailExportingWord);

@@ -2,7 +2,7 @@
 using ReportExporting.Core;
 using ReportExporting.ExportApi.Models;
 
-namespace ReportExporting.ExportApi.Generators;
+namespace ReportExporting.ExportApi.Generators.Core;
 
 public class ReportGeneratorFactory : IReportGeneratorService
 {

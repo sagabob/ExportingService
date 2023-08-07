@@ -17,8 +17,17 @@ public class TableStorageServiceTests
     [Fact]
     public async Task UpsertEntityAsyncTest()
     {
-        // Arrange
+        //Arrange
+        var request = TestDataFactory.GetFakeReportRequest();
 
+        IReportRequestTableEntityFactory tableEntityFactory = new ReportRequestTableEntityFactory();
+        IReportRequestObjectFactory reportRequestObjectFactory = new ReportRequestObjectFactory();
+
+        var reportRequestObject = reportRequestObjectFactory.CreateFromReportRequest(request);
+
+        var tableEntityObject = tableEntityFactory.CreateTableEntity(reportRequestObject);
+
+        //Mocking setup
         var responseMock = new Mock<Response>();
         responseMock.SetupGet(r => r.Status).Returns(200);
 
@@ -38,21 +47,16 @@ public class TableStorageServiceTests
         var tableStorageService =
             new TableStorageService(tableServiceClientMock.Object, configuration.Object);
 
-        var request = TestDataFactory.GetFakeReportRequest();
 
-        IReportRequestTableEntityFactory tableEntityFactory = new ReportRequestTableEntityFactory();
-        IReportRequestObjectFactory reportRequestObjectFactory = new ReportRequestObjectFactory();
-
-        var reportRequestObject = reportRequestObjectFactory.CreateFromReportRequest(request);
-
-        var tableEntityObject = tableEntityFactory.CreateTableEntity(reportRequestObject);
-
-
-        // Act
+        //Act
         var expectedResponse = await tableStorageService.UpsertEntityAsync(tableEntityObject);
 
 
-        // Assertion
+        //Assertion
         expectedResponse.Status.Should().Be(200);
+
+        //Verify
+        tableClientMock.Verify(x =>
+            x.UpsertEntityAsync(It.IsAny<ReportRequestTableEntity>(), TableUpdateMode.Merge, default), Times.Once);
     }
 }

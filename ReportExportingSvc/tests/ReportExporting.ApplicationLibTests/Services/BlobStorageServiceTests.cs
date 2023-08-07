@@ -14,10 +14,11 @@ public class BlobStorageServiceTests
     [Fact]
     public async Task UploadExportFileAyncTest()
     {
-        // Arrange
+        //Arrange
         var blobContent =
             BlobsModelFactory.BlobContentInfo(new ETag("123"), DateTimeOffset.Now, null, "123", 123);
 
+        //Mocking setups
         var response = Response.FromValue(blobContent, Mock.Of<Response>());
 
         var blobServiceClient = new Mock<BlobServiceClient>();
@@ -32,18 +33,23 @@ public class BlobStorageServiceTests
 
         var blobStorageService = new BlobStorageService(blobServiceClient.Object, configuration.Object);
 
-        // Act
+
+        //Act
         var expectedResponse = await blobStorageService.UploadExportFileAync(new MemoryStream(), "123");
 
 
-        // Assert
+        //Assert
         expectedResponse.HasValue.Should().BeTrue();
+
+        blobContainerClient.Verify(x => x.UploadBlobAsync(It.IsAny<string>(), It.IsAny<MemoryStream>(), default),
+            Times.Once);
     }
 
     [Fact]
     public async Task DownloadExportFileAyncTest()
     {
-        // Arrange
+        //Arrange
+        //Mocking setup
         var responseMock = new Mock<Response>();
         responseMock.SetupGet(r => r.Status).Returns(206);
 
@@ -62,11 +68,12 @@ public class BlobStorageServiceTests
 
         var blobStorageService = new BlobStorageService(blobServiceClient.Object, configuration.Object);
 
-        // Act
+        //Act
         var expectedResponse = await blobStorageService.DownloadExportFileAync("123", new MemoryStream());
 
 
-        // Assert
+        //Assert
         expectedResponse.Status.Should().Be(206);
+        blobClient.Verify(x => x.DownloadToAsync(It.IsAny<MemoryStream>()), Times.Once);
     }
 }

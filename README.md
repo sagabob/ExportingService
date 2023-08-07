@@ -50,7 +50,7 @@ The application will be implemented with the following features:
 Other potential implementations:
 * Use MassTransit to abstract persistence layer (Azure Table, Storage & Service Bus).
 * Deploy the whole system to AWS.
-* Or use serverless functions & app logic to do the exporting and emailting.
+* Or use serverless functions & app logic to do the exporting and emailing.
 
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/bob-pham-93937973/

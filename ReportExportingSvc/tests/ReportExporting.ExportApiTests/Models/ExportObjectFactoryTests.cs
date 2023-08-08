@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using ReportExporting.ApplicationLib.Helpers.Core;
-using ReportExporting.Core;
 using ReportExporting.ExportApi.Models;
 using ReportExporting.ExportApi.Models.Core;
 using ReportExporting.TestHelpers;
@@ -24,7 +23,7 @@ public class ExportObjectFactoryTests
 
         var output = factory.CreateExportObject(requestObject);
 
-        var expectedObject = new ExportObject()
+        var expectedObject = new ExportObject
         {
             Urls = requestObject.Urls,
             Id = requestObject.Id.ToString(),

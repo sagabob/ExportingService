@@ -2,7 +2,7 @@
 
 namespace ReportExporting.ExportApi.Models.Core;
 
-public class ExportObjectFactory: IExportObjectFactory
+public class ExportObjectFactory : IExportObjectFactory
 {
     public ExportObject CreateExportObject(ReportRequestObject reportRequest)
     {

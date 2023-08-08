@@ -30,7 +30,7 @@ public class ExportConfigurationFactoryTests
         requestObject.Product = product;
         var output = exportConfigurationFactory.GetConfiguration(requestObject);
 
-        var expectedObject = new ExportConfiguration()
+        var expectedObject = new ExportConfiguration
         {
             ShowPageNumber = showPageNumber,
             ShowCoverPage = true

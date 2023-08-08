@@ -2,7 +2,7 @@
 
 namespace ReportExporting.ExportApi.Models.Core;
 
-public class ExportConfigurationFactory: IExportConfigurationFactory
+public class ExportConfigurationFactory : IExportConfigurationFactory
 {
     public ExportConfiguration GetConfiguration(ReportRequest reportRequest)
     {

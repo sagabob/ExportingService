@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using ReportExporting.ExportApi.Models;
+using ReportExporting.ExportApi.Models.Core;
 using SautinSoft;
 
 namespace ReportExporting.ExportApi.Generators.Core;

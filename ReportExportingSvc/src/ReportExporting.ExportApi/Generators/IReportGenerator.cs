@@ -1,4 +1,4 @@
-﻿using ReportExporting.ExportApi.Models;
+﻿using ReportExporting.ExportApi.Models.Core;
 
 namespace ReportExporting.ExportApi.Generators;
 

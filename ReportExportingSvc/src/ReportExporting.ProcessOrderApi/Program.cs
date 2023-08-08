@@ -10,6 +10,8 @@ using ReportExporting.ExportApi.Generators;
 using ReportExporting.ExportApi.Generators.Core;
 using ReportExporting.ExportApi.Handlers;
 using ReportExporting.ExportApi.Handlers.Core;
+using ReportExporting.ExportApi.Helpers;
+using ReportExporting.ExportApi.Helpers.Core;
 using ReportExporting.ExportApi.Models;
 using ReportExporting.ExportApi.Models.Core;
 using ReportExporting.ProcessOrderApi.Handlers;
@@ -40,6 +42,8 @@ builder.Services.AddSingleton<IReportRequestTableEntityFactory, ReportRequestTab
 
 builder.Services.AddSingleton<ITableStorageService, TableStorageService>();
 builder.Services.AddSingleton<IBlobStorageService, BlobStorageService>();
+
+builder.Services.AddSingleton<IPdfEngineWrapper, PdfEngineWrapper>();
 
 builder.Services.AddSingleton<PdfReportGenerator>();
 builder.Services.AddSingleton<WordReportGenerator>();

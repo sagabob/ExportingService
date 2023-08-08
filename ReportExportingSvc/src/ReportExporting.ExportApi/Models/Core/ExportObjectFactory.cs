@@ -1,10 +1,10 @@
 ﻿using ReportExporting.ApplicationLib.Entities;
 
-namespace ReportExporting.ExportApi.Models;
+namespace ReportExporting.ExportApi.Models.Core;
 
-public class ExportObjectFactory
+public class ExportObjectFactory: IExportObjectFactory
 {
-    public static ExportObject CreateExportObject(ReportRequestObject reportRequest)
+    public ExportObject CreateExportObject(ReportRequestObject reportRequest)
     {
         return new ExportObject
         {

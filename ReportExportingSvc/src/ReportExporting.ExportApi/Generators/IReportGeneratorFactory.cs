@@ -2,7 +2,7 @@
 
 namespace ReportExporting.ExportApi.Generators;
 
-public interface IReportGeneratorService
+public interface IReportGeneratorFactory
 {
     Task<Stream?> GenerateReport(ReportRequestObject request);
 }

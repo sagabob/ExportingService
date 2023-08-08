@@ -4,21 +4,27 @@ using ReportExporting.ExportApi.Models;
 
 namespace ReportExporting.ExportApi.Generators.Core;
 
-public class ReportGeneratorFactory : IReportGeneratorService
+public class ReportGeneratorFactory : IReportGeneratorFactory
 {
+    private readonly IExportConfigurationFactory _exportConfigurationFactory;
+    private readonly IExportObjectFactory _exportObjectFactory;
     private readonly PdfReportGenerator _pdfReportGenerator;
     private readonly WordReportGenerator _wordReportGenerator;
 
-    public ReportGeneratorFactory(PdfReportGenerator pdfReportGenerator, WordReportGenerator wordReportGenerator)
+
+    public ReportGeneratorFactory(PdfReportGenerator pdfReportGenerator, WordReportGenerator wordReportGenerator,
+        IExportConfigurationFactory exportConfigurationFactory, IExportObjectFactory exportObjectFactory)
     {
         _pdfReportGenerator = pdfReportGenerator;
         _wordReportGenerator = wordReportGenerator;
+        _exportConfigurationFactory = exportConfigurationFactory;
+        _exportObjectFactory = exportObjectFactory;
     }
 
     public async Task<Stream?> GenerateReport(ReportRequestObject request)
     {
-        var exportConfiguration = ExportConfigurationFactory.GetConfiguration(request);
-        var exportObject = ExportObjectFactory.CreateExportObject(request);
+        var exportConfiguration = _exportConfigurationFactory.GetConfiguration(request);
+        var exportObject = _exportObjectFactory.CreateExportObject(request);
         return request.Format switch
         {
             ReportFormat.Pdf => await _pdfReportGenerator.GenerateReportAsync(exportObject, exportConfiguration),

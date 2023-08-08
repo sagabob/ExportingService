@@ -6,11 +6,11 @@ namespace ReportExporting.ExportApi.Handlers.Core;
 
 public class ExportRequestHandler : IExportRequestHandler
 {
-    private readonly IReportGeneratorService _reportGeneratorService;
+    private readonly IReportGeneratorFactory _reportGeneratorFactory;
 
-    public ExportRequestHandler(IReportGeneratorService reportGeneratorService)
+    public ExportRequestHandler(IReportGeneratorFactory reportGeneratorFactory)
     {
-        _reportGeneratorService = reportGeneratorService;
+        _reportGeneratorFactory = reportGeneratorFactory;
     }
 
     public async Task<Stream?> ProcessExportRequest(ReportRequestObject request)
@@ -18,7 +18,7 @@ public class ExportRequestHandler : IExportRequestHandler
         Stream? exportedFileStream = null;
         try
         {
-            exportedFileStream = await _reportGeneratorService.GenerateReport(request);
+            exportedFileStream = await _reportGeneratorFactory.GenerateReport(request);
 
             request.FileName =
                 $"{request.Product}-{request.Id}.{(request.Format == ReportFormat.Pdf ? "pdf" : "docx")}";

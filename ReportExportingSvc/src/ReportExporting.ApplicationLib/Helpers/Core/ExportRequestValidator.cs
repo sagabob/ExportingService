@@ -21,11 +21,3 @@ public class ExportRequestValidator : AbstractValidator<ReportRequest>
         RuleFor(p => p.Format).NotNull().IsInEnum();
     }
 }
-
-public class ReportUrlValidator : AbstractValidator<ReportUrl>
-{
-    public ReportUrlValidator()
-    {
-        RuleFor(x => x.Url).NotNull().NotEmpty().Must(x => Uri.IsWellFormedUriString(x, UriKind.Absolute));
-    }
-}

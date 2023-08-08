@@ -36,7 +36,13 @@ public class EmailService : IEmailService
             //email to admin
             var jsonString = JsonConvert.SerializeObject(reportRequestObject);
             var byteArray = Encoding.ASCII.GetBytes(jsonString);
-            var stream = new MemoryStream(byteArray);
+            var stream = new MemoryStream(byteArray)
+            {
+                ReadTimeout = 0,
+                WriteTimeout = 0,
+                Capacity = 0,
+                Position = 0
+            };
             var msg = await EmailContentHelpers.PrepareEmailContentForAdmin(reportRequestObject, stream, fromEmail,
                 fromName, toEmail);
 

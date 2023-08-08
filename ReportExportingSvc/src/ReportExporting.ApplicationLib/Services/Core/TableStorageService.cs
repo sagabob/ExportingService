@@ -12,7 +12,7 @@ public class TableStorageService : ITableStorageService
         TableClient = tableServiceClient.GetTableClient(configuration["TableName"]);
     }
 
-    public TableClient TableClient { get; }
+    private TableClient TableClient { get; }
 
 
     public async Task<Response> UpsertEntityAsync(ReportRequestTableEntity entity)

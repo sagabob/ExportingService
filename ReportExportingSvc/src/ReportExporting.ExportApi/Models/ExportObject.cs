@@ -4,11 +4,11 @@ namespace ReportExporting.ExportApi.Models;
 
 public class ExportObject
 {
-    public string Id { get; set; }
+    public required string Id { get; set; }
 
-    public ReportUrl[]? Urls { get; set; }
+    public ReportUrl[]? Urls { get; init; }
 
-    public ReportProduct Product { get; set; }
+    public ReportProduct Product { get; init; }
 
     public ReportFormat Format { get; set; }
 }

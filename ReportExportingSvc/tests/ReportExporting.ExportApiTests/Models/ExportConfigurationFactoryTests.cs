@@ -28,6 +28,8 @@ public class ExportConfigurationFactoryTests
         IExportConfigurationFactory exportConfigurationFactory = new ExportConfigurationFactory();
 
         requestObject.Product = product;
+
+        //Act
         var output = exportConfigurationFactory.GetConfiguration(requestObject);
 
         var expectedObject = new ExportConfiguration
@@ -36,6 +38,7 @@ public class ExportConfigurationFactoryTests
             ShowCoverPage = true
         };
 
+        //Assert
         output.Should().BeEquivalentTo(expectedObject);
     }
 }

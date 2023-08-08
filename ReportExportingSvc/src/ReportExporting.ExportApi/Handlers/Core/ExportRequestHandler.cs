@@ -33,6 +33,7 @@ public class ExportRequestHandler : IExportRequestHandler
                 ? ExportingProgress.FailExportingPdf
                 : ExportingProgress.FailExportingWord);
             request.Status = ExportingStatus.Failure;
+            request.FileName = null;
         }
 
 

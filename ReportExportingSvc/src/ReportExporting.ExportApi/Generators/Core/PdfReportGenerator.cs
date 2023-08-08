@@ -15,12 +15,16 @@ public class PdfReportGenerator : IReportGenerator
     public async Task<Stream?> GenerateReportAsync(ExportObject exportObject, ExportConfiguration config)
     {
         var renderer = _pdfEngineWrapper.GetRender();
-
-        var cover = await RenderCoverPage(renderer, config, exportObject)!;
-        renderer.RenderingOptions.FirstPageNumber = 2;
-
         var pdfDocuments = _pdfEngineWrapper.CreateList();
-        pdfDocuments.Add(cover);
+        ;
+
+        if (config.ShowCoverPage)
+        {
+            var cover = await RenderCoverPage(renderer, config, exportObject);
+            renderer.RenderingOptions.FirstPageNumber = 2;
+            pdfDocuments.Add(cover);
+        }
+
 
         foreach (var urlItem in exportObject.Urls!)
         {
@@ -34,10 +38,9 @@ public class PdfReportGenerator : IReportGenerator
     }
 
 
-    public async Task<PdfDocument>? RenderCoverPage(ChromePdfRenderer renderer, ExportConfiguration config,
+    public async Task<PdfDocument> RenderCoverPage(ChromePdfRenderer renderer, ExportConfiguration config,
         ExportObject exportObject)
     {
-        if (!config.ShowCoverPage) return null!;
         var cover = await renderer.RenderHtmlAsPdfAsync($"<h1>{exportObject.Product.ToString()}</h1>");
         return cover;
     }

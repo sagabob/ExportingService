@@ -39,11 +39,11 @@ public class MessageHandler : IMessageHandler
         _processor.ProcessMessageAsync += ReceiveMessageHandler;
         _processor.ProcessErrorAsync += ErrorHandler;
 
-        await _processor.StartProcessingAsync().ConfigureAwait(false);
+        await _processor.StartProcessingAsync();
         ;
     }
 
-    private async Task ReceiveMessageHandler(ProcessMessageEventArgs args)
+    public async Task ReceiveMessageHandler(ProcessMessageEventArgs args)
     {
         try
         {
@@ -53,7 +53,7 @@ public class MessageHandler : IMessageHandler
             if (request != null)
             {
                 request.Progress.Add(ExportingProgress.OrderReceivedFromQueue);
-                await _handleExportProcess.Handle(request).ConfigureAwait(false);
+                await _handleExportProcess.Handle(request);
                 ;
             }
         }
@@ -71,10 +71,9 @@ public class MessageHandler : IMessageHandler
         }
     }
 
-    private async Task ErrorHandler(ProcessErrorEventArgs args)
+    public async Task ErrorHandler(ProcessErrorEventArgs args)
     {
         // the error source tells me at what point in the processing an error occurred
-        Console.WriteLine(args.ErrorSource);
         var blankReportRequestObject = new ReportRequestObject { ErrorMessage = args.Exception.Message };
         await _addItemToQueueHandler.Handle(blankReportRequestObject, QueueType.EmailQueue);
     }

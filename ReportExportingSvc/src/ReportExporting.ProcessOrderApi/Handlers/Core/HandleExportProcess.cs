@@ -36,11 +36,10 @@ public class HandleExportProcess : IHandleExportProcess
         result = await _upsertItemToTableHandler.Handle(result);
 
         // upload file
-        if (exportFileStream != null) await _uploadItemToBlobHandler.Handle(exportFileStream, result);
-
+        if (exportFileStream != null)
+            result = await _uploadItemToBlobHandler.Handle(exportFileStream, result);
 
         result = await _addItemToQueueHandler.Handle(result, QueueType.EmailQueue);
-
 
         result = await _upsertItemToTableHandler.Handle(result);
 

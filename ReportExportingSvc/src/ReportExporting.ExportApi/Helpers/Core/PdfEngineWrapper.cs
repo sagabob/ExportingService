@@ -4,12 +4,19 @@ namespace ReportExporting.ExportApi.Helpers.Core;
 
 public class PdfEngineWrapper : IPdfEngineWrapper
 {
+    private readonly IConfiguration _configuration;
+
     public PdfEngineWrapper(IConfiguration configuration)
     {
-        License.LicenseKey = configuration["IronPdfLicense"];
+        _configuration = configuration;
     }
 
-    public ChromePdfRenderer GetRender()
+    public void SetLicense()
+    {
+        License.LicenseKey = _configuration["IronPdfLicense"];
+    }
+
+    public ChromePdfRenderer GetRenderer()
     {
         var renderer = new ChromePdfRenderer();
         renderer.RenderingOptions.WaitFor.RenderDelay(5000);

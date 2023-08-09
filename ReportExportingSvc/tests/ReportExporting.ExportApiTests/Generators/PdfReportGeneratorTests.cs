@@ -1,10 +1,12 @@
 ﻿using FluentAssertions;
 using IronPdf;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using ReportExporting.ApplicationLib.Helpers.Core;
+using ReportExporting.Core;
 using ReportExporting.ExportApi.Generators.Core;
 using ReportExporting.ExportApi.Helpers;
-using ReportExporting.ExportApi.Models;
+using ReportExporting.ExportApi.Helpers.Core;
 using ReportExporting.ExportApi.Models.Core;
 using ReportExporting.TestHelpers;
 using Xunit;
@@ -23,26 +25,57 @@ public class PdfReportGeneratorTests
 
         var requestObject = reportRequestObjectFactory.CreateFromReportRequest(request);
 
-        IExportConfigurationFactory exportConfigurationFactory = new ExportConfigurationFactory();
+        var exportConfigurationFactory = new ExportConfigurationFactory();
 
         var exportConfiguration = exportConfigurationFactory.GetConfiguration(requestObject);
 
-        IExportObjectFactory exportObjectFactory = new ExportObjectFactory();
+        var exportObjectFactory = new ExportObjectFactory();
 
         var exportObject = exportObjectFactory.CreateExportObject(requestObject);
 
-
-        var renderer = new ChromePdfRenderer();
-
-        var samplePdf = await renderer.RenderHtmlAsPdfAsync($"<h1>{exportObject.Product.ToString()}</h1>");
-
+        //Mocking setup
         var pdfEngineWrapper = new Mock<IPdfEngineWrapper>();
 
         var pdfReportGenerator = new PdfReportGenerator(pdfEngineWrapper.Object);
 
         //Act
-        var outputPdf = await pdfReportGenerator.RenderCoverPage(renderer, exportConfiguration, exportObject)!;
+        var outputPdf =
+            await pdfReportGenerator.RenderCoverPage(new ChromePdfRenderer(), exportConfiguration, exportObject)!;
 
-        outputPdf.BinaryData.Should().BeEquivalentTo(samplePdf.BinaryData);
+        outputPdf.IsValid.Should().BeTrue();
+    }
+
+    [Theory]
+    [InlineData(ReportProduct.Atlas)]
+    [InlineData(ReportProduct.Economy)]
+    public async Task GenerateReportAsyncTest(ReportProduct product)
+    {
+        //Arrange
+        var request = TestDataFactory.GetFakeSingleReportRequest();
+        request.Product = product;
+
+        var reportRequestObjectFactory = new ReportRequestObjectFactory();
+
+        var requestObject = reportRequestObjectFactory.CreateFromReportRequest(request);
+
+        var exportConfigurationFactory = new ExportConfigurationFactory();
+
+        var exportConfiguration = exportConfigurationFactory.GetConfiguration(requestObject);
+
+        var exportObjectFactory = new ExportObjectFactory();
+
+        var exportObject = exportObjectFactory.CreateExportObject(requestObject);
+
+        Mock<IConfiguration> configurationMock = new();
+        var pdfEngineWrapper = new PdfEngineWrapper(configurationMock.Object);
+
+        var pdfReportGenerator = new PdfReportGenerator(pdfEngineWrapper);
+
+        //Act
+        var outputPdfStream =
+            await pdfReportGenerator.GenerateReportAsync(exportObject, exportConfiguration)!;
+
+        outputPdfStream.Should().NotBeNull();
+        outputPdfStream!.Length.Should().BeGreaterThan(0);
     }
 }

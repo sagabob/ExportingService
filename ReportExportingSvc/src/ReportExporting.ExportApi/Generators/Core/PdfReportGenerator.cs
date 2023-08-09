@@ -3,7 +3,7 @@ using ReportExporting.ExportApi.Models.Core;
 
 namespace ReportExporting.ExportApi.Generators.Core;
 
-public class PdfReportGenerator : IReportGenerator
+public class PdfReportGenerator : IPdfReportGenerator
 {
     private readonly IPdfEngineWrapper _pdfEngineWrapper;
 
@@ -14,7 +14,7 @@ public class PdfReportGenerator : IReportGenerator
 
     public async Task<Stream?> GenerateReportAsync(ExportObject exportObject, ExportConfiguration config)
     {
-        var renderer = _pdfEngineWrapper.GetRender();
+        var renderer = _pdfEngineWrapper.GetRenderer();
         var pdfDocuments = _pdfEngineWrapper.CreateList();
         ;
 

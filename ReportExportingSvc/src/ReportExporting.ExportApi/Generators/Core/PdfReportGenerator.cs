@@ -3,7 +3,7 @@ using ReportExporting.ExportApi.Models.Core;
 
 namespace ReportExporting.ExportApi.Generators.Core;
 
-public class PdfReportGenerator : IReportGenerator
+public class PdfReportGenerator : IPdfReportGenerator
 {
     private readonly IPdfEngineWrapper _pdfEngineWrapper;
 

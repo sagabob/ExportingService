@@ -3,12 +3,12 @@ using ReportExporting.ExportApi.Models.Core;
 
 namespace ReportExporting.ExportApi.Generators.Core;
 
-public class WordReportGenerator : IReportGenerator
+public class WordReportGenerator : IWordReportGenerator
 {
-    private readonly PdfReportGenerator _pdfReportGenerator;
+    private readonly IPdfReportGenerator _pdfReportGenerator;
     private readonly IWordEngineWrapper _wordEngineWrapper;
 
-    public WordReportGenerator(PdfReportGenerator pdfReportGenerator, IWordEngineWrapper wordEngineWrapper)
+    public WordReportGenerator(IPdfReportGenerator pdfReportGenerator, IWordEngineWrapper wordEngineWrapper)
     {
         _pdfReportGenerator = pdfReportGenerator;
         _wordEngineWrapper = wordEngineWrapper;

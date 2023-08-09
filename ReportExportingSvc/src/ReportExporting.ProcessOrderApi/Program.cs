@@ -46,8 +46,8 @@ builder.Services.AddSingleton<IBlobStorageService, BlobStorageService>();
 builder.Services.AddSingleton<IPdfEngineWrapper, PdfEngineWrapper>();
 builder.Services.AddSingleton<IWordEngineWrapper, WordEngineWrapper>();
 
-builder.Services.AddSingleton<PdfReportGenerator>();
-builder.Services.AddSingleton<WordReportGenerator>();
+builder.Services.AddSingleton<IPdfReportGenerator, PdfReportGenerator>();
+builder.Services.AddSingleton<IWordReportGenerator, WordReportGenerator>();
 
 builder.Services.AddSingleton<IExportObjectFactory, ExportObjectFactory>();
 builder.Services.AddSingleton<IExportConfigurationFactory, ExportConfigurationFactory>();

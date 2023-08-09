@@ -8,11 +8,11 @@ public class ReportGeneratorFactory : IReportGeneratorFactory
 {
     private readonly IExportConfigurationFactory _exportConfigurationFactory;
     private readonly IExportObjectFactory _exportObjectFactory;
-    private readonly PdfReportGenerator _pdfReportGenerator;
-    private readonly WordReportGenerator _wordReportGenerator;
+    private readonly IPdfReportGenerator _pdfReportGenerator;
+    private readonly IWordReportGenerator _wordReportGenerator;
 
 
-    public ReportGeneratorFactory(PdfReportGenerator pdfReportGenerator, WordReportGenerator wordReportGenerator,
+    public ReportGeneratorFactory(IPdfReportGenerator pdfReportGenerator, IWordReportGenerator wordReportGenerator,
         IExportConfigurationFactory exportConfigurationFactory, IExportObjectFactory exportObjectFactory)
     {
         _pdfReportGenerator = pdfReportGenerator;

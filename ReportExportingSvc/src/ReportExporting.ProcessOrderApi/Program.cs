@@ -44,9 +44,11 @@ builder.Services.AddSingleton<ITableStorageService, TableStorageService>();
 builder.Services.AddSingleton<IBlobStorageService, BlobStorageService>();
 
 builder.Services.AddSingleton<IPdfEngineWrapper, PdfEngineWrapper>();
+builder.Services.AddSingleton<IWordEngineWrapper, WordEngineWrapper>();
 
 builder.Services.AddSingleton<PdfReportGenerator>();
 builder.Services.AddSingleton<WordReportGenerator>();
+
 builder.Services.AddSingleton<IExportObjectFactory, ExportObjectFactory>();
 builder.Services.AddSingleton<IExportConfigurationFactory, ExportConfigurationFactory>();
 builder.Services.AddSingleton<IReportGeneratorFactory, ReportGeneratorFactory>();
@@ -63,8 +65,8 @@ builder.Services.AddSingleton<IMessageHandler, MessageHandler>();
 
 var app = builder.Build();
 
-
 app.Services.GetService<IPdfEngineWrapper>()?.SetLicense();
+app.Services.GetService<IWordEngineWrapper>()?.SetLicense();
 app.Services.GetService<IMessageHandler>()?.Register();
 
 // Configure the HTTP request pipeline.

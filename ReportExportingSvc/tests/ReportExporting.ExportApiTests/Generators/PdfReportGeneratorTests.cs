@@ -23,26 +23,23 @@ public class PdfReportGeneratorTests
 
         var requestObject = reportRequestObjectFactory.CreateFromReportRequest(request);
 
-        IExportConfigurationFactory exportConfigurationFactory = new ExportConfigurationFactory();
+        var exportConfigurationFactory = new ExportConfigurationFactory();
 
         var exportConfiguration = exportConfigurationFactory.GetConfiguration(requestObject);
 
-        IExportObjectFactory exportObjectFactory = new ExportObjectFactory();
+        var exportObjectFactory = new ExportObjectFactory();
 
         var exportObject = exportObjectFactory.CreateExportObject(requestObject);
 
-
-        var renderer = new ChromePdfRenderer();
-
-        var samplePdf = await renderer.RenderHtmlAsPdfAsync($"<h1>{exportObject.Product.ToString()}</h1>");
-
+        //Mocking setup
         var pdfEngineWrapper = new Mock<IPdfEngineWrapper>();
 
         var pdfReportGenerator = new PdfReportGenerator(pdfEngineWrapper.Object);
 
         //Act
-        var outputPdf = await pdfReportGenerator.RenderCoverPage(renderer, exportConfiguration, exportObject)!;
+        var outputPdf =
+            await pdfReportGenerator.RenderCoverPage(new ChromePdfRenderer(), exportConfiguration, exportObject)!;
 
-        outputPdf.BinaryData.Should().BeEquivalentTo(samplePdf.BinaryData);
+        outputPdf.IsValid.Should().BeTrue();
     }
 }

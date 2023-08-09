@@ -2,9 +2,11 @@
 
 public interface IPdfEngineWrapper
 {
-    ChromePdfRenderer GetRender();
+    ChromePdfRenderer GetRenderer();
 
     List<PdfDocument> CreateList();
 
     PdfDocument MergeDocuments(List<PdfDocument> documents);
+
+    void SetLicense();
 }

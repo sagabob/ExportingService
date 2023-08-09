@@ -16,6 +16,7 @@ public class WordReportGenerator : IReportGenerator
         PdfFocus.SetLicense(configuration["PdfToWordLicense"]);
         _pdfToWordConverter = new PdfFocus();
     }
+    
 
     public async Task<Stream?> GenerateReportAsync(ExportObject exportObject, ExportConfiguration config)
     {

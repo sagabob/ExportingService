@@ -64,6 +64,7 @@ builder.Services.AddSingleton<IMessageHandler, MessageHandler>();
 var app = builder.Build();
 
 
+app.Services.GetService<IPdfEngineWrapper>()?.SetLicense();
 app.Services.GetService<IMessageHandler>()?.Register();
 
 // Configure the HTTP request pipeline.

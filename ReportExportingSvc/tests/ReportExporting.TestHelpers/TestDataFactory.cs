@@ -28,4 +28,24 @@ public class TestDataFactory
 
         return request;
     }
+
+    public static ReportRequest GetFakeSingleReportRequest()
+    {
+        var request = new ReportRequest
+        {
+            Title = "Sample Report",
+            Product = ReportProduct.Profile,
+            EmailAddress = "bobpham.tdp@gmail.com",
+            Urls = new[]
+            {
+                new ReportUrl()
+                {
+                    Url = "https://profile.id.com.au/adelaide/ancestry",
+                    Title = "Ancestry"
+                }
+            }
+        };
+
+        return request;
+    }
 }

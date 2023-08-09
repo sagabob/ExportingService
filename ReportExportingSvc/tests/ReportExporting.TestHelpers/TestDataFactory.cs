@@ -15,13 +15,13 @@ public class TestDataFactory
             {
                 new()
                 {
-                    Url = "https://profile.id.com.au/adelaide/ancestry",
-                    Title = "Ancestry"
+                    Url = "https://profile.id.com.au/albany/volunteering",
+                    Title = "Volunteering"
                 },
                 new ReportUrl
                 {
-                    Url = "https://profile.id.com.au/adelaide/industries",
-                    Title = "Industries"
+                    Url = "https://profile.id.com.au/albany/unpaid-childcare",
+                    Title = "Unpaid Childcare"
                 }
             }
         };
@@ -40,8 +40,8 @@ public class TestDataFactory
             {
                 new ReportUrl
                 {
-                    Url = "https://profile.id.com.au/adelaide/ancestry",
-                    Title = "Ancestry"
+                    Url = "https://profile.id.com.au/albany/unpaid-childcare",
+                    Title = "Unpaid Childcare"
                 }
             }
         };

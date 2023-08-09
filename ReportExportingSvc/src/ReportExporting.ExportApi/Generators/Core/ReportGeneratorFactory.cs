@@ -25,11 +25,10 @@ public class ReportGeneratorFactory : IReportGeneratorFactory
     {
         var exportConfiguration = _exportConfigurationFactory.GetConfiguration(request);
         var exportObject = _exportObjectFactory.CreateExportObject(request);
-        return request.Format switch
-        {
-            ReportFormat.Pdf => await _pdfReportGenerator.GenerateReportAsync(exportObject, exportConfiguration),
-            ReportFormat.Word => await _wordReportGenerator.GenerateReportAsync(exportObject, exportConfiguration),
-            _ => await _pdfReportGenerator.GenerateReportAsync(exportObject, exportConfiguration)
-        };
+
+        if (request.Format == ReportFormat.Word)
+            return await _wordReportGenerator.GenerateReportAsync(exportObject, exportConfiguration);
+
+        return await _pdfReportGenerator.GenerateReportAsync(exportObject, exportConfiguration);
     }
 }

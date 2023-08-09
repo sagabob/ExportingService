@@ -52,12 +52,11 @@ public class ReportGeneratorFactoryTests
         outputStream!.ToString().Should().Be(streamMock.ToString());
 
         //Verify
-        if (format == ReportFormat.Pdf)
-            pdfReportGeneratorMock.Verify(
+        if (format == ReportFormat.Word)
+            wordReportGeneratorMock.Verify(
                 x => x.GenerateReportAsync(It.IsAny<ExportObject>(), It.IsAny<ExportConfiguration>()), Times.Once);
         else
-
-            wordReportGeneratorMock.Verify(
+            pdfReportGeneratorMock.Verify(
                 x => x.GenerateReportAsync(It.IsAny<ExportObject>(), It.IsAny<ExportConfiguration>()), Times.Once);
     }
 }

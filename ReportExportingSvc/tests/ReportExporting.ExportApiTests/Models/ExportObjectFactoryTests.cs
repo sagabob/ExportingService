@@ -20,7 +20,7 @@ public class ExportObjectFactoryTests
         var requestObject = reportRequestObjectFactory.CreateFromReportRequest(request);
 
         IExportObjectFactory factory = new ExportObjectFactory();
-        
+
         var expectedObject = new ExportObject
         {
             Urls = requestObject.Urls,
@@ -32,7 +32,7 @@ public class ExportObjectFactoryTests
         //Act
         var output = factory.CreateExportObject(requestObject);
 
-       
+
         //Assert
         output.Should().BeEquivalentTo(expectedObject);
     }

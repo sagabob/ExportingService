@@ -38,7 +38,7 @@ public class TestDataFactory
             EmailAddress = "bobpham.tdp@gmail.com",
             Urls = new[]
             {
-                new ReportUrl()
+                new ReportUrl
                 {
                     Url = "https://profile.id.com.au/adelaide/ancestry",
                     Title = "Ancestry"

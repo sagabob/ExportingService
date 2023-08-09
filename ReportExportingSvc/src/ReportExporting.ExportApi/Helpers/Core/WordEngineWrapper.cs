@@ -3,7 +3,7 @@ using SautinSoft;
 
 namespace ReportExporting.ExportApi.Helpers.Core;
 
-public class WordEngineWrapper: IWordEngineWrapper
+public class WordEngineWrapper : IWordEngineWrapper
 {
     private readonly IConfiguration _configuration;
 

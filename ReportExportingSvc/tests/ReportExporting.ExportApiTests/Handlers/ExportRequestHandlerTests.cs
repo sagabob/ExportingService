@@ -26,7 +26,8 @@ public class ExportRequestHandlerTests
         var requestObject = reportRequestObjectFactory.CreateFromReportRequest(request);
         requestObject.Format = reportFormat;
 
-        var expectedFileName = $"{requestObject.Product}-{requestObject.Id}.{(requestObject.Format == ReportFormat.Pdf ? "pdf" : "docx")}";
+        var expectedFileName =
+            $"{requestObject.Product}-{requestObject.Id}.{(requestObject.Format == ReportFormat.Pdf ? "pdf" : "docx")}";
 
         //Mocking setup
         var reportedStream = new MemoryStream(Encoding.UTF8.GetBytes("123"));
@@ -42,13 +43,14 @@ public class ExportRequestHandlerTests
         //Assert
         reportedStream.ToString().Should().BeEquivalentTo(outputStream!.ToString());
 
-        requestObject.Progress.Contains((reportFormat == ReportFormat.Pdf)? ExportingProgress.ExportedPdf: ExportingProgress.ExportedWord).Should().BeTrue();
+        requestObject.Progress
+            .Contains(reportFormat == ReportFormat.Pdf ? ExportingProgress.ExportedPdf : ExportingProgress.ExportedWord)
+            .Should().BeTrue();
 
         requestObject.FileName.Should().Be(expectedFileName);
 
         //Verify
         reportGeneratorFactoryMock.Verify(x => x.GenerateReport(It.IsAny<ReportRequestObject>()), Times.Once);
-
     }
 
     [Theory]
@@ -62,9 +64,9 @@ public class ExportRequestHandlerTests
         var reportRequestObjectFactory = new ReportRequestObjectFactory();
         var requestObject = reportRequestObjectFactory.CreateFromReportRequest(request);
         requestObject.Format = reportFormat;
-        
+
         //Mocking setup
-      
+
         var reportGeneratorFactoryMock = new Mock<IReportGeneratorFactory>();
         reportGeneratorFactoryMock.Setup(x => x.GenerateReport(It.IsAny<ReportRequestObject>()))
             .ThrowsAsync(new Exception());
@@ -77,7 +79,10 @@ public class ExportRequestHandlerTests
         //Assert
         outputStream.Should().BeNull();
 
-        requestObject.Progress.Contains((reportFormat == ReportFormat.Pdf) ? ExportingProgress.FailExportingPdf : ExportingProgress.FailExportingWord).Should().BeTrue();
+        requestObject.Progress
+            .Contains(reportFormat == ReportFormat.Pdf
+                ? ExportingProgress.FailExportingPdf
+                : ExportingProgress.FailExportingWord).Should().BeTrue();
 
         requestObject.FileName.Should().BeNull();
 
@@ -85,6 +90,5 @@ public class ExportRequestHandlerTests
 
         //Verify
         reportGeneratorFactoryMock.Verify(x => x.GenerateReport(It.IsAny<ReportRequestObject>()), Times.Once);
-
     }
 }

@@ -9,7 +9,7 @@ using ReportExporting.PlaceOrderApi.Handlers.Core;
 using ReportExporting.TestHelpers;
 using Xunit;
 
-namespace ReportExporting.PlaceOrderApiTests;
+namespace ReportExporting.PlaceOrderApiTests.Handlers;
 
 public class ExportRequestHandlerTests
 {

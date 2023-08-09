@@ -1,10 +1,10 @@
 ﻿using ReportExporting.Core;
 
-namespace ReportExporting.ExportApi.Models;
+namespace ReportExporting.ExportApi.Models.Core;
 
-public class ExportConfigurationFactory
+public class ExportConfigurationFactory : IExportConfigurationFactory
 {
-    public static ExportConfiguration GetConfiguration(ReportRequest reportRequest)
+    public ExportConfiguration GetConfiguration(ReportRequest reportRequest)
     {
         var config = new ExportConfiguration
         {

@@ -1,24 +1,30 @@
-﻿using Microsoft.Extensions.Configuration;
-using ReportExporting.ExportApi.Models;
+﻿using ReportExporting.ExportApi.Helpers;
+using ReportExporting.ExportApi.Models.Core;
 
 namespace ReportExporting.ExportApi.Generators.Core;
 
-public class PdfReportGenerator : IReportGenerator
+public class PdfReportGenerator : IPdfReportGenerator
 {
-    public PdfReportGenerator(IConfiguration configuration)
+    private readonly IPdfEngineWrapper _pdfEngineWrapper;
+
+    public PdfReportGenerator(IPdfEngineWrapper pdfEngineWrapper)
     {
-        License.LicenseKey = configuration["IronPdfLicense"];
+        _pdfEngineWrapper = pdfEngineWrapper;
     }
 
     public async Task<Stream?> GenerateReportAsync(ExportObject exportObject, ExportConfiguration config)
     {
-        var renderer = new ChromePdfRenderer();
-        renderer.RenderingOptions.WaitFor.RenderDelay(5000);
-        renderer.RenderingOptions.Timeout = 60;
+        var renderer = _pdfEngineWrapper.GetRenderer();
+        var pdfDocuments = _pdfEngineWrapper.CreateList();
+        ;
 
-        var cover = await RenderCoverPage(renderer, config, exportObject)!;
+        if (config.ShowCoverPage)
+        {
+            var cover = await RenderCoverPage(renderer, config, exportObject);
+            renderer.RenderingOptions.FirstPageNumber = 2;
+            pdfDocuments.Add(cover);
+        }
 
-        var pdfDocuments = new List<PdfDocument> { cover };
 
         foreach (var urlItem in exportObject.Urls!)
         {
@@ -26,18 +32,16 @@ public class PdfReportGenerator : IReportGenerator
             pdfDocuments.Add(pdf);
         }
 
-        var merged = PdfDocument.Merge(pdfDocuments).Stream;
+        var merged = _pdfEngineWrapper.MergeDocuments(pdfDocuments).Stream;
 
         return merged;
     }
 
 
-    public static Task<PdfDocument>? RenderCoverPage(ChromePdfRenderer renderer, ExportConfiguration config,
+    public async Task<PdfDocument> RenderCoverPage(ChromePdfRenderer renderer, ExportConfiguration config,
         ExportObject exportObject)
     {
-        if (!config.ShowCoverPage) return null;
-        var cover = renderer.RenderHtmlAsPdfAsync($"<h1>{exportObject.Product.ToString()}</h1>");
-        renderer.RenderingOptions.FirstPageNumber = 2;
+        var cover = await renderer.RenderHtmlAsPdfAsync($"<h1>{exportObject.Product.ToString()}</h1>");
         return cover;
     }
 }

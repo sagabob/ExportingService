@@ -12,7 +12,7 @@ public class BlobStorageService : IBlobStorageService
         BlobClient = blobServiceClient.GetBlobContainerClient(configuration["ContainerName"]);
     }
 
-    public BlobContainerClient BlobClient { get; }
+    private BlobContainerClient BlobClient { get; }
 
     public async Task<Response<BlobContentInfo>> UploadExportFileAync(Stream fileStream, string? blobName)
     {

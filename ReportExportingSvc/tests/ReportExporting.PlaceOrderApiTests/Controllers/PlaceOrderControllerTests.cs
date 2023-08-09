@@ -11,7 +11,7 @@ using ReportExporting.PlaceOrderApi.Messages;
 using ReportExporting.TestHelpers;
 using Xunit;
 
-namespace ReportExporting.PlaceOrderApiTests;
+namespace ReportExporting.PlaceOrderApiTests.Controllers;
 
 public class PlaceOrderControllerTests
 {

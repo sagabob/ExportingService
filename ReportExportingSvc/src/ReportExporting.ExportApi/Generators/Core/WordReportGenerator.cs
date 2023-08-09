@@ -1,29 +1,29 @@
-﻿using Microsoft.Extensions.Configuration;
-using ReportExporting.ExportApi.Models;
-using SautinSoft;
+﻿using ReportExporting.ExportApi.Helpers;
+using ReportExporting.ExportApi.Models.Core;
 
 namespace ReportExporting.ExportApi.Generators.Core;
 
-public class WordReportGenerator : IReportGenerator
+public class WordReportGenerator : IWordReportGenerator
 {
-    private readonly PdfReportGenerator _pdfReportGenerator;
-    private readonly PdfFocus _pdfToWordConverter;
+    private readonly IPdfReportGenerator _pdfReportGenerator;
+    private readonly IWordEngineWrapper _wordEngineWrapper;
 
-    public WordReportGenerator(PdfReportGenerator pdfReportGenerator, IConfiguration configuration)
+    public WordReportGenerator(IPdfReportGenerator pdfReportGenerator, IWordEngineWrapper wordEngineWrapper)
     {
         _pdfReportGenerator = pdfReportGenerator;
-
-        PdfFocus.SetLicense(configuration["PdfToWordLicense"]);
-        _pdfToWordConverter = new PdfFocus();
+        _wordEngineWrapper = wordEngineWrapper;
     }
+
 
     public async Task<Stream?> GenerateReportAsync(ExportObject exportObject, ExportConfiguration config)
     {
         var pdfStream = await _pdfReportGenerator.GenerateReportAsync(exportObject, config);
 
-        _pdfToWordConverter.OpenPdf(pdfStream);
+        var wordEngine = _wordEngineWrapper.GetRenderer();
 
-        var output = _pdfToWordConverter.ToWord();
+        wordEngine.OpenPdf(pdfStream);
+
+        var output = wordEngine.ToWord();
 
         return new MemoryStream(output);
     }

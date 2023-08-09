@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using ReportExporting.ApplicationLib.Entities;
 using ReportExporting.NotificationApi.Helpers;
+using ReportExporting.NotificationApi.Helpers.Core;
 using SendGrid;
 
 namespace ReportExporting.NotificationApi.Services.Core;
@@ -10,12 +11,14 @@ public class EmailService : IEmailService
 {
     private readonly IConfiguration _configuration;
     private readonly ISendGridClient _sendGridClient;
+    private readonly IEmailContentHelpers _emailContentHelpers;
 
     public EmailService(
-        ISendGridClient sendGridClient,
+        ISendGridClient sendGridClient, IEmailContentHelpers emailContentHelpers,
         IConfiguration configuration)
     {
         _sendGridClient = sendGridClient;
+        _emailContentHelpers = emailContentHelpers;
         _configuration = configuration;
     }
 
@@ -43,7 +46,7 @@ public class EmailService : IEmailService
                 Capacity = 0,
                 Position = 0
             };
-            var msg = await EmailContentHelpers.PrepareEmailContentForAdmin(reportRequestObject, stream, fromEmail,
+            var msg = await _emailContentHelpers.PrepareEmailContentForAdmin(reportRequestObject, stream, fromEmail,
                 fromName, toEmail);
 
             var response = await _sendGridClient.SendEmailAsync(msg);
@@ -80,7 +83,7 @@ public class EmailService : IEmailService
             var fromName = _configuration.GetSection("SendGridEmailSettings")
                 .GetValue<string>("FromName");
 
-            var msg = await EmailContentHelpers.PrepareEmailContentForClient(reportRequestObject, fileStream, fromEmail,
+            var msg = await _emailContentHelpers.PrepareEmailContentForClient(reportRequestObject, fileStream, fromEmail,
                 fromName);
 
             var response = await _sendGridClient.SendEmailAsync(msg);

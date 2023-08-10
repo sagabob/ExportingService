@@ -9,12 +9,13 @@ public class ReportRequestObjectFactory : IReportRequestObjectFactory
     {
         return new ReportRequestObject
         {
-            Id = Guid.NewGuid(),
+            Id = Guid.NewGuid().ToString(),
             EmailAddress = request.EmailAddress,
             Format = request.Format,
             Title = request.Title,
             Product = request.Product,
-            Urls = request.Urls
+            Urls = request.Urls,
+            Status = ExportingStatus.Ongoing
         };
     }
 }

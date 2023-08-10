@@ -2,22 +2,25 @@
 using Azure.Messaging.ServiceBus;
 using Newtonsoft.Json;
 using ReportExporting.ApplicationLib.Entities;
+using ReportExporting.ApplicationLib.Helpers;
 
 namespace ReportExporting.NotificationApi.Handlers.Core;
 
 public class MessageForEmailHandler : IMessageForEmailHandler
 {
     private readonly IConfiguration _configuration;
+    private readonly IReportRequestErrorObjectFactory _reportRequestErrorObjectFactory;
     private readonly ISendEmailHandler _sendEmailHandler;
     private readonly ServiceBusClient _serviceBusClient;
     private ServiceBusProcessor? _processor;
 
     public MessageForEmailHandler(ServiceBusClient serviceBusClient, IConfiguration configuration,
-        ISendEmailHandler sendEmailHandler)
+        ISendEmailHandler sendEmailHandler, IReportRequestErrorObjectFactory reportRequestErrorObjectFactory)
     {
         _serviceBusClient = serviceBusClient;
         _configuration = configuration;
         _sendEmailHandler = sendEmailHandler;
+        _reportRequestErrorObjectFactory = reportRequestErrorObjectFactory;
     }
 
     public async Task Register()
@@ -36,13 +39,12 @@ public class MessageForEmailHandler : IMessageForEmailHandler
         _processor.ProcessMessageAsync += ReceiveMessageHandler;
         _processor.ProcessErrorAsync += ErrorHandler;
 
-        await _processor.StartProcessingAsync().ConfigureAwait(false);
+        await _processor.StartProcessingAsync();
         ;
     }
 
     private async Task ReceiveMessageHandler(ProcessMessageEventArgs args)
     {
-        var blankReportRequestObject = new ReportRequestObject();
         try
         {
             var messageBody = Encoding.UTF8.GetString(args.Message.Body);
@@ -56,20 +58,22 @@ public class MessageForEmailHandler : IMessageForEmailHandler
                     await _sendEmailHandler.HandleSendingEmailToClient(request);
                 else
                     // it means that the PlaceOrderApi sends this message to notify the admin
-                    await _sendEmailHandler.HandleSendingEmailToAdmin(blankReportRequestObject);
+                    await _sendEmailHandler.HandleSendingEmailToAdmin(request);
             }
             else
             {
-                blankReportRequestObject.ErrorMessage = "Fail to receive the request message in email queue";
-                await _sendEmailHandler.HandleSendingEmailToAdmin(blankReportRequestObject);
+                await _sendEmailHandler.HandleSendingErrorEmailToAdmin(
+                    _reportRequestErrorObjectFactory.CreateObjectErrorObject(
+                        "Fail to receive the request message in email queue"));
             }
         }
         catch (Exception ex)
         {
             // ignored
             // will handle it later
-            blankReportRequestObject.ErrorMessage = ex.Message;
-            await _sendEmailHandler.HandleSendingEmailToAdmin(blankReportRequestObject);
+
+            await _sendEmailHandler.HandleSendingErrorEmailToAdmin(
+                _reportRequestErrorObjectFactory.CreateObjectErrorObject(ex.Message));
         }
         finally
         {
@@ -81,10 +85,8 @@ public class MessageForEmailHandler : IMessageForEmailHandler
     private async Task ErrorHandler(ProcessErrorEventArgs args)
     {
         // the error source tells me at what point in the processing an error occurred
-        Console.WriteLine(args.Exception.Message);
 
-        var blankReportRequestObject = new ReportRequestObject { ErrorMessage = args.Exception.Message };
-
-        await _sendEmailHandler.HandleSendingEmailToAdmin(blankReportRequestObject);
+        await _sendEmailHandler.HandleSendingErrorEmailToAdmin(
+            _reportRequestErrorObjectFactory.CreateObjectErrorObject(args.Exception.Message));
     }
 }

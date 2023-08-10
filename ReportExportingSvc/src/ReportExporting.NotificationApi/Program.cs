@@ -8,6 +8,8 @@ using ReportExporting.ApplicationLib.Services;
 using ReportExporting.ApplicationLib.Services.Core;
 using ReportExporting.NotificationApi.Handlers;
 using ReportExporting.NotificationApi.Handlers.Core;
+using ReportExporting.NotificationApi.Helpers;
+using ReportExporting.NotificationApi.Helpers.Core;
 using ReportExporting.NotificationApi.Services;
 using ReportExporting.NotificationApi.Services.Core;
 using SendGrid.Extensions.DependencyInjection;
@@ -41,9 +43,12 @@ builder.Services.AddSendGrid(options =>
 });
 
 builder.Services.AddSingleton<IReportRequestTableEntityFactory, ReportRequestTableEntityFactory>();
+builder.Services.AddSingleton<IReportRequestErrorObjectFactory, ReportRequestErrorObjectFactory>();
 
 builder.Services.AddSingleton<ITableStorageService, TableStorageService>();
 builder.Services.AddSingleton<IBlobStorageService, BlobStorageService>();
+
+builder.Services.AddSingleton<IEmailContentHelpers, EmailContentHelpers>();
 builder.Services.AddSingleton<IEmailService, EmailService>();
 
 builder.Services.AddSingleton<IUpsertItemToTableHandler, UpsertItemToTableHandler>();

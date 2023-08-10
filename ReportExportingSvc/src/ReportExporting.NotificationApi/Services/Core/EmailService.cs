@@ -1,7 +1,6 @@
-﻿using System.Text;
-using Newtonsoft.Json;
-using ReportExporting.ApplicationLib.Entities;
+﻿using ReportExporting.ApplicationLib.Entities;
 using ReportExporting.NotificationApi.Helpers;
+using ReportExporting.NotificationApi.Helpers.Core;
 using SendGrid;
 
 namespace ReportExporting.NotificationApi.Services.Core;
@@ -9,42 +8,39 @@ namespace ReportExporting.NotificationApi.Services.Core;
 public class EmailService : IEmailService
 {
     private readonly IConfiguration _configuration;
+    private readonly IEmailContentHelpers _emailContentHelpers;
     private readonly ISendGridClient _sendGridClient;
 
     public EmailService(
-        ISendGridClient sendGridClient,
+        ISendGridClient sendGridClient, IEmailContentHelpers emailContentHelpers,
         IConfiguration configuration)
     {
         _sendGridClient = sendGridClient;
+        _emailContentHelpers = emailContentHelpers;
         _configuration = configuration;
     }
 
+    public AdminInfo AdminInfo =>
+        new()
+        {
+            FromMail = _configuration.GetSection("SendGridEmailSettings")
+                .GetValue<string>("FromEmail")!,
+            FromName = _configuration.GetSection("SendGridEmailSettings")
+                .GetValue<string>("FromName")!,
+            AdminEmail = _configuration.GetSection("SendGridEmailSettings")
+                .GetValue<string>("AdminEmail")!
+        };
 
     public async Task<ReportRequestObject> SendingEmailToAdminAsync(ReportRequestObject reportRequestObject)
     {
         try
         {
-            var fromEmail = _configuration.GetSection("SendGridEmailSettings")
-                .GetValue<string>("FromEmail");
-
-            var fromName = _configuration.GetSection("SendGridEmailSettings")
-                .GetValue<string>("FromName");
-
-            var toEmail = _configuration.GetSection("SendGridEmailSettings")
-                .GetValue<string>("AdminEmail");
-
             //email to admin
-            var jsonString = JsonConvert.SerializeObject(reportRequestObject);
-            var byteArray = Encoding.ASCII.GetBytes(jsonString);
-            var stream = new MemoryStream(byteArray)
-            {
-                ReadTimeout = 0,
-                WriteTimeout = 0,
-                Capacity = 0,
-                Position = 0
-            };
-            var msg = await EmailContentHelpers.PrepareEmailContentForAdmin(reportRequestObject, stream, fromEmail,
-                fromName, toEmail);
+            var stream = _emailContentHelpers.WrapReportRequestObjectToStream(reportRequestObject);
+
+            var msg = await _emailContentHelpers.PrepareEmailContentForAdmin(reportRequestObject, stream,
+                AdminInfo.FromMail,
+                AdminInfo.FromMail, AdminInfo.AdminEmail);
 
             var response = await _sendGridClient.SendEmailAsync(msg);
 
@@ -74,14 +70,10 @@ public class EmailService : IEmailService
     {
         try
         {
-            var fromEmail = _configuration.GetSection("SendGridEmailSettings")
-                .GetValue<string>("FromEmail");
-
-            var fromName = _configuration.GetSection("SendGridEmailSettings")
-                .GetValue<string>("FromName");
-
-            var msg = await EmailContentHelpers.PrepareEmailContentForClient(reportRequestObject, fileStream, fromEmail,
-                fromName);
+            var msg = await _emailContentHelpers.PrepareEmailContentForClient(reportRequestObject, fileStream,
+                AdminInfo.FromMail,
+                AdminInfo.FromName
+            );
 
             var response = await _sendGridClient.SendEmailAsync(msg);
 
@@ -105,5 +97,14 @@ public class EmailService : IEmailService
 
 
         return reportRequestObject;
+    }
+
+    public async Task<Response> SendingEmailWithErrorToAdminAsync(ReportRequestErrorObject reportRequestErrorObject)
+    {
+        var msg = _emailContentHelpers.CreateMessageForAdminFromErrorMessage(reportRequestErrorObject,
+            AdminInfo.FromMail,
+            AdminInfo.FromName, AdminInfo.AdminEmail);
+
+        return await _sendGridClient.SendEmailAsync(msg);
     }
 }

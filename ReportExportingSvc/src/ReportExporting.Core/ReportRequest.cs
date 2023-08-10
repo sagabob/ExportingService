@@ -2,13 +2,13 @@
 
 public class ReportRequest
 {
-    public ReportUrl[] Urls { get; set; } = null!;
+    public required ReportUrl[] Urls { get; set; }
 
-    public string EmailAddress { get; set; } = null!;
+    public required string EmailAddress { get; set; } 
 
     public ReportFormat Format { get; set; }
 
-    public string Title { get; set; } = null!;
+    public required string Title { get; set; }
 
-    public ReportProduct Product { get; set; }
+    public required ReportProduct Product { get; set; }
 }

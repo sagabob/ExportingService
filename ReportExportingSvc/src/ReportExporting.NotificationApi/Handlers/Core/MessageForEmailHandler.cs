@@ -36,7 +36,7 @@ public class MessageForEmailHandler : IMessageForEmailHandler
         _processor.ProcessMessageAsync += ReceiveMessageHandler;
         _processor.ProcessErrorAsync += ErrorHandler;
 
-        await _processor.StartProcessingAsync().ConfigureAwait(false);
+        await _processor.StartProcessingAsync();
         ;
     }
 

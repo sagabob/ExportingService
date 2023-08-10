@@ -19,8 +19,7 @@ public class ExportRequestHandler : IExportRequestHandler
     public async Task<ReportRequestObject> Handle(ReportRequestObject request)
     {
         request.Progress.Add(ExportingProgress.Submitting);
-        request.Status = ExportingStatus.Ongoing;
-
+      
         //place it on the Azure Table
         var result = await _upsertItemToTableHandler.Handle(request);
 

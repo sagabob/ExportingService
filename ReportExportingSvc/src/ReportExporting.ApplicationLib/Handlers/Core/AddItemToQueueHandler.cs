@@ -33,7 +33,7 @@ public class AddItemToQueueHandler : IAddItemToQueueHandler
             var message = new ServiceBusMessage(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(request)))
             {
                 ContentType = "application/json",
-                MessageId = request.Id.ToString()
+                MessageId = request.Id
             };
 
             await serviceBusSender.SendMessageAsync(message);

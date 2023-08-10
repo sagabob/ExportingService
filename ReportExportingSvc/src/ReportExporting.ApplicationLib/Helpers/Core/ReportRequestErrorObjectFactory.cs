@@ -2,7 +2,7 @@
 
 namespace ReportExporting.ApplicationLib.Helpers.Core;
 
-public class ReportRequestErrorObjectFactory: IReportRequestErrorObjectFactory
+public class ReportRequestErrorObjectFactory : IReportRequestErrorObjectFactory
 {
     public ReportRequestErrorObject CreateObjectErrorObject(string errorMessage)
     {

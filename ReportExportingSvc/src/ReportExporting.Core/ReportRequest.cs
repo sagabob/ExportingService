@@ -4,7 +4,7 @@ public class ReportRequest
 {
     public required ReportUrl[] Urls { get; set; }
 
-    public required string EmailAddress { get; set; } 
+    public required string EmailAddress { get; set; }
 
     public ReportFormat Format { get; set; }
 

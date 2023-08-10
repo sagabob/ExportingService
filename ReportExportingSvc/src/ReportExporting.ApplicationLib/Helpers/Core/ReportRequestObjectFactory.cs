@@ -16,7 +16,6 @@ public class ReportRequestObjectFactory : IReportRequestObjectFactory
             Product = request.Product,
             Urls = request.Urls,
             Status = ExportingStatus.Ongoing
-            
         };
     }
 }

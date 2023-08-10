@@ -53,7 +53,7 @@ public class PlaceOrderControllerTests
 
         var response = okResult!.Value as ExportingReportResponse;
 
-        response!.OrderId.Should().Be(requestObject.Id.ToString());
+        response!.OrderId.Should().Be(requestObject.Id);
 
         response!.Status.Should().Be("Order submitted");
 
@@ -131,7 +131,7 @@ public class PlaceOrderControllerTests
     {
         //Arrange
         var request = TestDataFactory.GetFakeReportRequest();
-       
+
         request.Urls = new[]
         {
             new()
@@ -217,7 +217,7 @@ public class PlaceOrderControllerTests
 
             var response = okResult!.Value as ExportingReportResponse;
 
-            response!.OrderId.Should().Be(requestObject.Id.ToString());
+            response!.OrderId.Should().Be(requestObject.Id);
 
             response!.Status.Should().Be("Order submitted");
 
@@ -271,7 +271,7 @@ public class PlaceOrderControllerTests
 
             var response = okResult!.Value as ExportingReportResponse;
 
-            response!.OrderId.Should().Be(requestObject.Id.ToString());
+            response!.OrderId.Should().Be(requestObject.Id);
 
             response!.Status.Should().Be("Order submitted");
 

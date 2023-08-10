@@ -9,7 +9,7 @@ public class ExportObjectFactory : IExportObjectFactory
         return new ExportObject
         {
             Urls = reportRequest.Urls,
-            Id = reportRequest.Id.ToString(),
+            Id = reportRequest.Id,
             Product = reportRequest.Product,
             Format = reportRequest.Format
         };

@@ -23,7 +23,7 @@ public class EmailContentHelpers : IEmailContentHelpers
     }
 
     public async Task<SendGridMessage> PrepareEmailContentForAdmin(ReportRequestObject reportRequestObject,
-        Stream exportedFileStream, string? fromEmail, string? fromName, string? toEmail)
+        Stream exportedFileStream, string fromEmail, string fromName, string toEmail)
     {
         var msg = CreateMessageForAdmin(reportRequestObject, fromEmail, fromName);
         msg.AddTo(toEmail);
@@ -33,7 +33,7 @@ public class EmailContentHelpers : IEmailContentHelpers
     }
 
     public async Task<SendGridMessage> PrepareEmailContentForClient(ReportRequestObject reportRequestObject,
-        Stream exportedFileStream, string? fromEmail, string? fromName)
+        Stream exportedFileStream, string fromEmail, string fromName)
     {
         var msg = CreateMessageForClient(reportRequestObject, fromEmail, fromName);
 
@@ -43,8 +43,22 @@ public class EmailContentHelpers : IEmailContentHelpers
         return msg;
     }
 
-    public SendGridMessage CreateMessageForClient(ReportRequestObject reportRequestObject, string? fromEmail,
-        string? fromName)
+    public SendGridMessage CreateMessageForAdminFromErrorMessage(ReportRequestErrorObject reportRequestErrorObject,
+        string fromEmail, string fromName, string adminEmail)
+    {
+        var msg = new SendGridMessage
+        {
+            From = new EmailAddress(fromEmail, fromName),
+            Subject = "Notify on failure",
+            PlainTextContent = $"Here is the order detail & error: {reportRequestErrorObject.ErrorMassage}"
+        };
+
+        msg.AddTo(adminEmail);
+        return msg;
+    }
+
+    public SendGridMessage CreateMessageForClient(ReportRequestObject reportRequestObject, string fromEmail,
+        string fromName)
     {
         var msg = new SendGridMessage
         {
@@ -56,8 +70,8 @@ public class EmailContentHelpers : IEmailContentHelpers
         return msg;
     }
 
-    public SendGridMessage CreateMessageForAdmin(ReportRequestObject reportRequestObject, string? fromEmail,
-        string? fromName)
+    public SendGridMessage CreateMessageForAdmin(ReportRequestObject reportRequestObject, string fromEmail,
+        string fromName)
     {
         var msg = new SendGridMessage
         {

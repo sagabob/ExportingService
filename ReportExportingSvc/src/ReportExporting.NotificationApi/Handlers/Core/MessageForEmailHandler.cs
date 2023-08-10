@@ -2,6 +2,7 @@
 using Azure.Messaging.ServiceBus;
 using Newtonsoft.Json;
 using ReportExporting.ApplicationLib.Entities;
+using ReportExporting.ApplicationLib.Helpers;
 
 namespace ReportExporting.NotificationApi.Handlers.Core;
 
@@ -9,15 +10,17 @@ public class MessageForEmailHandler : IMessageForEmailHandler
 {
     private readonly IConfiguration _configuration;
     private readonly ISendEmailHandler _sendEmailHandler;
+    private readonly IReportRequestErrorObjectFactory _reportRequestErrorObjectFactory;
     private readonly ServiceBusClient _serviceBusClient;
     private ServiceBusProcessor? _processor;
 
     public MessageForEmailHandler(ServiceBusClient serviceBusClient, IConfiguration configuration,
-        ISendEmailHandler sendEmailHandler)
+        ISendEmailHandler sendEmailHandler, IReportRequestErrorObjectFactory reportRequestErrorObjectFactory)
     {
         _serviceBusClient = serviceBusClient;
         _configuration = configuration;
         _sendEmailHandler = sendEmailHandler;
+        _reportRequestErrorObjectFactory = reportRequestErrorObjectFactory;
     }
 
     public async Task Register()
@@ -42,7 +45,6 @@ public class MessageForEmailHandler : IMessageForEmailHandler
 
     private async Task ReceiveMessageHandler(ProcessMessageEventArgs args)
     {
-        var blankReportRequestObject = new ReportRequestObject();
         try
         {
             var messageBody = Encoding.UTF8.GetString(args.Message.Body);
@@ -60,8 +62,7 @@ public class MessageForEmailHandler : IMessageForEmailHandler
             }
             else
             {
-                blankReportRequestObject.ErrorMessage = "Fail to receive the request message in email queue";
-                await _sendEmailHandler.HandleSendingEmailToAdmin(blankReportRequestObject);
+                await _sendEmailHandler.h.(_reportRequestErrorObjectFactory.CreateObjectErrorObject("Fail to receive the request message in email queue"));
             }
         }
         catch (Exception ex)

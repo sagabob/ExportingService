@@ -41,6 +41,7 @@ builder.Services.AddSendGrid(options =>
 });
 
 builder.Services.AddSingleton<IReportRequestTableEntityFactory, ReportRequestTableEntityFactory>();
+builder.Services.AddSingleton<IReportRequestErrorObjectFactory, ReportRequestErrorObjectFactory>();
 
 builder.Services.AddSingleton<ITableStorageService, TableStorageService>();
 builder.Services.AddSingleton<IBlobStorageService, BlobStorageService>();

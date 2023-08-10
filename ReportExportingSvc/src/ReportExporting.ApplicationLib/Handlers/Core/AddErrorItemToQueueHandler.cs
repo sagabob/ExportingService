@@ -17,7 +17,7 @@ public class AddErrorItemToQueueHandler : IAddErrorItemToQueueHandler
         _configuration = configuration;
     }
 
-    public async Task Handle(ReportRequestErrorObject requestErrorObject, QueueType queueType)
+    public async Task<bool> Handle(ReportRequestErrorObject requestErrorObject, QueueType queueType)
     {
         try
         {
@@ -33,7 +33,10 @@ public class AddErrorItemToQueueHandler : IAddErrorItemToQueueHandler
         }
         catch (Exception)
         {
-            // ignored
+            // log will be implemented here
+            return false;
         }
+
+        return true;
     }
 }

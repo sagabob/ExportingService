@@ -12,7 +12,7 @@ public class ReportRequestTableEntityFactory : IReportRequestTableEntityFactory
             EmailAddress = request.EmailAddress,
             PartitionKey = request.Id,
             RowKey = request.Id,
-            Status = Enum.GetName(typeof(ExportingStatus), request.Status),
+            Status = request.Status.ToString(),
             FullProgress = request.GetFullProgress()
         };
     }

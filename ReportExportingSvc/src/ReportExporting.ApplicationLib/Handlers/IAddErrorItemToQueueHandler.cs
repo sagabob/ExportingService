@@ -4,5 +4,5 @@ namespace ReportExporting.ApplicationLib.Handlers;
 
 public interface IAddErrorItemToQueueHandler
 {
-    Task Handle(ReportRequestErrorObject requestErrorObject, QueueType queueType);
+    Task<bool> Handle(ReportRequestErrorObject requestErrorObject, QueueType queueType);
 }

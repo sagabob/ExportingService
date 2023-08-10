@@ -20,6 +20,7 @@
 * [Architecture Diagram](#Diagram)
 * [Built with](#built-with)
 * [CI/CD](#CI/CD)
+* [Progress](#Progress)
 * [Roadmap](#roadmap)
 * [Contact](#contact)
 
@@ -40,7 +41,9 @@ A simple event driven architecture system exporting Html pages to Pdf/Word. User
 ## CI/CD
 [![Build Status](https://dev.azure.com/bobpham-tdp-saga/TdpAGISApp/_apis/build/status%2FExporting_Service?branchName=main)](https://dev.azure.com/bobpham-tdp-saga/TdpAGISApp/_build/latest?definitionId=48&branchName=main)
 
-
+## Progress
+* Write all tests, aim to get near 100% test coverage.
+  
 ## Roadmap
 The application will be implemented with the following features:
 * Use docker.

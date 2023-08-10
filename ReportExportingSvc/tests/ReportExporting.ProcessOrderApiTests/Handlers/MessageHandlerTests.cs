@@ -4,6 +4,7 @@ using Moq;
 using Newtonsoft.Json;
 using ReportExporting.ApplicationLib.Entities;
 using ReportExporting.ApplicationLib.Handlers;
+using ReportExporting.ApplicationLib.Helpers;
 using ReportExporting.ApplicationLib.Helpers.Core;
 using ReportExporting.ProcessOrderApi.Handlers;
 using ReportExporting.ProcessOrderApi.Handlers.Core;
@@ -32,10 +33,14 @@ public class MessageHandlerTests
         var serviceBusClientMock = new Mock<ServiceBusClient>();
         var addItemToQueueHandlerMock = new Mock<IAddItemToQueueHandler>();
         var handleExportProcessMock = new Mock<IHandleExportProcess>();
+        var addErrorItemToQueueHandlerMock = new Mock<IAddErrorItemToQueueHandler>();
         Mock<IConfiguration> configurationMock = new();
 
+        IReportRequestErrorObjectFactory reportRequestErrorObjectFactory = new ReportRequestErrorObjectFactory();
+
         var msgHandler = new MessageHandler(serviceBusClientMock.Object, configurationMock.Object,
-            handleExportProcessMock.Object, addItemToQueueHandlerMock.Object);
+            handleExportProcessMock.Object, addItemToQueueHandlerMock.Object, addErrorItemToQueueHandlerMock.Object,
+            reportRequestErrorObjectFactory);
 
         var processMessageEventArgs =
             new ProcessMessageEventArgs(serviceBusReceivedMessage, serviceBusReceiverMock.Object, cts.Token);
@@ -63,10 +68,13 @@ public class MessageHandlerTests
         var serviceBusClientMock = new Mock<ServiceBusClient>();
         var addItemToQueueHandlerMock = new Mock<IAddItemToQueueHandler>();
         var handleExportProcessMock = new Mock<IHandleExportProcess>();
+        var addErrorItemToQueueHandlerMock = new Mock<IAddErrorItemToQueueHandler>();
         Mock<IConfiguration> configurationMock = new();
+        IReportRequestErrorObjectFactory reportRequestErrorObjectFactory = new ReportRequestErrorObjectFactory();
 
         var msgHandler = new MessageHandler(serviceBusClientMock.Object, configurationMock.Object,
-            handleExportProcessMock.Object, addItemToQueueHandlerMock.Object);
+            handleExportProcessMock.Object, addItemToQueueHandlerMock.Object, addErrorItemToQueueHandlerMock.Object,
+            reportRequestErrorObjectFactory);
 
         var processMessageEventArgs =
             new ProcessMessageEventArgs(serviceBusReceivedMessage, serviceBusReceiverMock.Object, cts.Token);
@@ -96,12 +104,15 @@ public class MessageHandlerTests
         var serviceBusClientMock = new Mock<ServiceBusClient>();
         var addItemToQueueHandlerMock = new Mock<IAddItemToQueueHandler>();
         var handleExportProcessMock = new Mock<IHandleExportProcess>();
+        var addErrorItemToQueueHandlerMock = new Mock<IAddErrorItemToQueueHandler>();
         Mock<IConfiguration> configurationMock = new();
+        IReportRequestErrorObjectFactory reportRequestErrorObjectFactory = new ReportRequestErrorObjectFactory();
 
         handleExportProcessMock.Setup(x => x.Handle(It.IsAny<ReportRequestObject>())).ThrowsAsync(new Exception());
 
         var msgHandler = new MessageHandler(serviceBusClientMock.Object, configurationMock.Object,
-            handleExportProcessMock.Object, addItemToQueueHandlerMock.Object);
+            handleExportProcessMock.Object, addItemToQueueHandlerMock.Object, addErrorItemToQueueHandlerMock.Object,
+            reportRequestErrorObjectFactory);
 
 
         var processMessageEventArgs =
@@ -112,7 +123,7 @@ public class MessageHandlerTests
 
         //Assert
         handleExportProcessMock.Verify(x => x.Handle(It.IsAny<ReportRequestObject>()), Times.Once);
-        addItemToQueueHandlerMock.Verify(x => x.Handle(It.IsAny<ReportRequestObject>(), QueueType.EmailQueue),
+        addErrorItemToQueueHandlerMock.Verify(x => x.Handle(It.IsAny<ReportRequestErrorObject>(), QueueType.EmailQueue),
             Times.Once);
     }
 
@@ -123,7 +134,9 @@ public class MessageHandlerTests
         var serviceBusClientMock = new Mock<ServiceBusClient>();
         var addItemToQueueHandlerMock = new Mock<IAddItemToQueueHandler>();
         var handleExportProcessMock = new Mock<IHandleExportProcess>();
+        var addErrorItemToQueueHandlerMock = new Mock<IAddErrorItemToQueueHandler>();
         Mock<IConfiguration> configurationMock = new();
+        IReportRequestErrorObjectFactory reportRequestErrorObjectFactory = new ReportRequestErrorObjectFactory();
 
         Mock<ServiceBusProcessor> serviceBusProcessorMock = new();
 
@@ -132,14 +145,15 @@ public class MessageHandlerTests
             .Returns(serviceBusProcessorMock.Object);
 
         var msgHandler = new MessageHandler(serviceBusClientMock.Object, configurationMock.Object,
-            handleExportProcessMock.Object, addItemToQueueHandlerMock.Object);
+            handleExportProcessMock.Object, addItemToQueueHandlerMock.Object, addErrorItemToQueueHandlerMock.Object,
+            reportRequestErrorObjectFactory);
 
         //Act
         await msgHandler.Register();
 
         //Verify
-        serviceBusProcessorMock.Verify(x => x.StartProcessingAsync(default),Times.Once);
-        
+        serviceBusProcessorMock.Verify(x => x.StartProcessingAsync(default), Times.Once);
+
         //TODO Can't verify event handler is being added due to the function is sealed
         //serviceBusProcessorMock.VerifyAdd(x => x.ProcessMessageAsync += It.IsAny<Func<ProcessMessageEventArgs, Task>>());
     }
@@ -152,10 +166,13 @@ public class MessageHandlerTests
         var serviceBusClientMock = new Mock<ServiceBusClient>();
         var addItemToQueueHandlerMock = new Mock<IAddItemToQueueHandler>();
         var handleExportProcessMock = new Mock<IHandleExportProcess>();
+        var addErrorItemToQueueHandlerMock = new Mock<IAddErrorItemToQueueHandler>();
         Mock<IConfiguration> configurationMock = new();
+        IReportRequestErrorObjectFactory reportRequestErrorObjectFactory = new ReportRequestErrorObjectFactory();
 
         var msgHandler = new MessageHandler(serviceBusClientMock.Object, configurationMock.Object,
-            handleExportProcessMock.Object, addItemToQueueHandlerMock.Object);
+            handleExportProcessMock.Object, addItemToQueueHandlerMock.Object, addErrorItemToQueueHandlerMock.Object,
+            reportRequestErrorObjectFactory);
 
         var processErrorEventArgs =
             new ProcessErrorEventArgs(new Exception(), It.IsAny<ServiceBusErrorSource>(), It.IsAny<string>(),
@@ -165,8 +182,7 @@ public class MessageHandlerTests
         await msgHandler.ErrorHandler(processErrorEventArgs);
 
         //Verify
-        addItemToQueueHandlerMock.Verify(x => x.Handle(It.IsAny<ReportRequestObject>(), QueueType.EmailQueue),
+        addErrorItemToQueueHandlerMock.Verify(x => x.Handle(It.IsAny<ReportRequestErrorObject>(), QueueType.EmailQueue),
             Times.Once);
-
     }
 }

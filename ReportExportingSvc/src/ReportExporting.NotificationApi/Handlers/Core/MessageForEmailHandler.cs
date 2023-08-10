@@ -9,8 +9,8 @@ namespace ReportExporting.NotificationApi.Handlers.Core;
 public class MessageForEmailHandler : IMessageForEmailHandler
 {
     private readonly IConfiguration _configuration;
-    private readonly ISendEmailHandler _sendEmailHandler;
     private readonly IReportRequestErrorObjectFactory _reportRequestErrorObjectFactory;
+    private readonly ISendEmailHandler _sendEmailHandler;
     private readonly ServiceBusClient _serviceBusClient;
     private ServiceBusProcessor? _processor;
 
@@ -58,19 +58,22 @@ public class MessageForEmailHandler : IMessageForEmailHandler
                     await _sendEmailHandler.HandleSendingEmailToClient(request);
                 else
                     // it means that the PlaceOrderApi sends this message to notify the admin
-                    await _sendEmailHandler.HandleSendingEmailToAdmin(blankReportRequestObject);
+                    await _sendEmailHandler.HandleSendingEmailToAdmin(request);
             }
             else
             {
-                await _sendEmailHandler.h.(_reportRequestErrorObjectFactory.CreateObjectErrorObject("Fail to receive the request message in email queue"));
+                await _sendEmailHandler.HandleSendingErrorEmailToAdmin(
+                    _reportRequestErrorObjectFactory.CreateObjectErrorObject(
+                        "Fail to receive the request message in email queue"));
             }
         }
         catch (Exception ex)
         {
             // ignored
             // will handle it later
-            blankReportRequestObject.ErrorMessage = ex.Message;
-            await _sendEmailHandler.HandleSendingEmailToAdmin(blankReportRequestObject);
+
+            await _sendEmailHandler.HandleSendingErrorEmailToAdmin(
+                _reportRequestErrorObjectFactory.CreateObjectErrorObject(ex.Message));
         }
         finally
         {
@@ -82,10 +85,8 @@ public class MessageForEmailHandler : IMessageForEmailHandler
     private async Task ErrorHandler(ProcessErrorEventArgs args)
     {
         // the error source tells me at what point in the processing an error occurred
-        Console.WriteLine(args.Exception.Message);
 
-        var blankReportRequestObject = new ReportRequestObject { ErrorMessage = args.Exception.Message };
-
-        await _sendEmailHandler.HandleSendingEmailToAdmin(blankReportRequestObject);
+        await _sendEmailHandler.HandleSendingErrorEmailToAdmin(
+            _reportRequestErrorObjectFactory.CreateObjectErrorObject(args.Exception.Message));
     }
 }

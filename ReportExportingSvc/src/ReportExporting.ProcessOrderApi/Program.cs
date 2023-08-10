@@ -38,7 +38,10 @@ builder.Services.AddAzureClients(cfg =>
         .WithCredential(new DefaultAzureCredential());
 });
 
+builder.Services.AddSingleton<IReportRequestObjectFactory, ReportRequestObjectFactory>();
 builder.Services.AddSingleton<IReportRequestTableEntityFactory, ReportRequestTableEntityFactory>();
+builder.Services.AddSingleton<IReportRequestErrorObjectFactory, ReportRequestErrorObjectFactory>();
+
 
 builder.Services.AddSingleton<ITableStorageService, TableStorageService>();
 builder.Services.AddSingleton<IBlobStorageService, BlobStorageService>();
@@ -54,6 +57,7 @@ builder.Services.AddSingleton<IExportConfigurationFactory, ExportConfigurationFa
 builder.Services.AddSingleton<IReportGeneratorFactory, ReportGeneratorFactory>();
 
 builder.Services.AddSingleton<IExportRequestHandler, ExportRequestHandler>();
+builder.Services.AddSingleton<IAddErrorItemToQueueHandler, AddErrorItemToQueueHandler>();
 builder.Services.AddSingleton<IUpsertItemToTableHandler, UpsertItemToTableHandler>();
 builder.Services.AddSingleton<IAddItemToQueueHandler, AddItemToQueueHandler>();
 builder.Services.AddSingleton<IUploadItemToBlobHandler, UploadItemToBlobHandler>();

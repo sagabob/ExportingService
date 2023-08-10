@@ -24,7 +24,7 @@ public class ExportObjectFactoryTests
         var expectedObject = new ExportObject
         {
             Urls = requestObject.Urls,
-            Id = requestObject.Id.ToString(),
+            Id = requestObject.Id,
             Product = requestObject.Product,
             Format = requestObject.Format
         };

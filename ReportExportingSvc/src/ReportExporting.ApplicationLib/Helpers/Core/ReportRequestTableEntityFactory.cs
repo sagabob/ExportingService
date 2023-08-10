@@ -10,9 +10,9 @@ public class ReportRequestTableEntityFactory : IReportRequestTableEntityFactory
         {
             FileName = request.FileName,
             EmailAddress = request.EmailAddress,
-            PartitionKey = request.Id.ToString(),
-            RowKey = request.Id.ToString(),
-            Status = Enum.GetName(typeof(ExportingStatus), request.Status),
+            PartitionKey = request.Id,
+            RowKey = request.Id,
+            Status = request.Status.ToString(),
             FullProgress = request.GetFullProgress()
         };
     }

@@ -1,6 +1,7 @@
 ﻿using ReportExporting.ApplicationLib.Entities;
 using ReportExporting.ApplicationLib.Handlers;
 using ReportExporting.NotificationApi.Services;
+using SendGrid;
 
 namespace ReportExporting.NotificationApi.Handlers.Core;
 
@@ -62,5 +63,10 @@ public class SendEmailHandler : ISendEmailHandler
     public async Task<ReportRequestObject> HandleSendingEmailToAdmin(ReportRequestObject reportRequestObject)
     {
         return await _emailService.SendingEmailToAdminAsync(reportRequestObject);
+    }
+
+    public async Task<Response> HandleSendingErrorEmailToAdmin(ReportRequestErrorObject reportRequestErrorObject)
+    {
+        return await _emailService.SendingEmailWithErrorToAdminAsync(reportRequestErrorObject);
     }
 }

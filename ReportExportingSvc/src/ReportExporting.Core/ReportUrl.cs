@@ -3,5 +3,5 @@
 public class ReportUrl
 {
     public string? Title { get; set; }
-    public string Url { get; set; } = null!;
+    public required string Url { get; set; }
 }

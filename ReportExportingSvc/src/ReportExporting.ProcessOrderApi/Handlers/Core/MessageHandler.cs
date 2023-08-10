@@ -3,24 +3,31 @@ using Azure.Messaging.ServiceBus;
 using Newtonsoft.Json;
 using ReportExporting.ApplicationLib.Entities;
 using ReportExporting.ApplicationLib.Handlers;
+using ReportExporting.ApplicationLib.Helpers;
 
 namespace ReportExporting.ProcessOrderApi.Handlers.Core;
 
 public class MessageHandler : IMessageHandler
 {
+    private readonly IAddErrorItemToQueueHandler _addErrorItemToQueueHandler;
     private readonly IAddItemToQueueHandler _addItemToQueueHandler;
     private readonly IConfiguration _configuration;
     private readonly IHandleExportProcess _handleExportProcess;
+    private readonly IReportRequestErrorObjectFactory _reportRequestErrorObjectFactory;
     private readonly ServiceBusClient _serviceBusClient;
     private ServiceBusProcessor? _processor;
 
     public MessageHandler(ServiceBusClient serviceBusClient, IConfiguration configuration,
-        IHandleExportProcess handleExportProcess, IAddItemToQueueHandler addItemToQueueHandler)
+        IHandleExportProcess handleExportProcess, IAddItemToQueueHandler addItemToQueueHandler,
+        IAddErrorItemToQueueHandler addErrorItemToQueueHandler,
+        IReportRequestErrorObjectFactory reportRequestErrorObjectFactory)
     {
         _serviceBusClient = serviceBusClient;
         _configuration = configuration;
         _handleExportProcess = handleExportProcess;
         _addItemToQueueHandler = addItemToQueueHandler;
+        _addErrorItemToQueueHandler = addErrorItemToQueueHandler;
+        _reportRequestErrorObjectFactory = reportRequestErrorObjectFactory;
     }
 
     public async Task Register()
@@ -61,8 +68,8 @@ public class MessageHandler : IMessageHandler
         {
             // ignored
             // will handle it later
-            var blankReportRequestObject = new ReportRequestObject { ErrorMessage = ex.Message };
-            await _addItemToQueueHandler.Handle(blankReportRequestObject, QueueType.EmailQueue);
+            var blankReportRequestObject = _reportRequestErrorObjectFactory.CreateObjectErrorObject(ex.Message);
+            await _addErrorItemToQueueHandler.Handle(blankReportRequestObject, QueueType.EmailQueue);
         }
         finally
         {
@@ -74,7 +81,7 @@ public class MessageHandler : IMessageHandler
     public async Task ErrorHandler(ProcessErrorEventArgs args)
     {
         // the error source tells me at what point in the processing an error occurred
-        var blankReportRequestObject = new ReportRequestObject { ErrorMessage = args.Exception.Message };
-        await _addItemToQueueHandler.Handle(blankReportRequestObject, QueueType.EmailQueue);
+        var blankReportRequestObject = _reportRequestErrorObjectFactory.CreateObjectErrorObject(args.Exception.Message);
+        await _addErrorItemToQueueHandler.Handle(blankReportRequestObject, QueueType.EmailQueue);
     }
 }

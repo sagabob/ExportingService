@@ -60,7 +60,7 @@ public class AppTestingController : ControllerBase
         if (result.Status == ExportingStatus.Failure)
             return Forbid("Fail to process the order");
 
-        var successResult = new ExportingReportResponse { OrderId = result.Id.ToString(), Status = "Order submitted" };
+        var successResult = new ExportingReportResponse { OrderId = result.Id, Status = "Order submitted" };
 
         return Ok(successResult);
     }
@@ -100,7 +100,7 @@ public class AppTestingController : ControllerBase
         if (result.Status == ExportingStatus.Failure)
             return Forbid("Fail to process the order");
 
-        var successResult = new ExportingReportResponse { OrderId = result.Id.ToString(), Status = "Order submitted" };
+        var successResult = new ExportingReportResponse { OrderId = result.Id, Status = "Order submitted" };
 
         return Ok(successResult);
     }

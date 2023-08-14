@@ -63,6 +63,10 @@ public class MessageHandler : IMessageHandler
                 await _handleExportProcess.Handle(request);
                 ;
             }
+            else
+            {
+                throw new Exception("Fail to parse the request from received message");
+            }
         }
         catch (Exception ex)
         {

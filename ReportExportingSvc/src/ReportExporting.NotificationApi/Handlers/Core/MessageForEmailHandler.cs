@@ -40,10 +40,9 @@ public class MessageForEmailHandler : IMessageForEmailHandler
         _processor.ProcessErrorAsync += ErrorHandler;
 
         await _processor.StartProcessingAsync();
-        ;
     }
 
-    private async Task ReceiveMessageHandler(ProcessMessageEventArgs args)
+    public async Task ReceiveMessageHandler(ProcessMessageEventArgs args)
     {
         try
         {
@@ -62,9 +61,7 @@ public class MessageForEmailHandler : IMessageForEmailHandler
             }
             else
             {
-                await _sendEmailHandler.HandleSendingErrorEmailToAdmin(
-                    _reportRequestErrorObjectFactory.CreateObjectErrorObject(
-                        "Fail to receive the request message in email queue"));
+                throw new Exception("Fail to parse the request from received message");
             }
         }
         catch (Exception ex)
@@ -82,7 +79,7 @@ public class MessageForEmailHandler : IMessageForEmailHandler
         }
     }
 
-    private async Task ErrorHandler(ProcessErrorEventArgs args)
+    public async Task ErrorHandler(ProcessErrorEventArgs args)
     {
         // the error source tells me at what point in the processing an error occurred
 

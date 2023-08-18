@@ -156,7 +156,7 @@ public class EmailContentHelpersTests
 
 
         var output = await helpers.PrepareEmailContentForClient(reportRequestObject, fileStream, FromEmail, FromName);
-        
+
         output.Should().NotBeNull();
         output.From.Email.Should().Be(FromEmail);
         output.Attachments.Count.Should().Be(1);

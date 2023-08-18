@@ -20,7 +20,7 @@ public class MessageForEmailHandlerTests
         var request = TestDataFactory.GetFakeReportRequest();
         var reportRequestObjectFactory = new ReportRequestObjectFactory();
         var requestObject = reportRequestObjectFactory.CreateFromReportRequest(request);
-        IReportRequestErrorObjectFactory errorObjectFactory = new ReportRequestErrorObjectFactory();
+        var errorObjectFactory = new ReportRequestErrorObjectFactory();
 
         var cts = new CancellationTokenSource();
         var serviceBusReceivedMessage = ServiceBusModelFactory.ServiceBusReceivedMessage(

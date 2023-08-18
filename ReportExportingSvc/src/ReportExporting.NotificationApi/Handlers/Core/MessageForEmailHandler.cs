@@ -40,7 +40,6 @@ public class MessageForEmailHandler : IMessageForEmailHandler
         _processor.ProcessErrorAsync += ErrorHandler;
 
         await _processor.StartProcessingAsync();
-        
     }
 
     public async Task ReceiveMessageHandler(ProcessMessageEventArgs args)
@@ -61,8 +60,9 @@ public class MessageForEmailHandler : IMessageForEmailHandler
                     await _sendEmailHandler.HandleSendingEmailToAdmin(request);
             }
             else
+            {
                 throw new Exception("Fail to parse the request from received message");
-            
+            }
         }
         catch (Exception ex)
         {

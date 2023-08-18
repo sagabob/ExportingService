@@ -23,12 +23,9 @@ public class EmailService : IEmailService
     public AdminInfo AdminInfo =>
         new()
         {
-            FromMail = _configuration.GetSection("SendGridEmailSettings")
-                .GetValue<string>("FromEmail")!,
-            FromName = _configuration.GetSection("SendGridEmailSettings")
-                .GetValue<string>("FromName")!,
-            AdminEmail = _configuration.GetSection("SendGridEmailSettings")
-                .GetValue<string>("AdminEmail")!
+            FromMail = Convert.ToString(_configuration["SendGridEmailSettings:FromEmail"])!,
+            FromName = Convert.ToString(_configuration["SendGridEmailSettings:FromName"])!,
+            AdminEmail = Convert.ToString(_configuration["SendGridEmailSettings:AdminEmail"])!
         };
 
     public async Task<ReportRequestObject> SendingEmailToAdminAsync(ReportRequestObject reportRequestObject)
@@ -51,14 +48,13 @@ public class EmailService : IEmailService
             else
             {
                 reportRequestObject.Progress.Add(ExportingProgress.FailSendingEmailToAdmin);
-                reportRequestObject.ErrorMessage = response.Body.ToString();
+                reportRequestObject.ErrorMessage = ExportingProgress.FailSendingEmailToAdmin.ToString();
             }
         }
         catch (Exception ex)
         {
             reportRequestObject.Progress.Add(ExportingProgress.FailSendingEmailToAdmin);
             reportRequestObject.ErrorMessage = ex.Message;
-            reportRequestObject.Status = ExportingStatus.Failure;
         }
         //email to admin
 
@@ -84,7 +80,7 @@ public class EmailService : IEmailService
             else
             {
                 reportRequestObject.Progress.Add(ExportingProgress.FailSendingEmailToClient);
-                reportRequestObject.ErrorMessage = response.Body.ToString();
+                reportRequestObject.ErrorMessage = ExportingProgress.FailSendingEmailToClient.ToString();
                 reportRequestObject.Status = ExportingStatus.Failure;
             }
         }

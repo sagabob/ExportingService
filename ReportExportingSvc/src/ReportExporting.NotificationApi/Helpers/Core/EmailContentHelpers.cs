@@ -10,14 +10,8 @@ public class EmailContentHelpers : IEmailContentHelpers
     public Stream WrapReportRequestObjectToStream(ReportRequestObject reportRequestObject)
     {
         var jsonString = JsonConvert.SerializeObject(reportRequestObject);
-        var byteArray = Encoding.ASCII.GetBytes(jsonString);
-        var stream = new MemoryStream(byteArray)
-        {
-            ReadTimeout = 0,
-            WriteTimeout = 0,
-            Capacity = 0,
-            Position = 0
-        };
+        var byteArray = Encoding.UTF8.GetBytes(jsonString);
+        var stream = new MemoryStream(byteArray);
 
         return stream;
     }

@@ -58,7 +58,6 @@ public class EmailService : IEmailService
         {
             reportRequestObject.Progress.Add(ExportingProgress.FailSendingEmailToAdmin);
             reportRequestObject.ErrorMessage = ex.Message;
-            reportRequestObject.Status = ExportingStatus.Failure;
         }
         //email to admin
 

@@ -24,6 +24,13 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<ExportRequestValidator>();
 
 
+var clientId = Environment.GetEnvironmentVariable("AZURE_CLIENT_ID");
+var tenantId = Environment.GetEnvironmentVariable("AZURE_TENANT_ID");
+var clientSecret = Environment.GetEnvironmentVariable("AZURE_CLIENT_SECRET");
+
+var clientSecretCredential = new ClientSecretCredential(clientId, tenantId, clientSecret);
+
+
 builder.Services.AddAzureClients(cfg =>
 {
     cfg.AddServiceBusClient(builder.Configuration.GetSection("ServiceBus"))
@@ -46,11 +53,9 @@ builder.Services.AddScoped<IExportRequestHandler, ExportRequestHandler>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

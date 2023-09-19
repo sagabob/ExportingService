@@ -10,10 +10,10 @@ services:
       - "8080:80"
       - "4443:443"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - AZURE_CLIENT_ID=be6a10bc-18dc-4edb-a149-d091bc24a771
-      - AZURE_TENANT_ID=59797dbd-8544-4600-8142-9bc07692a636
-      - AZURE_CLIENT_SECRET=LZ18Q~TYMTyiLBRxh3LjQWkfpw8-jHw-c1qISac2
+      - ASPNETCORE_ENVIRONMENT=${DEPLOYMENT_MODE}
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+      - AZURE_TENANT_ID=${AZURE_TENANT_ID}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
  
   reportexporting.notificationapi:
     image: ${DOCKER_REGISTRY-}reportexportingnotificationapi
@@ -24,11 +24,11 @@ services:
       - "8087:80"
       - "4447:443"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - AZURE_CLIENT_ID=be6a10bc-18dc-4edb-a149-d091bc24a771
-      - AZURE_TENANT_ID=59797dbd-8544-4600-8142-9bc07692a636
-      - AZURE_CLIENT_SECRET=LZ18Q~TYMTyiLBRxh3LjQWkfpw8-jHw-c1qISac2
-      - SendGridEmailSettings__APIKey=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 
+      - ASPNETCORE_ENVIRONMENT=${DEPLOYMENT_MODE}
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+      - AZURE_TENANT_ID=${AZURE_TENANT_ID}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
+      - SendGridEmailSettings__APIKey=${SENDGRID_KEY}
 
   reportexporting.processorderapi:
     image: ${DOCKER_REGISTRY-}reportexportingprocessorderapi
@@ -39,7 +39,7 @@ services:
       - "8085:80"
       - "4445:443"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - AZURE_CLIENT_ID=be6a10bc-18dc-4edb-a149-d091bc24a771
-      - AZURE_TENANT_ID=59797dbd-8544-4600-8142-9bc07692a636
-      - AZURE_CLIENT_SECRET=LZ18Q~TYMTyiLBRxh3LjQWkfpw8-jHw-c1qISac2
+      - ASPNETCORE_ENVIRONMENT=${DEPLOYMENT_MODE}
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+      - AZURE_TENANT_ID=${AZURE_TENANT_ID}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}

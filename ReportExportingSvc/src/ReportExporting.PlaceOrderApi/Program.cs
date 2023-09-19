@@ -30,14 +30,14 @@ var clientSecret = Environment.GetEnvironmentVariable("AZURE_CLIENT_SECRET");
 
 var clientSecretCredential = new ClientSecretCredential(clientId, tenantId, clientSecret);
 
-
+//https://azuresdkdocs.blob.core.windows.net/$web/dotnet/Microsoft.Extensions.Azure/1.0.0/index.html
 builder.Services.AddAzureClients(cfg =>
 {
     cfg.AddServiceBusClient(builder.Configuration.GetSection("ServiceBus"))
-        .WithCredential(new DefaultAzureCredential());
+        .WithCredential(clientSecretCredential); //should work
 
     cfg.AddTableServiceClient(new Uri(builder.Configuration.GetValue<string>("TableStorageServiceUrl")!))
-        .WithCredential(new DefaultAzureCredential());
+        .WithCredential(clientSecretCredential); //should work
 });
 
 builder.Services.AddScoped<IReportRequestObjectFactory, ReportRequestObjectFactory>();

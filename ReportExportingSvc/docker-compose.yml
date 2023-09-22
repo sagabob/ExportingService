@@ -11,9 +11,9 @@ services:
       - "4443:443"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - AZURE_CLIENT_ID=be6a10bc-18dc-4edb-a149-d091bc24a771
-      - AZURE_TENANT_ID=59797dbd-8544-4600-8142-9bc07692a636
-      - AZURE_CLIENT_SECRET=LZ18Q~TYMTyiLBRxh3LjQWkfpw8-jHw-c1qISac2
+      - AZURE_CLIENT_ID=---insert---
+      - AZURE_TENANT_ID=---insert---
+      - AZURE_CLIENT_SECRET=---insert---
  
   reportexporting.notificationapi:
     image: ${DOCKER_REGISTRY-}reportexportingnotificationapi
@@ -25,10 +25,10 @@ services:
       - "4447:443"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - AZURE_CLIENT_ID=be6a10bc-18dc-4edb-a149-d091bc24a771
-      - AZURE_TENANT_ID=59797dbd-8544-4600-8142-9bc07692a636
-      - AZURE_CLIENT_SECRET=LZ18Q~TYMTyiLBRxh3LjQWkfpw8-jHw-c1qISac2
-      - SendGridEmailSettings__APIKey=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 
+      - AZURE_CLIENT_ID=---insert---
+      - AZURE_TENANT_ID=---insert---
+      - AZURE_CLIENT_SECRET=---insert---
+      - SendGridEmailSettings__APIKey=---insert---
 
   reportexporting.processorderapi:
     image: ${DOCKER_REGISTRY-}reportexportingprocessorderapi
@@ -40,6 +40,6 @@ services:
       - "4445:443"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - AZURE_CLIENT_ID=be6a10bc-18dc-4edb-a149-d091bc24a771
-      - AZURE_TENANT_ID=59797dbd-8544-4600-8142-9bc07692a636
-      - AZURE_CLIENT_SECRET=LZ18Q~TYMTyiLBRxh3LjQWkfpw8-jHw-c1qISac2
+      - AZURE_CLIENT_ID=---insert---
+      - AZURE_TENANT_ID=---insert---
+      - AZURE_CLIENT_SECRET=---insert---

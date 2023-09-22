@@ -24,12 +24,6 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<ExportRequestValidator>();
 
 
-var clientId = Environment.GetEnvironmentVariable("AZURE_CLIENT_ID");
-var tenantId = Environment.GetEnvironmentVariable("AZURE_TENANT_ID");
-var clientSecret = Environment.GetEnvironmentVariable("AZURE_CLIENT_SECRET");
-
-var clientSecretCredential = new ClientSecretCredential(clientId, tenantId, clientSecret);
-
 
 builder.Services.AddAzureClients(cfg =>
 {

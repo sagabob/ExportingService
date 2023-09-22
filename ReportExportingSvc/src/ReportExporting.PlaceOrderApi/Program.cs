@@ -27,10 +27,10 @@ builder.Services.AddValidatorsFromAssemblyContaining<ExportRequestValidator>();
 builder.Services.AddAzureClients(cfg =>
 {
     cfg.AddServiceBusClient(builder.Configuration.GetSection("ServiceBus"))
-        .WithCredential(new DefaultAzureCredential());
+        .WithCredential(new DefaultAzureCredential()); //should work
 
     cfg.AddTableServiceClient(new Uri(builder.Configuration.GetValue<string>("TableStorageServiceUrl")!))
-        .WithCredential(new DefaultAzureCredential());
+        .WithCredential(new DefaultAzureCredential()); //should work
 });
 
 builder.Services.AddScoped<IReportRequestObjectFactory, ReportRequestObjectFactory>();
@@ -46,11 +46,9 @@ builder.Services.AddScoped<IExportRequestHandler, ExportRequestHandler>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

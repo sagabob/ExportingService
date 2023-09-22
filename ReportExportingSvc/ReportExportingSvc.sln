@@ -29,7 +29,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReportExporting.Application
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReportExporting.TestHelpers", "tests\ReportExporting.TestHelpers\ReportExporting.TestHelpers.csproj", "{9FC2032C-19C8-4A01-9BB7-A34A721B4484}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportExporting.ExportApiTests", "tests\ReportExporting.ExportApiTests\ReportExporting.ExportApiTests.csproj", "{C3D6A209-6BA4-4CCF-AD28-EE90F776084D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReportExporting.ExportApiTests", "tests\ReportExporting.ExportApiTests\ReportExporting.ExportApiTests.csproj", "{C3D6A209-6BA4-4CCF-AD28-EE90F776084D}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{250D48C0-6C2E-4A21-A18E-390879D3C5B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,6 +87,10 @@ Global
 		{C3D6A209-6BA4-4CCF-AD28-EE90F776084D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3D6A209-6BA4-4CCF-AD28-EE90F776084D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3D6A209-6BA4-4CCF-AD28-EE90F776084D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{250D48C0-6C2E-4A21-A18E-390879D3C5B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{250D48C0-6C2E-4A21-A18E-390879D3C5B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{250D48C0-6C2E-4A21-A18E-390879D3C5B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{250D48C0-6C2E-4A21-A18E-390879D3C5B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

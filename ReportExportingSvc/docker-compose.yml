@@ -1,0 +1,45 @@
+version: '3.4'
+
+services:
+  reportexporting.placeorderapi:
+    image: ${DOCKER_REGISTRY-}reportexportingplaceorderapi
+    build:
+      context: .
+      dockerfile: src/ReportExporting.PlaceOrderApi/Dockerfile
+    ports:
+      - "8080:80"
+      - "4443:443"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${DEPLOYMENT_MODE}
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+      - AZURE_TENANT_ID=${AZURE_TENANT_ID}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
+ 
+  reportexporting.notificationapi:
+    image: ${DOCKER_REGISTRY-}reportexportingnotificationapi
+    build:
+      context: .
+      dockerfile: src/ReportExporting.NotificationApi/Dockerfile
+    ports:
+      - "8087:80"
+      - "4447:443"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${DEPLOYMENT_MODE}
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+      - AZURE_TENANT_ID=${AZURE_TENANT_ID}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
+      - SendGridEmailSettings__APIKey=${SENDGRID_KEY}
+
+  reportexporting.processorderapi:
+    image: ${DOCKER_REGISTRY-}reportexportingprocessorderapi
+    build:
+      context: .
+      dockerfile: src/ReportExporting.ProcessOrderApi/Dockerfile
+    ports:
+      - "8085:80"
+      - "4445:443"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${DEPLOYMENT_MODE}
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+      - AZURE_TENANT_ID=${AZURE_TENANT_ID}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}

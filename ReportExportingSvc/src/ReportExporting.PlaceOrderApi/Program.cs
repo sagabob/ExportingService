@@ -24,14 +24,13 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<ExportRequestValidator>();
 
 
-
 builder.Services.AddAzureClients(cfg =>
 {
     cfg.AddServiceBusClient(builder.Configuration.GetSection("ServiceBus"))
-        .WithCredential(new DefaultAzureCredential());
+        .WithCredential(new DefaultAzureCredential()); //should work
 
     cfg.AddTableServiceClient(new Uri(builder.Configuration.GetValue<string>("TableStorageServiceUrl")!))
-        .WithCredential(new DefaultAzureCredential());
+        .WithCredential(new DefaultAzureCredential()); //should work
 });
 
 builder.Services.AddScoped<IReportRequestObjectFactory, ReportRequestObjectFactory>();

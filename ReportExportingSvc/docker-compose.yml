@@ -10,10 +10,10 @@ services:
       - "8080:80"
       - "4443:443"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - AZURE_CLIENT_ID=---insert---
-      - AZURE_TENANT_ID=---insert---
-      - AZURE_CLIENT_SECRET=---insert---
+      - ASPNETCORE_ENVIRONMENT=${DEPLOYMENT_MODE}
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+      - AZURE_TENANT_ID=${AZURE_TENANT_ID}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
  
   reportexporting.notificationapi:
     image: ${DOCKER_REGISTRY-}reportexportingnotificationapi
@@ -24,11 +24,11 @@ services:
       - "8087:80"
       - "4447:443"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - AZURE_CLIENT_ID=---insert---
-      - AZURE_TENANT_ID=---insert---
-      - AZURE_CLIENT_SECRET=---insert---
-      - SendGridEmailSettings__APIKey=---insert---
+      - ASPNETCORE_ENVIRONMENT=${DEPLOYMENT_MODE}
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+      - AZURE_TENANT_ID=${AZURE_TENANT_ID}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
+      - SendGridEmailSettings__APIKey=${SENDGRID_KEY}
 
   reportexporting.processorderapi:
     image: ${DOCKER_REGISTRY-}reportexportingprocessorderapi
@@ -39,7 +39,7 @@ services:
       - "8085:80"
       - "4445:443"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - AZURE_CLIENT_ID=---insert---
-      - AZURE_TENANT_ID=---insert---
-      - AZURE_CLIENT_SECRET=---insert---
+      - ASPNETCORE_ENVIRONMENT=${DEPLOYMENT_MODE}
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+      - AZURE_TENANT_ID=${AZURE_TENANT_ID}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}

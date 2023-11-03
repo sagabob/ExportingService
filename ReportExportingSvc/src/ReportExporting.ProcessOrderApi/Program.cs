@@ -26,16 +26,21 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+var azureCredential = new ClientSecretCredential(builder.Configuration.GetValue<string>("AZURE_TENANT_ID"),
+    builder.Configuration.GetValue<string>("AZURE_CLIENT_ID"),
+    builder.Configuration.GetValue<string>("AZURE_CLIENT_SECRET"));
+
 builder.Services.AddAzureClients(cfg =>
 {
     cfg.AddServiceBusClient(builder.Configuration.GetSection("ServiceBus"))
-        .WithCredential(new DefaultAzureCredential());
+        .WithCredential(azureCredential);
 
     cfg.AddTableServiceClient(new Uri(builder.Configuration.GetValue<string>("TableStorageServiceUrl")!))
-        .WithCredential(new DefaultAzureCredential());
+        .WithCredential(azureCredential);
 
     cfg.AddBlobServiceClient(new Uri(builder.Configuration.GetValue<string>("BlobStorageServiceUrl")!))
-        .WithCredential(new DefaultAzureCredential());
+        .WithCredential(azureCredential);
 });
 
 builder.Services.AddSingleton<IReportRequestObjectFactory, ReportRequestObjectFactory>();

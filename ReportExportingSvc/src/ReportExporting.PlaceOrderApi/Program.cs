@@ -23,14 +23,16 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<ExportRequestValidator>();
 
-
+var azureCredential = new ClientSecretCredential(builder.Configuration.GetValue<string>("AZURE_TENANT_ID"),
+    builder.Configuration.GetValue<string>("AZURE_CLIENT_ID"),
+    builder.Configuration.GetValue<string>("AZURE_CLIENT_SECRET"));
 builder.Services.AddAzureClients(cfg =>
 {
     cfg.AddServiceBusClient(builder.Configuration.GetSection("ServiceBus"))
-        .WithCredential(new DefaultAzureCredential()); //should work
+        .WithCredential(azureCredential); //should work
 
     cfg.AddTableServiceClient(new Uri(builder.Configuration.GetValue<string>("TableStorageServiceUrl")!))
-        .WithCredential(new DefaultAzureCredential()); //should work
+        .WithCredential(azureCredential); //should work
 });
 
 builder.Services.AddScoped<IReportRequestObjectFactory, ReportRequestObjectFactory>();

@@ -39,7 +39,7 @@ public class MessageHandler : IMessageHandler
             AutoCompleteMessages = false,
 
             // I can also allow for multi-threading
-            MaxConcurrentCalls = 1
+            MaxConcurrentCalls = 3
         };
         _processor = _serviceBusClient.CreateProcessor(_configuration["WorkQueue"], options);
 

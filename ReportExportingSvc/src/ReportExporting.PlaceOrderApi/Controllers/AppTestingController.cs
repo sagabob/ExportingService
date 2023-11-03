@@ -33,7 +33,7 @@ public class AppTestingController : ControllerBase
         {
             Title = "Sample Report",
             Product = ReportProduct.Profile,
-            EmailAddress = "bobp@id.com.au",
+            EmailAddress = "bobpham.tdp@live.com",
             Format = ReportFormat.Pdf,
             Urls = new[]
             {
@@ -73,7 +73,7 @@ public class AppTestingController : ControllerBase
         {
             Title = "Sample Report",
             Product = ReportProduct.Profile,
-            EmailAddress = "bobp@id.com.au",
+            EmailAddress = "bobpham.tdp@live.com",
             Format = ReportFormat.Word,
             Urls = new[]
             {

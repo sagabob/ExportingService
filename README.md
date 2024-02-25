@@ -26,7 +26,7 @@
 * [Contact](#contact)
 
 ## About the project
-A simple event driven architecture system exporting Html pages to Pdf/Word. Users just send a request containing a list of URLs, target format (Pdf/Word) and email address. It components will received the request, converting Html pages to the target format, and then email to the user with exported file attached.   
+A simple event driven architecture system exporting Html pages to Pdf/Word. Users just send a request containing a list of URLs, target format (Pdf/Word) and email address. Its components will received the request, converting Html pages to the target format, and then email to the user with exported file attached.   
 
 ## Diagram
 <img src="https://i.imgur.com/PbBPHAe.png" alt="Architecture Diagram" width="800" height="560">

@@ -23,10 +23,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Controllers\" />
-    </ItemGroup>
-
-    <ItemGroup>
         <ProjectReference Include="..\ReportExporting.ApplicationLib\ReportExporting.ApplicationLib.csproj" />
         <ProjectReference Include="..\ReportExporting.Core\ReportExporting.Core.csproj" />
         <ProjectReference Include="..\ReportExporting.ExportApi\ReportExporting.ExportApi.csproj" />

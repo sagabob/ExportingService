@@ -6,8 +6,16 @@ namespace ReportExporting.PlaceOrderApi.Controllers;
 [ApiController]
 public class ApiInfoController : ControllerBase
 {
+    private readonly IConfiguration _configuration;
+
+    public ApiInfoController(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+
     public IActionResult Info()
     {
-        return Ok($"PlaceOrderApi-{DateTime.Today.ToLocalTime()}");
+        var dockerImage = _configuration["DockerImage"];
+        return Ok($"{dockerImage} - {DateTime.Today.ToLocalTime()}");
     }
 }

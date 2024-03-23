@@ -44,12 +44,13 @@ A simple event driven architecture system exporting Html pages to Pdf/Word. User
 
 ## Milestones
 * Achieve nearly 100% test coverage, most projects get 100%.
+* Docker & Docker compose implementation  
 
 ## Progress
-* Docker implementation.
+* Kubernetes implementation.
   
 ## Roadmap
-The application will be implemented with the following features:
+The application is and will be implemented with the following features:
 * Use docker.
 * Use Kubernetes.
 * Deploy the whole system to Azure.

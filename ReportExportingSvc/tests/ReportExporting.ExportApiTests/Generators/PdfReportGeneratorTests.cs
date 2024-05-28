@@ -45,7 +45,7 @@ public class PdfReportGeneratorTests
         outputPdf.IsValid.Should().BeTrue();
     }
 
-    [Theory]
+    [Theory(Skip = "Invalid license")]
     [InlineData(ReportProduct.Atlas)]
     [InlineData(ReportProduct.Economy)]
     public async Task GenerateReportAsyncTest(ReportProduct product)

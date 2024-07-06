@@ -27,22 +27,18 @@ public class ReportGeneratorFactoryTests
 
         var exportConfigurationFactory = new ExportConfigurationFactory();
         var exportObjectFactory = new ExportObjectFactory();
-        var pdfReportGeneratorMock = new Mock<IPdfReportGenerator>();
-        var wordReportGeneratorMock = new Mock<IWordReportGenerator>();
+        var reportGeneratorMock = new Mock<IReportGenerator>();
+
 
         //Mocking setup
         var streamMock = new MemoryStream(Encoding.UTF8.GetBytes("123"));
 
-        pdfReportGeneratorMock
+        reportGeneratorMock
             .Setup(x => x.GenerateReportAsync(It.IsAny<ExportObject>(), It.IsAny<ExportConfiguration>()))
             .ReturnsAsync(streamMock);
 
-        wordReportGeneratorMock
-            .Setup(x => x.GenerateReportAsync(It.IsAny<ExportObject>(), It.IsAny<ExportConfiguration>()))
-            .ReturnsAsync(streamMock);
 
-        var reportGeneratorFactory = new ReportGeneratorFactory(pdfReportGeneratorMock.Object,
-            wordReportGeneratorMock.Object,
+        var reportGeneratorFactory = new ReportGeneratorFactory(reportGeneratorMock.Object,
             exportConfigurationFactory, exportObjectFactory);
 
         //Act
@@ -50,13 +46,5 @@ public class ReportGeneratorFactoryTests
 
         //Assert
         outputStream!.ToString().Should().Be(streamMock.ToString());
-
-        //Verify
-        if (format == ReportFormat.Word)
-            wordReportGeneratorMock.Verify(
-                x => x.GenerateReportAsync(It.IsAny<ExportObject>(), It.IsAny<ExportConfiguration>()), Times.Once);
-        else
-            pdfReportGeneratorMock.Verify(
-                x => x.GenerateReportAsync(It.IsAny<ExportObject>(), It.IsAny<ExportConfiguration>()), Times.Once);
     }
 }

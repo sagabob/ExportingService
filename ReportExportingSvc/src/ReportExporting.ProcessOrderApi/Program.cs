@@ -10,8 +10,6 @@ using ReportExporting.ExportApi.Generators;
 using ReportExporting.ExportApi.Generators.Core;
 using ReportExporting.ExportApi.Handlers;
 using ReportExporting.ExportApi.Handlers.Core;
-using ReportExporting.ExportApi.Helpers;
-using ReportExporting.ExportApi.Helpers.Core;
 using ReportExporting.ExportApi.Models;
 using ReportExporting.ExportApi.Models.Core;
 using ReportExporting.ProcessOrderApi.Handlers;
@@ -51,11 +49,9 @@ builder.Services.AddSingleton<IReportRequestErrorObjectFactory, ReportRequestErr
 builder.Services.AddSingleton<ITableStorageService, TableStorageService>();
 builder.Services.AddSingleton<IBlobStorageService, BlobStorageService>();
 
-builder.Services.AddSingleton<IPdfEngineWrapper, PdfEngineWrapper>();
-builder.Services.AddSingleton<IWordEngineWrapper, WordEngineWrapper>();
 
-builder.Services.AddSingleton<IPdfReportGenerator, PdfReportGenerator>();
-builder.Services.AddSingleton<IWordReportGenerator, WordReportGenerator>();
+builder.Services.AddSingleton<IReportGenerator, ReportGenerator>();
+
 
 builder.Services.AddSingleton<IExportObjectFactory, ExportObjectFactory>();
 builder.Services.AddSingleton<IExportConfigurationFactory, ExportConfigurationFactory>();
@@ -74,8 +70,7 @@ builder.Services.AddSingleton<IMessageHandler, MessageHandler>();
 
 var app = builder.Build();
 
-app.Services.GetService<IPdfEngineWrapper>()?.SetLicense();
-app.Services.GetService<IWordEngineWrapper>()?.SetLicense();
+
 app.Services.GetService<IMessageHandler>()?.Register();
 
 // Configure the HTTP request pipeline.

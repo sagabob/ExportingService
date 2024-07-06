@@ -4,44 +4,33 @@ using ReportExporting.ExportApi.Handlers;
 
 namespace ReportExporting.ProcessOrderApi.Handlers.Core;
 
-public class HandleExportProcess : IHandleExportProcess
+public class HandleExportProcess(
+    IExportRequestHandler exportRequestHandler,
+    IUploadItemToBlobHandler uploadItemToBlobHandler,
+    IUpsertItemToTableHandler upsertItemToTableHandler,
+    IAddItemToQueueHandler addItemToQueueHandler)
+    : IHandleExportProcess
 {
-    private readonly IAddItemToQueueHandler _addItemToQueueHandler;
-    private readonly IExportRequestHandler _exportRequestHandler;
-    private readonly IUploadItemToBlobHandler _uploadItemToBlobHandler;
-    private readonly IUpsertItemToTableHandler _upsertItemToTableHandler;
-
-
-    public HandleExportProcess(IExportRequestHandler exportRequestHandler,
-        IUploadItemToBlobHandler uploadItemToBlobHandler, IUpsertItemToTableHandler upsertItemToTableHandler,
-        IAddItemToQueueHandler addItemToQueueHandler)
-    {
-        _exportRequestHandler = exportRequestHandler;
-        _uploadItemToBlobHandler = uploadItemToBlobHandler;
-        _upsertItemToTableHandler = upsertItemToTableHandler;
-        _addItemToQueueHandler = addItemToQueueHandler;
-    }
-
     public async Task<ReportRequestObject> Handle(ReportRequestObject request)
     {
         request.Progress.Add(ExportingProgress.DoExportingOnOrder);
 
         // update record
-        var result = await _upsertItemToTableHandler.Handle(request);
+        var result = await upsertItemToTableHandler.Handle(request);
 
         // do export 
-        var exportFileStream = await _exportRequestHandler.ProcessExportRequest(result);
+        var exportFileStream = await exportRequestHandler.ProcessExportRequest(result);
 
         // update record
-        result = await _upsertItemToTableHandler.Handle(result);
+        result = await upsertItemToTableHandler.Handle(result);
 
         // upload file
         if (exportFileStream != null)
-            result = await _uploadItemToBlobHandler.Handle(exportFileStream, result);
+            result = await uploadItemToBlobHandler.Handle(exportFileStream, result);
 
-        result = await _addItemToQueueHandler.Handle(result, QueueType.EmailQueue);
+        result = await addItemToQueueHandler.Handle(result, QueueType.EmailQueue);
 
-        result = await _upsertItemToTableHandler.Handle(result);
+        result = await upsertItemToTableHandler.Handle(result);
 
         return result;
     }

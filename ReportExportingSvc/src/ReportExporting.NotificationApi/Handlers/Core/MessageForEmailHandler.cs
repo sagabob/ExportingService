@@ -27,7 +27,7 @@ public class MessageForEmailHandler : IMessageForEmailHandler
     {
         var options = new ServiceBusProcessorOptions
         {
-            // By default after the message handler returns, the processor will complete the message
+            // By default, after the message handler returns, the processor will complete the message
             // If I want more fine-grained control over settlement, I can set this to false.
             AutoCompleteMessages = false,
 

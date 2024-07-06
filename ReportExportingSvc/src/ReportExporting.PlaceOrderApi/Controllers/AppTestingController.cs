@@ -11,20 +11,12 @@ namespace ReportExporting.PlaceOrderApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class AppTestingController : ControllerBase
+public class AppTestingController(
+    IExportRequestHandler exportRequestHandler,
+    IReportRequestObjectFactory reportRequestObjectFactory,
+    IValidator<ReportRequest> reportValidator)
+    : ControllerBase
 {
-    private readonly IExportRequestHandler _exportRequestHandler;
-    private readonly IReportRequestObjectFactory _reportRequestObjectFactory;
-    private readonly IValidator<ReportRequest> _reportValidator;
-
-    public AppTestingController(IExportRequestHandler exportRequestHandler,
-        IReportRequestObjectFactory reportRequestObjectFactory, IValidator<ReportRequest> reportValidator)
-    {
-        _exportRequestHandler = exportRequestHandler;
-        _reportRequestObjectFactory = reportRequestObjectFactory;
-        _reportValidator = reportValidator;
-    }
-
     [ExcludeFromCodeCoverage]
     [HttpGet("TestPdfExport", Name = "TestPdfExport")]
     public async Task<ActionResult<ExportingReportResponse>> TestPdfExport()
@@ -50,12 +42,12 @@ public class AppTestingController : ControllerBase
             }
         };
 
-        var validationResult = await _reportValidator.ValidateAsync(request);
+        var validationResult = await reportValidator.ValidateAsync(request);
 
         if (!validationResult.IsValid)
             return BadRequest("Invalid report request");
 
-        var result = await _exportRequestHandler.Handle(_reportRequestObjectFactory.CreateFromReportRequest(request));
+        var result = await exportRequestHandler.Handle(reportRequestObjectFactory.CreateFromReportRequest(request));
 
         if (result.Status == ExportingStatus.Failure)
             return Forbid("Fail to process the order");
@@ -90,12 +82,12 @@ public class AppTestingController : ControllerBase
             }
         };
 
-        var validationResult = await _reportValidator.ValidateAsync(request);
+        var validationResult = await reportValidator.ValidateAsync(request);
 
         if (!validationResult.IsValid)
             return BadRequest("Invalid report request");
 
-        var result = await _exportRequestHandler.Handle(_reportRequestObjectFactory.CreateFromReportRequest(request));
+        var result = await exportRequestHandler.Handle(reportRequestObjectFactory.CreateFromReportRequest(request));
 
         if (result.Status == ExportingStatus.Failure)
             return Forbid("Fail to process the order");

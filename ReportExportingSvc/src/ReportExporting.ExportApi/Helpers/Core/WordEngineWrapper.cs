@@ -3,18 +3,11 @@ using SautinSoft;
 
 namespace ReportExporting.ExportApi.Helpers.Core;
 
-public class WordEngineWrapper : IWordEngineWrapper
+public class WordEngineWrapper(IConfiguration configuration) : IWordEngineWrapper
 {
-    private readonly IConfiguration _configuration;
-
-    public WordEngineWrapper(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
-
     public void SetLicense()
     {
-        PdfFocus.SetLicense(_configuration["PdfToWordLicense"]);
+        PdfFocus.SetLicense(configuration["PdfToWordLicense"]);
     }
 
     public PdfFocus GetRenderer()

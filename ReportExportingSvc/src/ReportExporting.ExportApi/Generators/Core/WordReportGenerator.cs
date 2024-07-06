@@ -3,23 +3,14 @@ using ReportExporting.ExportApi.Models.Core;
 
 namespace ReportExporting.ExportApi.Generators.Core;
 
-public class WordReportGenerator : IWordReportGenerator
+public class WordReportGenerator(IPdfReportGenerator pdfReportGenerator, IWordEngineWrapper wordEngineWrapper)
+    : IWordReportGenerator
 {
-    private readonly IPdfReportGenerator _pdfReportGenerator;
-    private readonly IWordEngineWrapper _wordEngineWrapper;
-
-    public WordReportGenerator(IPdfReportGenerator pdfReportGenerator, IWordEngineWrapper wordEngineWrapper)
-    {
-        _pdfReportGenerator = pdfReportGenerator;
-        _wordEngineWrapper = wordEngineWrapper;
-    }
-
-
     public async Task<Stream?> GenerateReportAsync(ExportObject exportObject, ExportConfiguration config)
     {
-        var pdfStream = await _pdfReportGenerator.GenerateReportAsync(exportObject, config);
+        var pdfStream = await pdfReportGenerator.GenerateReportAsync(exportObject, config);
 
-        var wordEngine = _wordEngineWrapper.GetRenderer();
+        var wordEngine = wordEngineWrapper.GetRenderer();
 
         wordEngine.OpenPdf(pdfStream);
 

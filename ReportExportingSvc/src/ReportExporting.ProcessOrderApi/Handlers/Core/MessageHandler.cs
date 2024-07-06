@@ -7,41 +7,30 @@ using ReportExporting.ApplicationLib.Helpers;
 
 namespace ReportExporting.ProcessOrderApi.Handlers.Core;
 
-public class MessageHandler : IMessageHandler
+public class MessageHandler(
+    ServiceBusClient serviceBusClient,
+    IConfiguration configuration,
+    IHandleExportProcess handleExportProcess,
+    IAddItemToQueueHandler addItemToQueueHandler,
+    IAddErrorItemToQueueHandler addErrorItemToQueueHandler,
+    IReportRequestErrorObjectFactory reportRequestErrorObjectFactory)
+    : IMessageHandler
 {
-    private readonly IAddErrorItemToQueueHandler _addErrorItemToQueueHandler;
-    private readonly IAddItemToQueueHandler _addItemToQueueHandler;
-    private readonly IConfiguration _configuration;
-    private readonly IHandleExportProcess _handleExportProcess;
-    private readonly IReportRequestErrorObjectFactory _reportRequestErrorObjectFactory;
-    private readonly ServiceBusClient _serviceBusClient;
+    private readonly IAddItemToQueueHandler _addItemToQueueHandler = addItemToQueueHandler;
     private ServiceBusProcessor? _processor;
-
-    public MessageHandler(ServiceBusClient serviceBusClient, IConfiguration configuration,
-        IHandleExportProcess handleExportProcess, IAddItemToQueueHandler addItemToQueueHandler,
-        IAddErrorItemToQueueHandler addErrorItemToQueueHandler,
-        IReportRequestErrorObjectFactory reportRequestErrorObjectFactory)
-    {
-        _serviceBusClient = serviceBusClient;
-        _configuration = configuration;
-        _handleExportProcess = handleExportProcess;
-        _addItemToQueueHandler = addItemToQueueHandler;
-        _addErrorItemToQueueHandler = addErrorItemToQueueHandler;
-        _reportRequestErrorObjectFactory = reportRequestErrorObjectFactory;
-    }
 
     public async Task Register()
     {
         var options = new ServiceBusProcessorOptions
         {
-            // By default after the message handler returns, the processor will complete the message
+            // By default, after the message handler returns, the processor will complete the message
             // If I want more fine-grained control over settlement, I can set this to false.
             AutoCompleteMessages = false,
 
             // I can also allow for multi-threading
             MaxConcurrentCalls = 3
         };
-        _processor = _serviceBusClient.CreateProcessor(_configuration["WorkQueue"], options);
+        _processor = serviceBusClient.CreateProcessor(configuration["WorkQueue"], options);
 
         _processor.ProcessMessageAsync += ReceiveMessageHandler;
         _processor.ProcessErrorAsync += ErrorHandler;
@@ -60,7 +49,7 @@ public class MessageHandler : IMessageHandler
             if (request != null)
             {
                 request.Progress.Add(ExportingProgress.OrderReceivedFromQueue);
-                await _handleExportProcess.Handle(request);
+                await handleExportProcess.Handle(request);
                 ;
             }
             else
@@ -72,8 +61,8 @@ public class MessageHandler : IMessageHandler
         {
             // ignored
             // will handle it later
-            var blankReportRequestObject = _reportRequestErrorObjectFactory.CreateObjectErrorObject(ex.Message);
-            await _addErrorItemToQueueHandler.Handle(blankReportRequestObject, QueueType.EmailQueue);
+            var blankReportRequestObject = reportRequestErrorObjectFactory.CreateObjectErrorObject(ex.Message);
+            await addErrorItemToQueueHandler.Handle(blankReportRequestObject, QueueType.EmailQueue);
         }
         finally
         {
@@ -85,7 +74,7 @@ public class MessageHandler : IMessageHandler
     public async Task ErrorHandler(ProcessErrorEventArgs args)
     {
         // the error source tells me at what point in the processing an error occurred
-        var blankReportRequestObject = _reportRequestErrorObjectFactory.CreateObjectErrorObject(args.Exception.Message);
-        await _addErrorItemToQueueHandler.Handle(blankReportRequestObject, QueueType.EmailQueue);
+        var blankReportRequestObject = reportRequestErrorObjectFactory.CreateObjectErrorObject(args.Exception.Message);
+        await addErrorItemToQueueHandler.Handle(blankReportRequestObject, QueueType.EmailQueue);
     }
 }

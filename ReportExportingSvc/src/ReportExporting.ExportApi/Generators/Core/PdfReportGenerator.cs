@@ -3,19 +3,12 @@ using ReportExporting.ExportApi.Models.Core;
 
 namespace ReportExporting.ExportApi.Generators.Core;
 
-public class PdfReportGenerator : IPdfReportGenerator
+public class PdfReportGenerator(IPdfEngineWrapper pdfEngineWrapper) : IPdfReportGenerator
 {
-    private readonly IPdfEngineWrapper _pdfEngineWrapper;
-
-    public PdfReportGenerator(IPdfEngineWrapper pdfEngineWrapper)
-    {
-        _pdfEngineWrapper = pdfEngineWrapper;
-    }
-
     public async Task<Stream?> GenerateReportAsync(ExportObject exportObject, ExportConfiguration config)
     {
-        var renderer = _pdfEngineWrapper.GetRenderer();
-        var pdfDocuments = _pdfEngineWrapper.CreateList();
+        var renderer = pdfEngineWrapper.GetRenderer();
+        var pdfDocuments = pdfEngineWrapper.CreateList();
         ;
 
         if (config.ShowCoverPage)
@@ -32,7 +25,7 @@ public class PdfReportGenerator : IPdfReportGenerator
             pdfDocuments.Add(pdf);
         }
 
-        var merged = _pdfEngineWrapper.MergeDocuments(pdfDocuments).Stream;
+        var merged = pdfEngineWrapper.MergeDocuments(pdfDocuments).Stream;
 
         return merged;
     }

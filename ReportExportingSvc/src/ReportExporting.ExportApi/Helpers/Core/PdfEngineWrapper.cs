@@ -2,18 +2,11 @@
 
 namespace ReportExporting.ExportApi.Helpers.Core;
 
-public class PdfEngineWrapper : IPdfEngineWrapper
+public class PdfEngineWrapper(IConfiguration configuration) : IPdfEngineWrapper
 {
-    private readonly IConfiguration _configuration;
-
-    public PdfEngineWrapper(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
-
     public void SetLicense()
     {
-        License.LicenseKey = _configuration["IronPdfLicense"];
+        License.LicenseKey = configuration["IronPdfLicense"];
     }
 
     public ChromePdfRenderer GetRenderer()

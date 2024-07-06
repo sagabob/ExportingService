@@ -15,7 +15,7 @@ namespace ReportExporting.ExportApiTests.Generators;
 
 public class WordReportGeneratorTests
 {
-    [Fact]
+    [Fact(Skip = "Invalid license")]
     public async Task GenerateReportAsyncTest()
     {
         //Arrange

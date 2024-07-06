@@ -13,6 +13,7 @@ public class ApiInfoController : ControllerBase
         _configuration = configuration;
     }
 
+    [HttpGet("Info", Name = "Info")]
     public IActionResult Info()
     {
         var dockerImage = _configuration["DockerImage"];

@@ -6,6 +6,7 @@ namespace ReportExporting.ProcessOrderApi.Controllers;
 [ApiController]
 public class ApiInfoController(IConfiguration configuration) : ControllerBase
 {
+    [HttpGet("Info", Name = "Info")]
     public IActionResult Info()
     {
         var dockerImage = configuration["DockerImage"];
